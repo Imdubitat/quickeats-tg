@@ -1,0 +1,44 @@
+body {
+    background-attachment: fixed;
+    font-family: 'Afacad';
+}
+
+html, body {
+    overflow-x: hidden;
+	height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    background: #EF4444;
+}
+
+.footer {
+    background: #1E3A8A;
+    color: #FFFFFF !important;
+}
+
+.footer a {
+    color: #FFFFFF !important;
+}
+
+.btn-custom {
+    background: #EF4444;
+    color: #FFFFFF;
+}
+
+.btn-custom:hover {
+    background: #FFFFFF;
+    color: #000000;
+}
+
+.btn-custom2 {
+    background: #FFFFFF;
+    color: #EF4444;
+}
+
+.btn-custom2:hover {
+    background: #FFFFFF;
+    color: #000000;
+}
