@@ -7,8 +7,13 @@ use Illuminate\Http\Request;
 
 class Controller extends BaseController
 {
-    public function Index() 
+    public function exibirIndex() 
     {
         return view('index');
+    }
+
+    public function exibirIndexCliente() 
+    {
+        return view('index_cliente');
     }
 }

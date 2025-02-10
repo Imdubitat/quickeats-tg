@@ -7,4 +7,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/quickeats', [Controller::class, 'Index'])->name('Index');
+Route::get('/quickeats', [Controller::class, 'exibirIndex'])->name('index');
+Route::get('/clientes', [Controller::class, 'exibirIndexCliente'])->name('index_cliente');

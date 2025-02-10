@@ -42,3 +42,23 @@ html, body {
     background: #FFFFFF;
     color: #000000;
 }
+
+.btn-custom3 {
+    background: #EF4444;
+    color: #FFFFFF;
+}
+
+.btn-custom3:hover {
+    background: #DC2626;
+    color: #FFFFFF;
+}
+
+.btn-custom4 {
+    background: #1E3A8A;
+    color: #FFFFFF;
+}
+
+.btn-custom4:hover {
+    background: #00043D;
+    color: #FFFFFF;
+}

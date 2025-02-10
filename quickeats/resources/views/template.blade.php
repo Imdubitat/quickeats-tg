@@ -14,7 +14,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-dark fixed-top">
             <div class="container">
-                <a class="navbar-brand" href="{{ route('Index') }}"><img src="{{ asset('images/quick-logo.png') }}" style="width: 150px;"></a>
+                <a class="navbar-brand" href="{{ route('index') }}"><img src="{{ asset('images/quick_logo.png') }}" style="width: 150px;"></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav-principal">
                     <span class="navbar-toggler-icon"></span>
                 </button>
