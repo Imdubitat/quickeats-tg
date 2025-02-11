@@ -9,3 +9,4 @@ Route::get('/', function () {
 
 Route::get('/quickeats', [Controller::class, 'exibirIndex'])->name('index');
 Route::get('/clientes', [Controller::class, 'exibirIndexCliente'])->name('index_cliente');
+Route::get('/restaurantes', [Controller::class, 'exibirIndexRestaurante'])->name('index_restaurante');

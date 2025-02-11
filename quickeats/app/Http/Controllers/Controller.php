@@ -16,4 +16,9 @@ class Controller extends BaseController
     {
         return view('index_cliente');
     }
+
+    public function exibirIndexRestaurante()
+    {
+        return view('index_restaurante');
+    }
 }

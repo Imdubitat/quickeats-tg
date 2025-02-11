@@ -9,7 +9,7 @@
         </li>
 
         <li class="nav-item">
-            <a href="" id="restaurante" class="btn btn-custom2 ms-4">Tenho um restaurante</a>
+            <a href="{{ route('index_restaurante') }}" id="restaurante" class="btn btn-custom2 ms-4">Tenho um restaurante</a>
         </li>
     </ul>
 @endsection
