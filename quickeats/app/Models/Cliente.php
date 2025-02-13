@@ -20,8 +20,8 @@ class Cliente extends Authenticatable
     // Define os campos que podem ser preenchidos em massa
     protected $fillable = [
         'nome',
+        'cpf',
         'data_nasc',
-        'CPF',
         'telefone',
         'email',
         'senha',
@@ -46,12 +46,12 @@ class Cliente extends Authenticatable
     public static function cadastrarCliente($data)
     {
         return self::create([
-            'nome' => $data['nome'],
-            'data_nasc' => $data['data_nascimento'],
-            'CPF' => $data['cpf'],
-            'telefone' => $data['telefone'],
-            'email' => $data['email'],
-            'senha' => Hash::make($data['senha']),
+            'nome' => $data['nomeSignup'],
+            'cpf' => $data['cpfSignup'],
+            'data_nasc' => $data['dataNascSignup'],
+            'telefone' => $data['telefoneSignup'],
+            'email' => $data['emailSignup'],
+            'senha' => Hash::make($data['senhaSignup']),
             'email_verificado' => 0,
         ]);
     }

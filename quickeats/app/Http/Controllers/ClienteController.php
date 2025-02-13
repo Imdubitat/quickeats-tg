@@ -9,6 +9,31 @@ use Illuminate\Support\Facades\Session;
 
 class ClienteController extends Controller
 {
+    // Função para salvar o cliente no banco de dados
+    public function cadastrarCliente(Request $request)
+    {
+        // Valida os dados enviados pelo modal
+        $validatedData = $request->validate([
+            'nomeSignup' => 'required|string|max:50',
+            'cpfSignup' => 'required|string|max:11',
+            'dataNascSignup' => 'required|string|max:50',
+            'telefoneSignup' => 'required|string|max:11',
+            'emailSignup' => 'required|string|email|max:100|unique:clientes,email',
+            'senhaSignup' => 'required|string|min:8',
+        ]);
+
+        try {
+            // Chama o método para criar o cliente no model
+            $cliente = Cliente::cadastrarCliente($validatedData);
+
+            // Redireciona para a página com uma mensagem de sucesso
+            return redirect()->route('index_cliente')->with('success', 'Cliente cadastrado com sucesso. Por favor, verifique seu e-mail!');
+        } catch (\Exception $e) {
+            // Se ocorrer um erro, redireciona com uma mensagem de erro
+            return redirect()->back()->with('error', 'Ocorreu um erro ao cadastrar o cliente. Tente novamente.');
+        }
+    }
+
     public function realizarLogin(Request $request)
     {
         // Validação dos campos de entrada

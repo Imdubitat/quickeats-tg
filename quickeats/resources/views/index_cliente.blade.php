@@ -58,30 +58,30 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form>
+                <form action="{{ route('cadastro_cliente') }}" method="POST">
                     @csrf
                     <div class="form-floating mb-3">
-                        <input id="nomeSignup" type="text" class="form-control rounded-4" placeholder="Nome">
+                        <input id="nomeSignup" name="nomeSignup" type="text" class="form-control rounded-4" placeholder="Nome">
                         <label for="nomeSignup">Nome Completo</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input id="cpfSignup" type="text" class="form-control rounded-4" placeholder="CPF">
+                        <input id="cpfSignup" name="cpfSignup" type="text" class="form-control rounded-4" placeholder="CPF">
                         <label for="cpfSignup">CPF</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input id="dataNascSignup" type="date" class="form-control rounded-4" placeholder="Data de nascimento">
+                        <input id="dataNascSignup" name="dataNascSignup" type="date" class="form-control rounded-4" placeholder="Data de nascimento">
                         <label for="dataNascSignup">Data de nascimento</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input id="telefoneSignup" type="text" class="form-control rounded-4" placeholder="Telefone">
+                        <input id="telefoneSignup" name="telefoneSignup" type="text" class="form-control rounded-4" placeholder="Telefone">
                         <label for="telefoneSignup">Telefone</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input id="emailSignup" type="email" class="form-control rounded-4" placeholder="Email">
+                        <input id="emailSignup" name="emailSignup" type="email" class="form-control rounded-4" placeholder="Email">
                         <label for="emailSignup">Email</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input id="senhaSignup" type="password" class="form-control rounded-4" placeholder="Senha">
+                        <input id="senhaSignup" name="senhaSignup" type="password" class="form-control rounded-4" placeholder="Senha">
                         <label for="senhaSignup">Senha</label>
                     </div>
                     <div class="d-flex justify-content-center">
