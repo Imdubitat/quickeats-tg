@@ -27,14 +27,14 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form>
+                <form action="{{ route('login_estabelecimento') }}" method="POST">
                     @csrf
                     <div class="form-floating mb-3">
-                        <input id="emailLogin" type="email" class="form-control rounded-4" placeholder="Email">
+                        <input id="emailLogin" type="email" class="form-control rounded-4" placeholder="Email" name="emailLogin">
                         <label for="emailLogin">Email</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input id="senhaLogin" type="password" class="form-control rounded-4" placeholder="Senha">
+                        <input id="senhaLogin" type="password" class="form-control rounded-4" placeholder="Senha" name="senhaLogin">
                         <label for="senhaLogin">Senha</label>
                     </div>
                     <div class="d-flex justify-content-center">
