@@ -55,10 +55,4 @@ class Cliente extends Authenticatable
             'email_verificado' => 0,
         ]);
     }
-
-    // Método para atualizar o cliente usando stored procedure
-    public static function atualizarCliente($id_cliente, $telefone, $email)
-    {
-        return DB::statement('CALL atualizar_cliente(?, ?, ?)', [$id_cliente, $telefone, $email]);
-    }
 }

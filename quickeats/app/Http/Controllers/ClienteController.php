@@ -46,12 +46,12 @@ class ClienteController extends Controller
 
         // Tentar autenticar o cliente usando o guard 'cliente'
         if (Auth::guard('cliente')->attempt(['email' => $request->input('emailLogin'), 'password' => $request->input('senhaLogin')])) {
-            if($email_verificado){
-                // Login bem-sucedido, redirecionar para a página inicial do profissional
+            // if($email_verificado){
+            //     // Login bem-sucedido, redirecionar para a página inicial do profissional
                 return redirect()->route('home_cliente')->with('success', 'Login realizado com sucesso!');
-            } else {
-                return redirect()->back()->with('error', 'Email não verificado!');
-            }
+            // } else {
+            //     return redirect()->back()->with('error', 'Email não verificado!');
+            // }
         } else {
             // Login falhou, redirecionar de volta com uma mensagem de erro
             return redirect()->back()->with('error', 'Email ou senha inválidos');
