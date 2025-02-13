@@ -391,13 +391,13 @@ INSERT INTO `enderecos_clientes` (`id_endereco`, `id_cliente`) VALUES
 
 CREATE TABLE `estabelecimentos` (
   `id_estab` int(11) NOT NULL,
-  `razao_social` varchar(255) NOT NULL,
+  `razao_social` varchar(255) DEFAULT NULL,
   `nome_fantasia` varchar(255) NOT NULL,
   `cnpj` varchar(18) NOT NULL,
   `telefone` varchar(15) NOT NULL,
-  `cpf_titular` varchar(14) NOT NULL,
-  `rg_titular` varchar(12) NOT NULL,
-  `cnae` varchar(9) NOT NULL,
+  `cpf_titular` varchar(14) DEFAULT NULL,
+  `rg_titular` varchar(12) DEFAULT NULL,
+  `cnae` varchar(9) DEFAULT NULL,
   `logradouro` varchar(100) NOT NULL,
   `numero` int(11) NOT NULL,
   `bairro` varchar(100) NOT NULL,
@@ -406,9 +406,9 @@ CREATE TABLE `estabelecimentos` (
   `cep` varchar(9) NOT NULL,
   `inicio_expediente` time NOT NULL,
   `termino_expediente` time NOT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `senha` varchar(255) DEFAULT NULL,
-  `tipo` int(11) NOT NULL
+  `email` varchar(255) NOT NULL,
+  `senha` varchar(255) NOT NULL,
+  `tipo` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
