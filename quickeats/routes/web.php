@@ -28,7 +28,7 @@ Route::middleware('auth:cliente')->group(function () {
 Route::post('restaurante/cadastro', [EstabelecimentoController::class, 'cadastrarEstabelecimento'])->name('cadastro_restaurante');
 Route::post('restaurante/login', [EstabelecimentoController::class, 'realizarLogin'])->name('login_estabelecimento');
 
-// Rotas privadas (requer autenticação do cliente)
+// Rotas privadas (requer autenticação do restaurante)
 Route::middleware('auth:estabelecimento')->group(function () {
     // Página inicial do cliente
     Route::get('/home-restaurante', [EstabelecimentoController::class, 'exibirPaginaInicial'])->name('home_restaurante');
