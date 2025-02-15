@@ -28,7 +28,7 @@
                             <a class="nav-link text-white text-nowrap" href="">Restaurantes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white text-nowrap" href="">Mercados</a>
+                            <a class="nav-link text-white text-nowrap" href="{{ route('catalogo_produtos') }}">Produtos</a>
                         </li>
                         <li>
                             <a class="nav-link text-white text-nowrap" href="">Meus pedidos</a>
@@ -88,7 +88,7 @@
                         <a class="nav-link text-dark" href="">Restaurantes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" href="">Mercados</a>
+                        <a class="nav-link text-dark" href="{{ route('catalogo_produtos') }}">Produtos</a>
                     </li>
                     <li class="nav-item">
                         <form action="" method="POST">

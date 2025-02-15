@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Cliente;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class ClienteController extends Controller
 {
@@ -62,5 +63,12 @@ class ClienteController extends Controller
     {
         // Retorna a view 'home-cliente' com os dados dos estabelecimentos populares
         return view('home_cliente');
+    }
+
+    public function exibirProdutosDisponiveis()
+    {
+        $produtos = DB::select('SELECT * FROM `produtos_disponiveis`');
+
+        return view('catalogo_produtos', compact('produtos'));
     }
 }

@@ -21,6 +21,9 @@ Route::post('cliente/cadastro', [ClienteController::class, 'cadastrarCliente'])-
 Route::middleware('auth:cliente')->group(function () {
     // Página inicial do cliente
     Route::get('/home-cliente', [ClienteController::class, 'exibirPaginaInicial'])->name('home_cliente');
+
+    // Catálogo de produtos
+    Route::get('/catalogo-produtos', [ClienteController::class, 'exibirProdutosDisponiveis'])->name('catalogo_produtos');
 });
 
 
@@ -28,7 +31,7 @@ Route::middleware('auth:cliente')->group(function () {
 Route::post('restaurante/cadastro', [EstabelecimentoController::class, 'cadastrarEstabelecimento'])->name('cadastro_restaurante');
 Route::post('restaurante/login', [EstabelecimentoController::class, 'realizarLogin'])->name('login_estabelecimento');
 
-// Rotas privadas (requer autenticação do restaurante)
+// Rotas privadas (requer autenticação do cliente)
 Route::middleware('auth:estabelecimento')->group(function () {
     // Página inicial do cliente
     Route::get('/home-restaurante', [EstabelecimentoController::class, 'exibirPaginaInicial'])->name('home_restaurante');
