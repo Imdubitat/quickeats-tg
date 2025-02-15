@@ -62,3 +62,12 @@ html, body {
     background: #00043D;
     color: #FFFFFF;
 }
+
+.card {
+    max-width: 500px;
+}
+
+.carousel-item img {
+    height: 700px; /* Ajuste conforme necessário */
+    object-fit: cover; /* Garante que a imagem cubra a área sem distorção */
+}
