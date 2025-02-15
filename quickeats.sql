@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Tempo de geração: 17/01/2025 às 16:29
+-- Host: localhost
+-- Tempo de geração: 15/02/2025 às 03:10
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Banco de dados: `quickeats`
+-- Banco de dados: `quickEats`
 --
 
 DELIMITER $$
@@ -712,6 +712,19 @@ INSERT INTO `produtos` (`id_produto`, `nome`, `valor`, `id_categoria`, `id_estab
 -- --------------------------------------------------------
 
 --
+-- Estrutura stand-in para view `produtos_disponiveis`
+-- (Veja abaixo para a visão atual)
+--
+CREATE TABLE `produtos_disponiveis` (
+`id_produto` int(11)
+,`nome_produto` varchar(60)
+,`valor` decimal(10,2)
+,`estab` varchar(255)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `resets_senhas`
 --
 
@@ -770,6 +783,15 @@ INSERT INTO `tipo_estabelecimentos` (`id_tipo`, `descricao`) VALUES
 DROP TABLE IF EXISTS `pedidos_estabelecimento`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `pedidos_estabelecimento`  AS SELECT `e`.`id_estab` AS `id_estab`, `e`.`nome_fantasia` AS `nome_fantasia`, `p`.`id_pedido` AS `id_pedido`, `c`.`nome` AS `cliente`, `p`.`valor_total` AS `valor_total`, `fp`.`descricao` AS `forma_pagamento`, `p`.`data_compra` AS `data_compra`, `sp`.`descricao` AS `status_pedido`, concat(`en`.`logradouro`,', ',`en`.`numero`,', ',`en`.`bairro`,', ',`en`.`cidade`,', ',`en`.`estado`,', ',`en`.`cep`) AS `endereco_completo` FROM (((((((`pedidos` `p` join `itens_pedidos` `ip` on(`ip`.`id_pedido` = `p`.`id_pedido`)) join `produtos` `prod` on(`prod`.`id_produto` = `ip`.`id_produto`)) join `estabelecimentos` `e` on(`prod`.`id_estab` = `e`.`id_estab`)) join `clientes` `c` on(`c`.`id_cliente` = `p`.`id_cliente`)) join `formas_pagamentos` `fp` on(`fp`.`id_formapag` = `p`.`forma_pagamento`)) join `status_pedidos` `sp` on(`sp`.`id_status` = `p`.`status_entrega`)) join `enderecos` `en` on(`en`.`id_endereco` = `p`.`endereco`)) ;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para view `produtos_disponiveis`
+--
+DROP TABLE IF EXISTS `produtos_disponiveis`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `produtos_disponiveis`  AS SELECT `p`.`id_produto` AS `id_produto`, `p`.`nome` AS `nome_produto`, `p`.`valor` AS `valor`, `e`.`nome_fantasia` AS `estab` FROM (`produtos` `p` join `estabelecimentos` `e` on(`e`.`id_estab` = `p`.`id_estab`)) WHERE `p`.`qtd_estoque` <> 0 ;
 
 --
 -- Índices para tabelas despejadas
