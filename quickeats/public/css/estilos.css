@@ -68,6 +68,6 @@ html, body {
 }
 
 .carousel-item img {
-    height: 700px; /* Ajuste conforme necessário */
+    height: 900px; /* Ajuste conforme necessário */
     object-fit: cover; /* Garante que a imagem cubra a área sem distorção */
 }
