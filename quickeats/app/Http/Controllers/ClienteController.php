@@ -43,7 +43,7 @@ class ClienteController extends Controller
             'senhaLogin' => 'required|string|min:8',
         ]);
 
-        $email_verificado = Cliente::where('email', $validatedData['emailLogin'])->where('email_verificado', 1)->first();
+        //$email_verificado = Cliente::where('email', $validatedData['emailLogin'])->where('email_verificado', 1)->first();
 
         // Tentar autenticar o cliente usando o guard 'cliente'
         if (Auth::guard('cliente')->attempt(['email' => $request->input('emailLogin'), 'password' => $request->input('senhaLogin')])) {
@@ -70,5 +70,113 @@ class ClienteController extends Controller
         $produtos = DB::select('SELECT * FROM `produtos_disponiveis`');
 
         return view('catalogo_produtos', compact('produtos'));
+    }
+
+    public function exibirCarrinho()
+    {
+        $id_cliente = auth()->guard('cliente')->id();
+
+        $produtos = DB::select('CALL produtos_carrinho(?)', [$id_cliente]);
+
+        // Retorna a view 'carrinho' com os dados dos estabelecimentos populares
+        return view('carrinho', compact('produtos'));
+    }
+
+    public function adicionarProdutoCarrinho(Request $request)
+    {
+        $id_cliente = auth()->guard('cliente')->id();
+        $id_produto = $request->input('produto');
+        $qtd_produto = $request->input('qtd_produto');
+        $data_adicao = now(); // Sempre define a data atual
+
+        // Verifica se o produto já está no carrinho do cliente
+        $produtoExistente = DB::table('carrinho')
+            ->where('id_cliente', $id_cliente)
+            ->where('id_produto', $id_produto)
+            ->first();
+
+        if ($produtoExistente) {
+            // Se o produto já existe, apenas atualiza a quantidade
+            DB::table('carrinho')
+                ->where('id_cliente', $id_cliente)
+                ->where('id_produto', $id_produto)
+                ->update([
+                    'qtd_produto' => $produtoExistente->qtd_produto + $qtd_produto,
+                    'data_adicao' => $data_adicao
+                ]);
+        } else {
+            // Se não existir, insere um novo registro
+            DB::table('carrinho')->insert([
+                'id_cliente' => $id_cliente,
+                'id_produto' => $id_produto,
+                'qtd_produto' => $qtd_produto,
+                'data_adicao' => $data_adicao,
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Produto adicionado ao carrinho!');
+    }
+
+    public function removerProdutoCarrinho(Request $request)
+    {
+        $id_cliente = auth()->guard('cliente')->id();
+        $id_produto = $request->input('produto');
+
+        DB::table('carrinho')
+        ->where('id_cliente', $id_cliente)
+        ->where('id_produto', $id_produto)
+        ->delete();
+            
+        return redirect()->back()->with('success', 'Produto removido do carrinho!');
+    }
+
+    public function diminuirQuantidadeCarrinho(Request $request)
+    {
+        $id_cliente = auth()->guard('cliente')->id();
+        $id_produto = $request->input('produto');
+
+        // Buscar o produto no carrinho
+        $produto = DB::table('carrinho')
+        ->where('id_cliente', $id_cliente)
+        ->where('id_produto', $id_produto)
+        ->first();
+
+        if ($produto) {
+            // Atualizar a quantidade no carrinho
+            $produto = DB::table('carrinho')
+            ->where('id_cliente', $id_cliente)
+            ->where('id_produto', $id_produto)
+            ->update([
+                'qtd_produto'=> $produto->qtd_produto - 1,
+                'data_adicao' => now()
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Quantidade do produto reduzida!');
+    }
+
+    public function aumentarQuantidadeCarrinho(Request $request)
+    {
+        $id_cliente = auth()->guard('cliente')->id();
+        $id_produto = $request->input('produto');
+
+        // Buscar o produto no carrinho
+        $produto = DB::table('carrinho')
+        ->where('id_cliente', $id_cliente)
+        ->where('id_produto', $id_produto)
+        ->first();
+
+        if ($produto) {
+            // Atualizar a quantidade no carrinho
+            DB::table('carrinho')
+                ->where('id_cliente', $id_cliente)
+                ->where('id_produto', $id_produto)
+                ->update([
+                    'qtd_produto' => $produto->qtd_produto + 1,
+                    'data_adicao' => now()
+                ]);
+        }
+
+        return redirect()->back()->with('success', 'Quantidade do produto aumentada!');
     }
 }

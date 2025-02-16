@@ -16,6 +16,7 @@ Route::get('/restaurantes', [Controller::class, 'exibirIndexRestaurante'])->name
 // -------------------------------------------- Rotas do cliente ---------------------------------------------------------
 Route::post('cliente/login', [ClienteController::class, 'realizarLogin'])->name('login_cliente');
 Route::post('cliente/cadastro', [ClienteController::class, 'cadastrarCliente'])->name('cadastro_cliente');
+Route::get('carrinho', [ClienteController::class, 'exibirCarrinho'])->name('carrinho');
 
 // Rotas privadas (requer autenticação do cliente)
 Route::middleware('auth:cliente')->group(function () {
@@ -24,6 +25,18 @@ Route::middleware('auth:cliente')->group(function () {
 
     // Catálogo de produtos
     Route::get('/catalogo-produtos', [ClienteController::class, 'exibirProdutosDisponiveis'])->name('catalogo_produtos');
+
+    // Adicionar produto ao carrinho
+    Route::post('/adiciona-carrinho', [ClienteController::class, 'adicionarProdutoCarrinho'])->name('adicionar_carrinho');
+
+    // Remover produto do carrinho
+    Route::post('/remove-carrinho', [ClienteController::class, 'removerProdutoCarrinho'])->name('remover_carrinho');
+
+    // Diminuir quantidade de produto no carrinho
+    Route::post('/diminuir-carrinho', [ClienteController::class, 'diminuirQuantidadeCarrinho'])->name('diminuir_carrinho');
+
+    // Aumentar quantidade de produto no carrinho
+    Route::post('/aumenta-carrinho', [ClienteController::class, 'aumentarQuantidadeCarrinho'])->name('aumentar_carrinho');
 });
 
 
