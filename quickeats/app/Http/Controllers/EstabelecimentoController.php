@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Estabelecimento;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB; // Para interagir com o banco de dados
+use App\Http\Controllers\Controller; // Para estender a classe base do Laravel
+
 
 class EstabelecimentoController extends Controller
 {
@@ -67,5 +70,19 @@ class EstabelecimentoController extends Controller
     {
         // Retorna a view 'home-restaurante' com os dados dos estabelecimentos populares
         return view('home_restaurante');
+    }
+
+    public function exibirPaginaPedidos()
+    {
+        // Obtendo o estabelecimento autenticado
+        $estabelecimento = Auth::guard('estabelecimento')->user();
+
+        // Pegando o ID do estabelecimento logado
+        $id_estabelecimento = $estabelecimento->id_estab; 
+
+        // Executando o procedure e obtendo os pedidos
+        $pedidos = DB::select("CALL exibir_pedidos_estabelecimento(?)", [$id_estabelecimento]);
+
+        return view('pedidos_restaurante', compact('pedidos'));
     }
 }

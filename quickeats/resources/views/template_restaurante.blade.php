@@ -25,7 +25,7 @@
                 <div class="collapse navbar-collapse" id="nav-principal">
                     <ul class="navbar-nav me-auto d-flex flex-nowrap">
                         <li class="nav-item">
-                            <a class="nav-link text-white text-nowrap" href="">Pedidos</a>
+                            <a class="nav-link text-white text-nowrap" href="{{ route('pedidos_restaurante') }}">Pedidos</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white text-nowrap" href="">Produtos</a>

@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Tempo de geração: 15/02/2025 às 03:10
+-- Host: 127.0.0.1
+-- Tempo de geração: 18/02/2025 às 14:12
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Banco de dados: `quickEats`
+-- Banco de dados: `quickeats`
 --
 
 DELIMITER $$
@@ -139,11 +139,16 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `exibir_pedidos_estabelecimento` (IN
         p.data_compra,
         p.status_entrega,
         p.valor_total,
-        GROUP_CONCAT(pr.nome SEPARATOR ', ') AS produtos
+        GROUP_CONCAT(pr.nome SEPARATOR ', ') AS produtos,
+        f.descricao AS forma_pagamento,
+        CONCAT(e.logradouro, ', ', e.numero, ', ', e.bairro, ', ', e.cidade, ' - ', e.estado, ', ', e.cep) AS endereco
     FROM pedidos AS p
     INNER JOIN clientes AS c ON p.id_cliente = c.id_cliente
     LEFT JOIN itens_pedidos AS ip ON p.id_pedido = ip.id_pedido
     LEFT JOIN produtos AS pr ON ip.id_produto = pr.id_produto
+    LEFT JOIN formas_pagamentos AS f ON p.forma_pagamento = f.id_formapag
+    LEFT JOIN enderecos_clientes AS ec ON c.id_cliente = ec.id_cliente
+    LEFT JOIN enderecos AS e ON ec.id_endereco = e.id_endereco
     WHERE pr.id_estab = p_id_estab
     GROUP BY p.id_pedido
     ORDER BY p.data_compra DESC;
@@ -420,7 +425,8 @@ INSERT INTO `estabelecimentos` (`id_estab`, `razao_social`, `nome_fantasia`, `cn
 (2, 'Mercado Bom Preço Ltda.', 'Bom Preço', '23.456.789/0001-91', '(21) 99876-5432', '987.654.321-00', '98.765.432-1', '4711-3', 'Avenida Brasil', 456, 'Zona Sul', 'Rio de Janeiro', 'RJ', '20000-000', '07:00:00', '23:00:00', 'contato@bompreco.com', 'senhaSegura456', 2),
 (3, 'Restaurante Delícias do Campo Ltda.', 'Delícias do Campo', '34.567.890/0001-92', '(31) 91234-5678', '654.321.987-00', '65.432.198-7', '5611-2', 'Rua Tranquila', 789, 'Bairro Novo', 'Belo Horizonte', 'MG', '30000-000', '11:00:00', '23:00:00', 'contato@deliciasdocampo.com', 'senhaSegura789', 1),
 (4, 'Supermercado Sempre Fresco Ltda.', 'Sempre Fresco', '45.678.901/0001-93', '(41) 98765-6789', '321.987.654-00', '32.198.765-4', '4711-3', 'Rua Principal', 321, 'Zona Norte', 'Curitiba', 'PR', '80000-000', '08:00:00', '22:00:00', 'contato@semprefresco.com', 'senhaSuper123', 2),
-(5, 'Restaurante Sabores do Mar Ltda.', 'Sabores do Mar', '56.789.012/0001-94', '(51) 97654-3210', '210.987.654-00', '21.098.765-4', '5611-2', 'Rua da Praia', 654, 'Centro', 'Porto Alegre', 'RS', '90000-000', '12:00:00', '23:00:00', 'contato@saboresdomar.com', 'senhaSabores123', 1);
+(5, 'Restaurante Sabores do Mar Ltda.', 'Sabores do Mar', '56.789.012/0001-94', '(51) 97654-3210', '210.987.654-00', '21.098.765-4', '5611-2', 'Rua da Praia', 654, 'Centro', 'Porto Alegre', 'RS', '90000-000', '12:00:00', '23:00:00', 'contato@saboresdomar.com', 'senhaSabores123', 1),
+(6, NULL, 'Novo Sabor Caseiro', '12.345.678/0001-90', '(11) 99999-9999', NULL, NULL, NULL, 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'contato@saborcaseiro.com', '$2y$12$yNISLT2y2pcczjlwjFWIgecvHU2Lig6XuIqZHefoOW5MEtIHZPtuq', NULL);
 
 --
 -- Acionadores `estabelecimentos`
@@ -657,12 +663,13 @@ CREATE TABLE `pedidos` (
 --
 
 INSERT INTO `pedidos` (`id_pedido`, `id_cliente`, `valor_total`, `forma_pagamento`, `data_compra`, `status_entrega`, `endereco`) VALUES
-(1, 1, 79.80, 1, '2025-01-16 12:31:16', 1, 2),
-(2, 2, 23.90, 2, '2025-01-16 12:31:16', 1, 3),
-(3, 3, 149.70, 1, '2025-01-16 12:31:16', 1, 1),
-(4, 4, 42.50, 3, '2025-01-16 12:31:16', 1, 4),
-(5, 5, 51.60, 2, '2025-01-16 12:31:16', 1, 2),
-(6, 1, 7.98, 1, '2025-01-16 12:33:00', 1, 2);
+(1, 1, 79.80, 1, '2025-01-16 12:31:16', 2, 2),
+(2, 2, 23.90, 2, '2025-01-16 12:31:16', 3, 3),
+(3, 3, 149.70, 1, '2025-01-16 12:31:16', 4, 1),
+(4, 4, 42.50, 3, '2025-01-16 12:31:16', 3, 4),
+(5, 5, 51.60, 2, '2025-01-16 12:31:16', 2, 2),
+(6, 1, 7.98, 1, '2025-01-16 12:33:00', 5, 2),
+(7, 1, 50.00, 1, '2025-02-18 14:04:09', 2, 3);
 
 -- --------------------------------------------------------
 
@@ -704,23 +711,10 @@ CREATE TABLE `produtos` (
 INSERT INTO `produtos` (`id_produto`, `nome`, `valor`, `id_categoria`, `id_estab`, `qtd_estoque`) VALUES
 (1, 'Arroz Branco 5kg', 23.90, 1, 2, 49),
 (2, 'Feijão Carioca 1kg', 8.50, 1, 2, 95),
-(3, 'Pizza Calabresa', 39.90, 2, 1, 18),
+(3, 'Pizza Calabresa', 39.90, 2, 6, 18),
 (4, 'Peixe Grelhado', 49.90, 2, 5, 12),
 (5, 'Sabonete Líquido 500ml', 12.90, 3, 4, 26),
 (6, 'Macarrão Instantâneo 80g', 3.99, 1, 3, 188);
-
--- --------------------------------------------------------
-
---
--- Estrutura stand-in para view `produtos_disponiveis`
--- (Veja abaixo para a visão atual)
---
-CREATE TABLE `produtos_disponiveis` (
-`id_produto` int(11)
-,`nome_produto` varchar(60)
-,`valor` decimal(10,2)
-,`estab` varchar(255)
-);
 
 -- --------------------------------------------------------
 
@@ -753,8 +747,10 @@ CREATE TABLE `status_pedidos` (
 
 INSERT INTO `status_pedidos` (`id_status`, `descricao`) VALUES
 (1, 'aguardando pagamento'),
-(2, 'em preparação'),
-(3, 'em rota de entrega');
+(2, 'aguardando aprovação'),
+(3, 'em preparação'),
+(4, 'em rota de entrega'),
+(5, 'finalizado');
 
 -- --------------------------------------------------------
 
@@ -783,15 +779,6 @@ INSERT INTO `tipo_estabelecimentos` (`id_tipo`, `descricao`) VALUES
 DROP TABLE IF EXISTS `pedidos_estabelecimento`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `pedidos_estabelecimento`  AS SELECT `e`.`id_estab` AS `id_estab`, `e`.`nome_fantasia` AS `nome_fantasia`, `p`.`id_pedido` AS `id_pedido`, `c`.`nome` AS `cliente`, `p`.`valor_total` AS `valor_total`, `fp`.`descricao` AS `forma_pagamento`, `p`.`data_compra` AS `data_compra`, `sp`.`descricao` AS `status_pedido`, concat(`en`.`logradouro`,', ',`en`.`numero`,', ',`en`.`bairro`,', ',`en`.`cidade`,', ',`en`.`estado`,', ',`en`.`cep`) AS `endereco_completo` FROM (((((((`pedidos` `p` join `itens_pedidos` `ip` on(`ip`.`id_pedido` = `p`.`id_pedido`)) join `produtos` `prod` on(`prod`.`id_produto` = `ip`.`id_produto`)) join `estabelecimentos` `e` on(`prod`.`id_estab` = `e`.`id_estab`)) join `clientes` `c` on(`c`.`id_cliente` = `p`.`id_cliente`)) join `formas_pagamentos` `fp` on(`fp`.`id_formapag` = `p`.`forma_pagamento`)) join `status_pedidos` `sp` on(`sp`.`id_status` = `p`.`status_entrega`)) join `enderecos` `en` on(`en`.`id_endereco` = `p`.`endereco`)) ;
-
--- --------------------------------------------------------
-
---
--- Estrutura para view `produtos_disponiveis`
---
-DROP TABLE IF EXISTS `produtos_disponiveis`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `produtos_disponiveis`  AS SELECT `p`.`id_produto` AS `id_produto`, `p`.`nome` AS `nome_produto`, `p`.`valor` AS `valor`, `e`.`nome_fantasia` AS `estab` FROM (`produtos` `p` join `estabelecimentos` `e` on(`e`.`id_estab` = `p`.`id_estab`)) WHERE `p`.`qtd_estoque` <> 0 ;
 
 --
 -- Índices para tabelas despejadas
@@ -918,7 +905,7 @@ ALTER TABLE `enderecos`
 -- AUTO_INCREMENT de tabela `estabelecimentos`
 --
 ALTER TABLE `estabelecimentos`
-  MODIFY `id_estab` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_estab` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de tabela `formas_pagamentos`
@@ -954,7 +941,7 @@ ALTER TABLE `logs_tokens`
 -- AUTO_INCREMENT de tabela `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de tabela `produtos`
@@ -966,7 +953,7 @@ ALTER TABLE `produtos`
 -- AUTO_INCREMENT de tabela `status_pedidos`
 --
 ALTER TABLE `status_pedidos`
-  MODIFY `id_status` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_status` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de tabela `tipo_estabelecimentos`
