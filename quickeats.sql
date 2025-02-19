@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 18/02/2025 às 14:12
+-- Tempo de geração: 19/02/2025 às 19:21
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -117,6 +117,21 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `contagem_pedidos_mes` (IN `p_id_est
         ano, mes;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `exibir_enderecos_cliente` (IN `p_id_cliente` INT)   BEGIN
+    SELECT 
+        e.id_endereco, 
+        e.logradouro, 
+        e.numero, 
+        e.bairro, 
+        e.cidade, 
+        e.estado, 
+        e.cep 
+    FROM enderecos e
+    INNER JOIN enderecos_clientes ec 
+        ON ec.id_endereco = e.id_endereco
+    WHERE ec.id_cliente = p_id_cliente;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `exibir_pedidos_cliente` (IN `p_id_cliente` INT)   BEGIN
     SELECT 
         p.id_pedido,
@@ -140,6 +155,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `exibir_pedidos_estabelecimento` (IN
         p.status_entrega,
         p.valor_total,
         GROUP_CONCAT(pr.nome SEPARATOR ', ') AS produtos,
+        ip.qtd_produto AS quantidade,
         f.descricao AS forma_pagamento,
         CONCAT(e.logradouro, ', ', e.numero, ', ', e.bairro, ', ', e.cidade, ' - ', e.estado, ', ', e.cep) AS endereco
     FROM pedidos AS p
@@ -219,7 +235,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `realizar_pedido` (IN `p_id_cliente`
         id_cliente, endereco, forma_pagamento, status_entrega, data_compra, valor_total
     ) 
     VALUES (
-        p_id_cliente, p_endereco, p_forma_pagamento, 1, NOW(), 0
+        p_id_cliente, p_endereco, p_forma_pagamento, 2, NOW(), 0
     );
 
     -- Recupera o último ID gerado para o pedido
@@ -315,7 +331,8 @@ INSERT INTO `clientes` (`id_cliente`, `nome`, `cpf`, `data_nasc`, `telefone`, `e
 (2, 'Mariana Oliveira Santos', '437.215.098-76', '1995-06-15', '(11) 98765-4321', 'mariana.santos@teste.com', 'senhaSegura123', 1),
 (3, 'Roberto Almeida Costa', '152.987.654-01', '1988-12-03', '(21) 99988-7766', 'roberto.almeida@teste.com', 'minhaSenha456', 1),
 (4, 'Carla Beatriz Ferreira', '254.632.198-87', '1992-04-22', '(31) 91234-5678', 'carla.ferreira@teste.com', 'outraSenha789', 1),
-(5, 'Pedro Henrique Souza', '345.768.902-65', '2001-09-10', '(41) 96543-2109', 'pedro.souza@teste.com', 'senhaPedro123', 1);
+(5, 'Pedro Henrique Souza', '345.768.902-65', '2001-09-10', '(41) 96543-2109', 'pedro.souza@teste.com', 'senhaPedro123', 1),
+(6, 'Ronaldo Silveira', '1234567891', '2002-02-22', '195226512', 'ronaldo@teste.com', '$2y$12$RjB8fKNNrPDTEW4xbMNoIuDnasjQ7vbn9.okm/lUpbm07jdbHJbCK', 0);
 
 --
 -- Acionadores `clientes`
@@ -402,7 +419,8 @@ INSERT INTO `enderecos_clientes` (`id_endereco`, `id_cliente`) VALUES
 (2, 2),
 (3, 3),
 (4, 4),
-(5, 5);
+(5, 5),
+(1, 6);
 
 -- --------------------------------------------------------
 
@@ -639,7 +657,9 @@ INSERT INTO `itens_pedidos` (`id_pedido`, `id_produto`, `qtd_produto`) VALUES
 (3, 4, 3),
 (4, 2, 5),
 (5, 5, 4),
-(6, 6, 2);
+(6, 6, 2),
+(8, 7, 2),
+(8, 3, 3);
 
 -- --------------------------------------------------------
 
@@ -679,13 +699,14 @@ CREATE TABLE `pedidos` (
 --
 
 INSERT INTO `pedidos` (`id_pedido`, `id_cliente`, `valor_total`, `forma_pagamento`, `data_compra`, `status_entrega`, `endereco`) VALUES
-(1, 1, 79.80, 1, '2025-01-16 12:31:16', 2, 2),
+(1, 1, 79.80, 1, '2025-01-16 12:31:16', 3, 2),
 (2, 2, 23.90, 2, '2025-01-16 12:31:16', 3, 3),
 (3, 3, 149.70, 1, '2025-01-16 12:31:16', 4, 1),
 (4, 4, 42.50, 3, '2025-01-16 12:31:16', 3, 4),
 (5, 5, 51.60, 2, '2025-01-16 12:31:16', 2, 2),
 (6, 1, 7.98, 1, '2025-01-16 12:33:00', 5, 2),
-(7, 1, 50.00, 1, '2025-02-18 14:04:09', 2, 3);
+(7, 1, 50.00, 1, '2025-02-18 14:04:09', 2, 3),
+(8, 6, 151.50, 2, '2025-02-19 15:10:04', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -727,10 +748,11 @@ CREATE TABLE `produtos` (
 INSERT INTO `produtos` (`id_produto`, `nome`, `valor`, `id_categoria`, `id_estab`, `qtd_estoque`) VALUES
 (1, 'Arroz Branco 5kg', 23.90, 1, 2, 49),
 (2, 'Feijão Carioca 1kg', 8.50, 1, 2, 95),
-(3, 'Pizza Calabresa', 39.90, 2, 6, 18),
+(3, 'Pizza Calabresa', 39.90, 2, 6, 15),
 (4, 'Peixe Grelhado', 49.90, 2, 5, 12),
 (5, 'Sabonete Líquido 500ml', 12.90, 3, 4, 26),
-(6, 'Macarrão Instantâneo 80g', 3.99, 1, 3, 188);
+(6, 'Macarrão Instantâneo 80g', 3.99, 1, 3, 188),
+(7, 'BreadSticks', 15.90, 2, 6, 48);
 
 -- --------------------------------------------------------
 
@@ -931,7 +953,7 @@ ALTER TABLE `categorias_produtos`
 -- AUTO_INCREMENT de tabela `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de tabela `enderecos`
@@ -967,7 +989,7 @@ ALTER TABLE `historico_estabelecimentos`
 -- AUTO_INCREMENT de tabela `itens_pedidos`
 --
 ALTER TABLE `itens_pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de tabela `logs_tokens`
@@ -979,13 +1001,13 @@ ALTER TABLE `logs_tokens`
 -- AUTO_INCREMENT de tabela `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de tabela `produtos`
 --
 ALTER TABLE `produtos`
-  MODIFY `id_produto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_produto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de tabela `status_pedidos`
