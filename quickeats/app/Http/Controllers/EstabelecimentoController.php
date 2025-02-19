@@ -68,8 +68,23 @@ class EstabelecimentoController extends Controller
 
     public function exibirPaginaInicial()
     {
-        // Retorna a view 'home-restaurante' com os dados dos estabelecimentos populares
-        return view('home_restaurante');
+        // Obtendo o estabelecimento autenticado
+        $estabelecimento = Auth::guard('estabelecimento')->user();
+
+        // Pegando o ID do estabelecimento logado
+        $id_estabelecimento = $estabelecimento->id_estab; 
+
+        // Executando o procedure e obtendo os pedidos
+        $pedidos = DB::select("CALL exibir_pedidos_estabelecimento(?)", [$id_estabelecimento]);
+
+        // Contadores para os diferentes status
+        $totalPedidos = count($pedidos);
+        $pendentes = collect($pedidos)->where('status_entrega', 2)->count();
+        $preparacao = collect($pedidos)->where('status_entrega', 3)->count();
+        $emRota = collect($pedidos)->where('status_entrega', 4)->count();
+        $finalizados = collect($pedidos)->where('status_entrega', 5)->count();
+
+        return view('home_restaurante', compact('totalPedidos', 'pendentes', 'preparacao', 'emRota', 'finalizados'));
     }
 
     public function exibirPaginaPedidos()
@@ -84,5 +99,20 @@ class EstabelecimentoController extends Controller
         $pedidos = DB::select("CALL exibir_pedidos_estabelecimento(?)", [$id_estabelecimento]);
 
         return view('pedidos_restaurante', compact('pedidos'));
+    }
+
+    public function alterarStatus(Request $request, $id)
+    {
+        // Verificar se o pedido existe
+        $pedido = DB::select("SELECT * FROM pedidos WHERE id_pedido = ?", [$id]);
+
+        if (empty($pedido)) { // Como DB::select() retorna um array, verificamos se está vazio
+            return redirect()->back()->with('error', 'Pedido não encontrado.');
+        }
+
+        // Atualizar o status do pedido
+        DB::update("UPDATE pedidos SET status_entrega = ? WHERE id_pedido = ?", [$request->novo_status, $id]);
+
+        return redirect()->back()->with('success', 'Status atualizado com sucesso.');
     }
 }
