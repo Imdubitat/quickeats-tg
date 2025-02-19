@@ -14,7 +14,7 @@
 <header>
         <nav class="navbar navbar-expand-sm navbar-dark fixed-top">
             <div class="container">
-                <a class="navbar-brand" href="">
+                <a class="navbar-brand" href="{{ route('home_restaurante') }}">
                     <img src="{{ asset('images/quick_logo.png') }}" style="width: 150px;">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
