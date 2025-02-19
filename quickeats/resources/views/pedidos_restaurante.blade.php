@@ -28,49 +28,62 @@
     </ul>
 
     <div class="tab-content mt-3" id="pedidosTabsContent">
-        @foreach(['pendentes' => 2, 'preparacao' => 3, 'rota' => 4, 'finalizados' => 5] as $tab => $status)
-            <div class="tab-pane fade @if($loop->first) show active @endif" id="{{ $tab }}" role="tabpanel">
-                <div class="row">
-                    @php
-                        $filteredPedidos = array_filter($pedidos, function($pedido) use ($status) {
-                            return $pedido->status_entrega == $status;
-                        });
-                    @endphp
+    @foreach(['pendentes' => 2, 'preparacao' => 3, 'rota' => 4, 'finalizados' => 5] as $tab => $status)
+        <div class="tab-pane fade @if($loop->first) show active @endif" id="{{ $tab }}" role="tabpanel">
+            <div class="row">
+                @php
+                    $filteredPedidos = array_filter($pedidos, function($pedido) use ($status) {
+                        return $pedido->status_entrega == $status;
+                    });
+                @endphp
 
-                    @foreach($filteredPedidos as $pedido)
-                        <div class="col-md-4">
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h5 class="card-title">Pedido #{{ $pedido->id_pedido }}</h5>
-                                    <p class="card-text"><strong>Cliente:</strong> {{ $pedido->nome_cliente }}</p>
-                                    <p class="card-text">
-                                        <strong>Valor:</strong> R$ {{ number_format($pedido->valor_total, 2, ',', '.') }}
-                                    </p>
-                                    <p class="card-text">
-                                        <strong>Forma de Pagamento:</strong> {{ $pedido->forma_pagamento }}
-                                    </p>
-                                    <p class="card-text">
-                                        <strong>Data:</strong> {{ \Carbon\Carbon::parse($pedido->data_compra)->format('d/m/Y H:i') }}
-                                    </p>
-                                    <p class="card-text">
-                                        <strong>Endereço:</strong> {{ $pedido->endereco }}
-                                    </p>
-                                    <p class="card-text">
-                                        <strong>Produtos:</strong> {{ $pedido->produtos }}
-                                    </p>
-                                    <p class="card-text">
-                                        <strong>Status:</strong> {{ $pedido->status_entrega }}
-                                    </p>
-                                </div>
+                @foreach($filteredPedidos as $pedido)
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Pedido #{{ $pedido->id_pedido }}</h5>
+                                <p class="card-text"><strong>Cliente:</strong> {{ $pedido->nome_cliente }}</p>
+                                <p class="card-text">
+                                    <strong>Valor:</strong> R$ {{ number_format($pedido->valor_total, 2, ',', '.') }}
+                                </p>
+                                <p class="card-text">
+                                    <strong>Forma de Pagamento:</strong> {{ $pedido->forma_pagamento }}
+                                </p>
+                                <p class="card-text">
+                                    <strong>Data:</strong> {{ \Carbon\Carbon::parse($pedido->data_compra)->format('d/m/Y H:i') }}
+                                </p>
+                                <p class="card-text">
+                                    <strong>Endereço:</strong> {{ $pedido->endereco }}
+                                </p>
+                                <p class="card-text">
+                                    <strong>Produtos:</strong> {{ $pedido->produtos }} x {{ $pedido->quantidade }}
+                                </p>
+                                @if($pedido->status_entrega == 2) 
+                                    {{-- Se o pedido estiver aguardando aprovação --}}
+                                    <form action="{{ route('pedidos_status', $pedido->id_pedido) }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="novo_status" value="3">
+                                        <button type="submit" class="btn btn-success">Aceitar Pedido</button>
+                                    </form>
+                                @elseif($pedido->status_entrega == 3) 
+                                    {{-- Se o pedido estiver em preparação --}}
+                                    <form action="{{ route('pedidos_status', $pedido->id_pedido) }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="novo_status" value="4">
+                                        <button type="submit" class="btn btn-primary">Marcar como Pronto</button>
+                                    </form>
+                                @endif
                             </div>
                         </div>
-                    @endforeach
-                </div>
-                @if(empty($filteredPedidos))
-                    <p class="text-muted text-center">Nenhum pedido encontrado.</p>
-                @endif
+                    </div>
+                @endforeach
             </div>
-        @endforeach
-    </div>
+            @if(empty($filteredPedidos))
+                <p class="text-muted text-center">Nenhum pedido encontrado.</p>
+            @endif
+        </div>
+    @endforeach
+</div>
+
 </section>
 @endsection

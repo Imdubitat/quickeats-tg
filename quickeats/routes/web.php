@@ -60,4 +60,7 @@ Route::middleware('auth:estabelecimento')->group(function () {
 
     // Página gerenciar pedidos estabelecimento
     Route::get('/pedidos-restaurante', [EstabelecimentoController::class, 'exibirPaginaPedidos'])->name('pedidos_restaurante');
+
+    // Alterar status pedido
+    Route::post('/pedidos-status/{id}', [EstabelecimentoController::class, 'alterarStatus'])->name('pedidos_status');
 });
