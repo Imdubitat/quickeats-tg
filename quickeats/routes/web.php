@@ -37,6 +37,15 @@ Route::middleware('auth:cliente')->group(function () {
 
     // Aumentar quantidade de produto no carrinho
     Route::post('/aumenta-carrinho', [ClienteController::class, 'aumentarQuantidadeCarrinho'])->name('aumentar_carrinho');
+
+    // Exibir endereços cadastrados
+    Route::post('/enderecos', [ClienteController::class, 'exibirEnderecos'])->name('exibir_enderecos');
+
+    // Exibir formas de pagamento
+    Route::post('/pagamento', [ClienteController::class, 'exibirFormasPagamento'])->name('exibir_pagamentos');
+
+    // Realizar pedido
+    Route::post('/realizar-pedido', [ClienteController::class, 'realizarPedido'])->name('realizar_pedido');
 });
 
 

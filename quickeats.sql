@@ -198,43 +198,59 @@ e.numero, e.bairro, e.cidade, e.estado, e.cep
 FROM estabelecimentos as e 
 ORDER BY e.nome_fantasia$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `realizar_pedido` (IN `p_id_cliente` INT, IN `p_id_produto` INT, IN `p_endereco` INT, IN `p_forma_pagamento` INT, IN `p_qtd_produto` INT)   BEGIN
-    -- Declara a variável para armazenar o id_pedido gerado automaticamente
+CREATE DEFINER=`root`@`localhost` PROCEDURE `produtos_carrinho` (IN `p_id_cliente` INT)   BEGIN
+    SELECT ca.id_cliente AS cliente, 
+           ca.id_produto AS id_produto,
+           p.nome AS nome_produto, 
+           ca.qtd_produto AS qtd_produto, 
+           p.valor AS valor
+    FROM carrinho ca
+    INNER JOIN produtos p ON p.id_produto = ca.id_produto
+    WHERE ca.id_cliente = p_id_cliente;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `realizar_pedido` (IN `p_id_cliente` INT, IN `p_endereco` INT, IN `p_forma_pagamento` INT)   BEGIN
+    -- Declara variáveis
     DECLARE p_id_pedido INT;
     DECLARE p_valor_total DECIMAL(10,2);
 
-    -- Inserir o pedido na tabela pedidos (id_pedido é auto_increment e id_status será sempre 1)
+    -- Criar o pedido na tabela pedidos (id_status será sempre 1)
     INSERT INTO pedidos (
         id_cliente, endereco, forma_pagamento, status_entrega, data_compra, valor_total
-    )
+    ) 
     VALUES (
         p_id_cliente, p_endereco, p_forma_pagamento, 1, NOW(), 0
     );
 
-    -- Recupera o último id_pedido gerado automaticamente
+    -- Recupera o último ID gerado para o pedido
     SET p_id_pedido = LAST_INSERT_ID();
 
-    -- Inserir o item no pedido
-    INSERT INTO itens_pedidos (id_pedido, id_produto, qtd_produto) 
-    VALUES (p_id_pedido, p_id_produto, p_qtd_produto);
-    
-    -- Calcular o valor total baseado na soma do preço dos produtos e quantidades
+    -- Inserir os itens do carrinho na tabela itens_pedidos
+    INSERT INTO itens_pedidos (id_pedido, id_produto, qtd_produto)
+    SELECT p_id_pedido, id_produto, qtd_produto
+    FROM carrinho
+    WHERE id_cliente = p_id_cliente;
+
+    -- Calcular o valor total do pedido
     SELECT SUM(ip.qtd_produto * p.valor) 
     INTO p_valor_total
     FROM itens_pedidos ip
     JOIN produtos p ON ip.id_produto = p.id_produto
     WHERE ip.id_pedido = p_id_pedido;
-    
+
     -- Atualizar o valor total do pedido na tabela pedidos
     UPDATE pedidos
     SET valor_total = p_valor_total
     WHERE id_pedido = p_id_pedido;
-    
+
     -- Atualizar o estoque dos produtos
     UPDATE produtos p
     JOIN itens_pedidos ip ON p.id_produto = ip.id_produto
     SET p.qtd_estoque = p.qtd_estoque - ip.qtd_produto
     WHERE ip.id_pedido = p_id_pedido;
+
+    -- Esvaziar o carrinho do cliente
+    DELETE FROM carrinho WHERE id_cliente = p_id_cliente;
 
 END$$
 
@@ -719,6 +735,19 @@ INSERT INTO `produtos` (`id_produto`, `nome`, `valor`, `id_categoria`, `id_estab
 -- --------------------------------------------------------
 
 --
+-- Estrutura stand-in para view `produtos_disponiveis`
+-- (Veja abaixo para a visão atual)
+--
+CREATE TABLE `produtos_disponiveis` (
+`id_produto` int(11)
+,`nome_produto` varchar(60)
+,`valor` decimal(10,2)
+,`estab` varchar(255)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `resets_senhas`
 --
 
@@ -780,6 +809,15 @@ DROP TABLE IF EXISTS `pedidos_estabelecimento`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `pedidos_estabelecimento`  AS SELECT `e`.`id_estab` AS `id_estab`, `e`.`nome_fantasia` AS `nome_fantasia`, `p`.`id_pedido` AS `id_pedido`, `c`.`nome` AS `cliente`, `p`.`valor_total` AS `valor_total`, `fp`.`descricao` AS `forma_pagamento`, `p`.`data_compra` AS `data_compra`, `sp`.`descricao` AS `status_pedido`, concat(`en`.`logradouro`,', ',`en`.`numero`,', ',`en`.`bairro`,', ',`en`.`cidade`,', ',`en`.`estado`,', ',`en`.`cep`) AS `endereco_completo` FROM (((((((`pedidos` `p` join `itens_pedidos` `ip` on(`ip`.`id_pedido` = `p`.`id_pedido`)) join `produtos` `prod` on(`prod`.`id_produto` = `ip`.`id_produto`)) join `estabelecimentos` `e` on(`prod`.`id_estab` = `e`.`id_estab`)) join `clientes` `c` on(`c`.`id_cliente` = `p`.`id_cliente`)) join `formas_pagamentos` `fp` on(`fp`.`id_formapag` = `p`.`forma_pagamento`)) join `status_pedidos` `sp` on(`sp`.`id_status` = `p`.`status_entrega`)) join `enderecos` `en` on(`en`.`id_endereco` = `p`.`endereco`)) ;
 
+-- --------------------------------------------------------
+
+--
+-- Estrutura para view `produtos_disponiveis`
+--
+DROP TABLE IF EXISTS `produtos_disponiveis`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `produtos_disponiveis`  AS SELECT `p`.`id_produto` AS `id_produto`, `p`.`nome` AS `nome_produto`, `p`.`valor` AS `valor`, `e`.`nome_fantasia` AS `estab` FROM (`produtos` `p` join `estabelecimentos` `e` on(`e`.`id_estab` = `p`.`id_estab`)) WHERE `p`.`qtd_estoque` <> 0 ;
+
 --
 -- Índices para tabelas despejadas
 --
@@ -806,8 +844,8 @@ ALTER TABLE `enderecos`
 -- Índices de tabela `enderecos_clientes`
 --
 ALTER TABLE `enderecos_clientes`
-  ADD PRIMARY KEY (`id_endereco`),
-  ADD KEY `fk_endereco_cliente` (`id_cliente`);
+  ADD KEY `fk_endereco_cliente` (`id_cliente`),
+  ADD KEY `fk_endereco_cliente1` (`id_endereco`);
 
 --
 -- Índices de tabela `estabelecimentos`
@@ -840,8 +878,8 @@ ALTER TABLE `historico_estabelecimentos`
 -- Índices de tabela `itens_pedidos`
 --
 ALTER TABLE `itens_pedidos`
-  ADD PRIMARY KEY (`id_pedido`),
-  ADD KEY `fk_itens_produtos` (`id_produto`);
+  ADD KEY `fk_itens_produtos` (`id_produto`),
+  ADD KEY `fk_itens_produto1` (`id_pedido`);
 
 --
 -- Índices de tabela `logs_tokens`
@@ -994,6 +1032,7 @@ ALTER TABLE `historico_estabelecimentos`
 -- Restrições para tabelas `itens_pedidos`
 --
 ALTER TABLE `itens_pedidos`
+  ADD CONSTRAINT `fk_itens_produto1` FOREIGN KEY (`id_pedido`) REFERENCES `pedidos` (`id_pedido`),
   ADD CONSTRAINT `fk_itens_produtos` FOREIGN KEY (`id_produto`) REFERENCES `produtos` (`id_produto`);
 
 --

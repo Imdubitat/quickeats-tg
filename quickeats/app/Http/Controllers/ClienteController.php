@@ -179,4 +179,39 @@ class ClienteController extends Controller
 
         return redirect()->back()->with('success', 'Quantidade do produto aumentada!');
     }
+
+    public function exibirEnderecos()
+    {
+        $id_cliente = auth()->guard('cliente')->id();
+
+        $enderecos = DB::select('CALL exibir_enderecos_cliente(?)', [$id_cliente]);
+    
+        return view('checkout_endereco', compact('enderecos'));
+    }
+
+    public function exibirFormasPagamento(Request $request)
+    {
+        $id_cliente = auth()->guard('cliente')->id();
+        $formas_pagamento = DB::table('formas_pagamentos')->get();
+
+        session(['id_endereco' => $request->endereco]);
+
+        return view('checkout_pagamento', compact('formas_pagamento'));
+    }
+
+    public function realizarPedido(Request $request)
+    {
+        $id_cliente = auth()->guard('cliente')->id();
+        $id_pagamento = $request->input('pagamento');
+        $id_endereco = session('id_endereco');
+
+        if (!$id_endereco) {
+            return redirect()->back()->with('error', 'Endereço não selecionado.');
+        }
+
+        DB::select('CALL realizar_pedido(?, ?, ?)', [$id_cliente, $id_endereco, $id_pagamento]);
+
+        return redirect()->route('carrinho')->with('success', 'Pedido realizado!');
+    }
+
 }

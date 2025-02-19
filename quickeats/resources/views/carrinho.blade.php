@@ -62,7 +62,7 @@
 
         @if(count($produtos) > 0)
             <div class="text-center mt-4">
-                <form action="" method="POST">
+                <form action="{{ route('exibir_enderecos') }}" method="POST">
                     @csrf
                     <button type="submit" class="btn btn-custom4 w-50">Finalizar Compra</button>
                 </form>
