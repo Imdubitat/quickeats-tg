@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 20/02/2025 às 18:42
+-- Tempo de geração: 20/02/2025 às 19:11
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -782,6 +782,7 @@ CREATE TABLE `produtos_disponiveis` (
 `id_produto` int(11)
 ,`nome_produto` varchar(60)
 ,`valor` decimal(10,2)
+,`id_estab` int(11)
 ,`estab` varchar(255)
 );
 
@@ -858,7 +859,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `produtos_disponiveis`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `produtos_disponiveis`  AS SELECT `p`.`id_produto` AS `id_produto`, `p`.`nome` AS `nome_produto`, `p`.`valor` AS `valor`, `e`.`nome_fantasia` AS `estab` FROM (`produtos` `p` join `estabelecimentos` `e` on(`e`.`id_estab` = `p`.`id_estab`)) WHERE `p`.`qtd_estoque` <> 0 ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `produtos_disponiveis`  AS SELECT `p`.`id_produto` AS `id_produto`, `p`.`nome` AS `nome_produto`, `p`.`valor` AS `valor`, `e`.`id_estab` AS `id_estab`, `e`.`nome_fantasia` AS `estab` FROM (`produtos` `p` join `estabelecimentos` `e` on(`e`.`id_estab` = `p`.`id_estab`)) WHERE `p`.`qtd_estoque` > 0 ;
 
 --
 -- Índices para tabelas despejadas

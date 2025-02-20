@@ -88,6 +88,18 @@ class ClienteController extends Controller
         $id_produto = $request->input('produto');
         $qtd_produto = $request->input('qtd_produto');
         $data_adicao = now(); // Sempre define a data atual
+        $id_res = $request->input('id_estab');
+
+        // Verifica se já existe um produto no carrinho de outro estabelecimento
+        $produtoOutroEstab = DB::table('carrinho')
+            ->join('produtos', 'carrinho.id_produto', '=', 'produtos.id_produto')
+            ->where('carrinho.id_cliente', $id_cliente)
+            ->where('produtos.id_estab', '!=', $id_res)
+            ->exists();
+
+        if ($produtoOutroEstab) {
+            return redirect()->back()->with('error', 'Você já tem produtos de outro estabelecimento no carrinho. Esvazie o carrinho antes de adicionar novos produtos.');
+        }
 
         // Verifica se o produto já está no carrinho do cliente
         $produtoExistente = DB::table('carrinho')
