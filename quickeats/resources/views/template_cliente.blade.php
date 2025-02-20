@@ -31,7 +31,7 @@
                             <a class="nav-link text-white text-nowrap" href="{{ route('catalogo_produtos') }}">Produtos</a>
                         </li>
                         <li>
-                            <a class="nav-link text-white text-nowrap" href="">Meus pedidos</a>
+                            <a class="nav-link text-white text-nowrap" href="{{ route('pedidos_cliente') }}">Meus pedidos</a>
                         </li>
                     </ul>
 

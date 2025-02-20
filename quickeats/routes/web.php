@@ -46,6 +46,12 @@ Route::middleware('auth:cliente')->group(function () {
 
     // Realizar pedido
     Route::post('/realizar-pedido', [ClienteController::class, 'realizarPedido'])->name('realizar_pedido');
+
+    // Página com os pedidos realizados
+    Route::get('/pedidos-cliente', [ClienteController::class, 'exibirPaginaPedidos'])->name('pedidos_cliente');
+
+    // Solicitar cancelamento do pedido
+    Route::post('/cancelar-pedido/{id}', [ClienteController::class, 'cancelarPedido'])->name('cancelar_pedido');
 });
 
 

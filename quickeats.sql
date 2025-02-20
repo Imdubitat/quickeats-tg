@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Tempo de geração: 19/02/2025 às 19:21
+-- Host: localhost
+-- Tempo de geração: 20/02/2025 às 14:23
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -135,13 +135,20 @@ END$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `exibir_pedidos_cliente` (IN `p_id_cliente` INT)   BEGIN
     SELECT 
         p.id_pedido,
+        c.nome AS nome_cliente,
         p.data_compra,
         p.status_entrega,
         p.valor_total,
-        GROUP_CONCAT(pr.nome SEPARATOR ', ') AS produtos
+        GROUP_CONCAT(DISTINCT CONCAT(pr.nome, ' x ', ip.qtd_produto) SEPARATOR ', ') AS produtos,
+        f.descricao AS forma_pagamento,
+        CONCAT(e.logradouro, ', ', e.numero, ', ', e.bairro, ', ', e.cidade, ' - ', e.estado, ', ', e.cep) AS endereco
     FROM pedidos AS p
-    LEFT JOIN itens_pedidos AS ip ON p.id_pedido = ip.id_pedido
-    LEFT JOIN produtos AS pr ON ip.id_produto = pr.id_produto
+    INNER JOIN clientes AS c ON p.id_cliente = c.id_cliente
+    INNER JOIN itens_pedidos AS ip ON p.id_pedido = ip.id_pedido
+    INNER JOIN produtos AS pr ON ip.id_produto = pr.id_produto
+    INNER JOIN formas_pagamentos AS f ON p.forma_pagamento = f.id_formapag
+    INNER JOIN enderecos_clientes AS ec ON ec.id_cliente = p.endereco
+    INNER JOIN enderecos AS e ON ec.id_endereco = e.id_endereco
     WHERE p.id_cliente = p_id_cliente
     GROUP BY p.id_pedido
     ORDER BY p.data_compra DESC;
@@ -332,7 +339,8 @@ INSERT INTO `clientes` (`id_cliente`, `nome`, `cpf`, `data_nasc`, `telefone`, `e
 (3, 'Roberto Almeida Costa', '152.987.654-01', '1988-12-03', '(21) 99988-7766', 'roberto.almeida@teste.com', 'minhaSenha456', 1),
 (4, 'Carla Beatriz Ferreira', '254.632.198-87', '1992-04-22', '(31) 91234-5678', 'carla.ferreira@teste.com', 'outraSenha789', 1),
 (5, 'Pedro Henrique Souza', '345.768.902-65', '2001-09-10', '(41) 96543-2109', 'pedro.souza@teste.com', 'senhaPedro123', 1),
-(6, 'Ronaldo Silveira', '1234567891', '2002-02-22', '195226512', 'ronaldo@teste.com', '$2y$12$RjB8fKNNrPDTEW4xbMNoIuDnasjQ7vbn9.okm/lUpbm07jdbHJbCK', 0);
+(6, 'Ronaldo Silveira', '1234567891', '2002-02-22', '195226512', 'ronaldo@teste.com', '$2y$12$RjB8fKNNrPDTEW4xbMNoIuDnasjQ7vbn9.okm/lUpbm07jdbHJbCK', 0),
+(7, 'teste', '49333379851', '2001-03-02', '19971794122', 'teste@exemplo.com', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', 0);
 
 --
 -- Acionadores `clientes`
@@ -420,7 +428,9 @@ INSERT INTO `enderecos_clientes` (`id_endereco`, `id_cliente`) VALUES
 (3, 3),
 (4, 4),
 (5, 5),
-(1, 6);
+(1, 6),
+(3, 7),
+(5, 7);
 
 -- --------------------------------------------------------
 
@@ -456,7 +466,7 @@ CREATE TABLE `estabelecimentos` (
 
 INSERT INTO `estabelecimentos` (`id_estab`, `razao_social`, `nome_fantasia`, `cnpj`, `telefone`, `cpf_titular`, `rg_titular`, `cnae`, `logradouro`, `numero`, `bairro`, `cidade`, `estado`, `cep`, `inicio_expediente`, `termino_expediente`, `email`, `senha`, `tipo`) VALUES
 (1, 'Restaurante Sabor Caseiro Ltda.', 'Novo Sabor Caseiro', '12.345.678/0001-90', '(11) 99999-9999', '987.654.321-00', '98.765.432-1', '5611-2', 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'novocontato@saborcaseiro.com', 'NovaSenhaSegura2', 1),
-(2, 'Mercado Bom Preço Ltda.', 'Bom Preço', '23.456.789/0001-91', '(21) 99876-5432', '987.654.321-00', '98.765.432-1', '4711-3', 'Avenida Brasil', 456, 'Zona Sul', 'Rio de Janeiro', 'RJ', '20000-000', '07:00:00', '23:00:00', 'contato@bompreco.com', 'senhaSegura456', 2),
+(2, 'Mercado Bom Preço Ltda.', 'Bom Preço', '23.456.789/0001-91', '(21) 99876-5432', '987.654.321-00', '98.765.432-1', '4711-3', 'Avenida Brasil', 456, 'Zona Sul', 'Rio de Janeiro', 'RJ', '20000-000', '07:00:00', '23:00:00', 'contato@bompreco.com', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', 2),
 (3, 'Restaurante Delícias do Campo Ltda.', 'Delícias do Campo', '34.567.890/0001-92', '(31) 91234-5678', '654.321.987-00', '65.432.198-7', '5611-2', 'Rua Tranquila', 789, 'Bairro Novo', 'Belo Horizonte', 'MG', '30000-000', '11:00:00', '23:00:00', 'contato@deliciasdocampo.com', 'senhaSegura789', 1),
 (4, 'Supermercado Sempre Fresco Ltda.', 'Sempre Fresco', '45.678.901/0001-93', '(41) 98765-6789', '321.987.654-00', '32.198.765-4', '4711-3', 'Rua Principal', 321, 'Zona Norte', 'Curitiba', 'PR', '80000-000', '08:00:00', '22:00:00', 'contato@semprefresco.com', 'senhaSuper123', 2),
 (5, 'Restaurante Sabores do Mar Ltda.', 'Sabores do Mar', '56.789.012/0001-94', '(51) 97654-3210', '210.987.654-00', '21.098.765-4', '5611-2', 'Rua da Praia', 654, 'Centro', 'Porto Alegre', 'RS', '90000-000', '12:00:00', '23:00:00', 'contato@saboresdomar.com', 'senhaSabores123', 1),
@@ -633,7 +643,8 @@ INSERT INTO `historico_estabelecimentos` (`id_alteracao`, `id_estab`, `campo_alt
 (11, 1, 'email', 'contato@saborcaseiro.com', 'novocontato@saborcaseiro.com', '2025-01-16 09:28:37'),
 (12, 1, 'cidade', 'São Paulo', 'Belo Horizonte', '2025-01-16 09:34:35'),
 (13, 1, 'estado', 'SP', 'MG', '2025-01-16 09:34:35'),
-(14, 1, 'senha', 'senhaSegura123', 'NovaSenhaSegura2', '2025-01-16 09:44:47');
+(14, 1, 'senha', 'senhaSegura123', 'NovaSenhaSegura2', '2025-01-16 09:44:47'),
+(15, 2, 'senha', 'senhaSegura456', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', '2025-02-19 21:06:59');
 
 -- --------------------------------------------------------
 
@@ -659,7 +670,12 @@ INSERT INTO `itens_pedidos` (`id_pedido`, `id_produto`, `qtd_produto`) VALUES
 (5, 5, 4),
 (6, 6, 2),
 (8, 7, 2),
-(8, 3, 3);
+(8, 3, 3),
+(9, 1, 1),
+(9, 2, 1),
+(10, 7, 2),
+(10, 3, 1),
+(11, 1, 21);
 
 -- --------------------------------------------------------
 
@@ -705,8 +721,11 @@ INSERT INTO `pedidos` (`id_pedido`, `id_cliente`, `valor_total`, `forma_pagament
 (4, 4, 42.50, 3, '2025-01-16 12:31:16', 3, 4),
 (5, 5, 51.60, 2, '2025-01-16 12:31:16', 2, 2),
 (6, 1, 7.98, 1, '2025-01-16 12:33:00', 5, 2),
-(7, 1, 50.00, 1, '2025-02-18 14:04:09', 2, 3),
-(8, 6, 151.50, 2, '2025-02-19 15:10:04', 2, 1);
+(7, 1, 50.00, 1, '2025-02-18 14:04:09', 6, 3),
+(8, 6, 151.50, 2, '2025-02-19 15:10:04', 2, 1),
+(9, 7, 32.40, 1, '2025-02-19 21:06:19', 6, 3),
+(10, 7, 71.70, 1, '2025-02-20 07:55:21', 6, 3),
+(11, 7, 501.90, 2, '2025-02-20 08:21:19', 6, 5);
 
 -- --------------------------------------------------------
 
@@ -746,13 +765,13 @@ CREATE TABLE `produtos` (
 --
 
 INSERT INTO `produtos` (`id_produto`, `nome`, `valor`, `id_categoria`, `id_estab`, `qtd_estoque`) VALUES
-(1, 'Arroz Branco 5kg', 23.90, 1, 2, 49),
-(2, 'Feijão Carioca 1kg', 8.50, 1, 2, 95),
-(3, 'Pizza Calabresa', 39.90, 2, 6, 15),
+(1, 'Arroz Branco 5kg', 23.90, 1, 2, 27),
+(2, 'Feijão Carioca 1kg', 8.50, 1, 2, 94),
+(3, 'Pizza Calabresa', 39.90, 2, 6, 14),
 (4, 'Peixe Grelhado', 49.90, 2, 5, 12),
 (5, 'Sabonete Líquido 500ml', 12.90, 3, 4, 26),
 (6, 'Macarrão Instantâneo 80g', 3.99, 1, 3, 188),
-(7, 'BreadSticks', 15.90, 2, 6, 48);
+(7, 'BreadSticks', 15.90, 2, 6, 46);
 
 -- --------------------------------------------------------
 
@@ -801,7 +820,9 @@ INSERT INTO `status_pedidos` (`id_status`, `descricao`) VALUES
 (2, 'aguardando aprovação'),
 (3, 'em preparação'),
 (4, 'em rota de entrega'),
-(5, 'finalizado');
+(5, 'finalizado'),
+(6, 'aguardando cancelamento'),
+(7, 'cancelado');
 
 -- --------------------------------------------------------
 
@@ -953,7 +974,7 @@ ALTER TABLE `categorias_produtos`
 -- AUTO_INCREMENT de tabela `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de tabela `enderecos`
@@ -983,13 +1004,13 @@ ALTER TABLE `historico_clientes`
 -- AUTO_INCREMENT de tabela `historico_estabelecimentos`
 --
 ALTER TABLE `historico_estabelecimentos`
-  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de tabela `itens_pedidos`
 --
 ALTER TABLE `itens_pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de tabela `logs_tokens`
@@ -1001,7 +1022,7 @@ ALTER TABLE `logs_tokens`
 -- AUTO_INCREMENT de tabela `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de tabela `produtos`
@@ -1013,7 +1034,7 @@ ALTER TABLE `produtos`
 -- AUTO_INCREMENT de tabela `status_pedidos`
 --
 ALTER TABLE `status_pedidos`
-  MODIFY `id_status` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_status` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de tabela `tipo_estabelecimentos`
