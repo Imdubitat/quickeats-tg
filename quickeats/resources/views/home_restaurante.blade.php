@@ -14,19 +14,21 @@
         <div class="row">
             <!-- Total de Pedidos -->
             <div class="col-md-4">
-                <div class="card bg-primary text-white">
-                    <div class="card-body">
-                        <h5 class="card-title">📦 Total de Pedidos</h5>
-                        <h2>{{ $totalPedidos }}</h2>
+                <a href="{{ route('pedidos_restaurante') }}" class="text-decoration-none">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">📦 Total de Pedidos</h5>
+                            <h2>{{ $totalPedidos }}</h2>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
 
             <!-- Pedidos Pendentes -->
             <div class="col-md-4">
                 <div class="card bg-warning text-dark">
                     <div class="card-body">
-                        <h5 class="card-title">⏳ Pedidos Pendentes</h5>
+                        <h5 class="card-title">⏳ Pedidos Aguardando Aprovação</h5>
                         <h2>{{ $pendentes }}</h2>
                     </div>
                 </div>
