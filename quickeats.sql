@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Tempo de geração: 20/02/2025 às 14:23
+-- Host: 127.0.0.1
+-- Tempo de geração: 20/02/2025 às 18:42
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -161,17 +161,16 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `exibir_pedidos_estabelecimento` (IN
         p.data_compra,
         p.status_entrega,
         p.valor_total,
-        GROUP_CONCAT(pr.nome SEPARATOR ', ') AS produtos,
-        ip.qtd_produto AS quantidade,
+        GROUP_CONCAT(DISTINCT CONCAT(pr.nome, ' x ', ip.qtd_produto) SEPARATOR ', ') AS produtos,
         f.descricao AS forma_pagamento,
         CONCAT(e.logradouro, ', ', e.numero, ', ', e.bairro, ', ', e.cidade, ' - ', e.estado, ', ', e.cep) AS endereco
     FROM pedidos AS p
     INNER JOIN clientes AS c ON p.id_cliente = c.id_cliente
-    LEFT JOIN itens_pedidos AS ip ON p.id_pedido = ip.id_pedido
-    LEFT JOIN produtos AS pr ON ip.id_produto = pr.id_produto
-    LEFT JOIN formas_pagamentos AS f ON p.forma_pagamento = f.id_formapag
-    LEFT JOIN enderecos_clientes AS ec ON c.id_cliente = ec.id_cliente
-    LEFT JOIN enderecos AS e ON ec.id_endereco = e.id_endereco
+    INNER JOIN itens_pedidos AS ip ON p.id_pedido = ip.id_pedido
+    INNER JOIN produtos AS pr ON ip.id_produto = pr.id_produto
+    INNER JOIN formas_pagamentos AS f ON p.forma_pagamento = f.id_formapag
+    INNER JOIN enderecos_clientes AS ec ON c.id_cliente = ec.id_cliente
+    INNER JOIN enderecos AS e ON ec.id_endereco = e.id_endereco
     WHERE pr.id_estab = p_id_estab
     GROUP BY p.id_pedido
     ORDER BY p.data_compra DESC;

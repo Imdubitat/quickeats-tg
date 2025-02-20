@@ -56,7 +56,7 @@
                                     <strong>Endereço:</strong> {{ $pedido->endereco }}
                                 </p>
                                 <p class="card-text">
-                                    <strong>Produtos:</strong> {{ $pedido->produtos }} x {{ $pedido->quantidade }}
+                                    <strong>Produtos:</strong> {{ $pedido->produtos }}
                                 </p>
                                 @if($pedido->status_entrega == 2) 
                                     {{-- Se o pedido estiver aguardando aprovação --}}

@@ -90,10 +90,7 @@ class EstabelecimentoController extends Controller
     public function exibirPaginaPedidos()
     {
         // Obtendo o estabelecimento autenticado
-        $estabelecimento = Auth::guard('estabelecimento')->user();
-
-        // Pegando o ID do estabelecimento logado
-        $id_estabelecimento = $estabelecimento->id_estab; 
+        $id_estabelecimento = Auth::guard('estabelecimento')->id();
 
         // Executando o procedure e obtendo os pedidos
         $pedidos = DB::select("CALL exibir_pedidos_estabelecimento(?)", [$id_estabelecimento]);
