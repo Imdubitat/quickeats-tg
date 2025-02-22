@@ -54,12 +54,7 @@
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="">Dashboard </a></li>
                                 <li><a class="dropdown-item" href="{{ route('adm_restaurante') }}">Minha conta</a></li>
-                                <li>
-                                    <form action="" method="POST">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item">Log out</button>
-                                    </form>
-                                </li>
+                                <li><a class="dropdown-item" href="{{ route('logout') }}">Log out</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -83,20 +78,18 @@
                             </button>
                         </form>
                     </li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="">Minha conta</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="">Meus pedidos</a></li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="">Restaurantes</a>
+                    <li>
+                        <a class="dropdown-item" href="{{ route('pedidos_restaurante') }}">Pedidos</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="">Mercados</a>
+                    <li>
+                        <a class="dropdown-item" href="">Produtos</a>
                     </li>
-                    <li class="nav-item">
-                        <form action="" method="POST">
-                            @csrf
-                            <button type="submit" class="nav-link text-dark">Log out</button>
-                        </form>
+                    <li>
+                        <a class="dropdown-item" href="">Estoque</a>
                     </li>
+                    <li><a class="dropdown-item" href="">Dashboard </a></li>
+                    <li><a class="dropdown-item" href="{{ route('adm_restaurante') }}">Minha conta</a></li>
+                    <li><a class="dropdown-item" href="{{ route('logout') }}">Log out</a></li>
                 </ul>
             </div>
         </div>

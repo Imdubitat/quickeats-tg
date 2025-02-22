@@ -56,12 +56,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ route('adm_cliente') }}">Meu perfil</a></li>
-                                <li>
-                                    <form action="" method="POST">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item">Log out</button>
-                                    </form>
-                                </li>
+                                <li><a class="dropdown-item" href="{{ route('logout') }}">Log out</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -94,12 +89,7 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" href="{{ route('catalogo_produtos') }}">Produtos</a>
                     </li>
-                    <li class="nav-item">
-                        <form action="" method="POST">
-                            @csrf
-                            <button type="submit" class="nav-link text-dark">Log out</button>
-                        </form>
-                    </li>
+                    <li><a class="dropdown-item" href="{{ route('logout') }}">Log out</a></li>
                 </ul>
             </div>
         </div>
