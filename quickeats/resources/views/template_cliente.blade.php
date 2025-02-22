@@ -55,7 +55,7 @@
                                 <i id="minhaConta" class='fas fa-user-alt' style="color: white;"></i>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="">Meu perfil</a></li>
+                                <li><a class="dropdown-item" href="{{ route('adm_cliente') }}">Meu perfil</a></li>
                                 <li>
                                     <form action="" method="POST">
                                         @csrf
@@ -85,7 +85,7 @@
                             </button>
                         </form>
                     </li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="">Minha conta</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="{{ route('adm_cliente') }}">Minha conta</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="">Meus pedidos</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="{{ route('carrinho') }}">Meu carrinho</a></li>
                     <li class="nav-item">

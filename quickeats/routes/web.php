@@ -52,6 +52,15 @@ Route::middleware('auth:cliente')->group(function () {
 
     // Solicitar cancelamento do pedido
     Route::post('/cancelar-pedido/{id}', [ClienteController::class, 'cancelarPedido'])->name('cancelar_pedido');
+
+    // Página de alteração cadastral
+    Route::get('/adm-cliente', [ClienteController::class, 'exibirAdmCliente'])->name('adm_cliente');
+
+    // Página de alteração cadastral
+    Route::get('/info-cliente', [ClienteController::class, 'exibirInfoCliente'])->name('info_cliente');
+
+    // Alterar cadastro
+    Route::post('/alterar-cadastro/cliente', [ClienteController::class, 'alterarCadastro'])->name('altera_cadastro');
 });
 
 

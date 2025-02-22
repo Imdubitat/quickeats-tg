@@ -251,4 +251,42 @@ class ClienteController extends Controller
         return redirect()->back()->with('success', 'Status atualizado com sucesso.');
     }
 
+    // Método para ir para a página de adm
+    public function exibirAdmCliente() 
+    {
+        return view('adm_cliente');
+    }
+
+    public function exibirInfoCliente() 
+    {
+        $id_cliente = Auth::guard('cliente')->id();
+
+        $cadastro = DB::table('clientes')
+        ->where('id_cliente', $id_cliente)->get();
+
+        return view('info_cliente', compact('cadastro'));
+    }
+    
+
+    // Método para salvar alterações
+    public function alterarCadastro(Request $request) 
+    {
+        // Captura o id do cliente da sessão
+        $id_cliente = Auth::guard('cliente')->id();
+
+        // Validação dos dados
+        $request->validate([
+            'telefone' => ['required', 'string', 'max:11'],
+            'email' => ['required', 'email', 'max:100', 'unique:clientes,email,' . $id_cliente . ',id_cliente',],
+        ]);
+
+        // Capturando os dados validados
+        $telefone = $request->input('telefone');
+        $email = $request->input('email');
+
+        // Atualizando os dados no modelo
+        Cliente::atualizarCliente($id_cliente, $telefone, $email);
+
+        return redirect()->back()->with('success', 'Usuário atualizado com sucesso!');
+    }
 }
