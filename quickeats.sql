@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Tempo de geração: 20/02/2025 às 19:11
+-- Host: localhost
+-- Tempo de geração: 22/02/2025 às 16:28
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -455,21 +455,20 @@ CREATE TABLE `estabelecimentos` (
   `inicio_expediente` time NOT NULL,
   `termino_expediente` time NOT NULL,
   `email` varchar(255) NOT NULL,
-  `senha` varchar(255) NOT NULL,
-  `tipo` int(11) DEFAULT NULL
+  `senha` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `estabelecimentos`
 --
 
-INSERT INTO `estabelecimentos` (`id_estab`, `razao_social`, `nome_fantasia`, `cnpj`, `telefone`, `cpf_titular`, `rg_titular`, `cnae`, `logradouro`, `numero`, `bairro`, `cidade`, `estado`, `cep`, `inicio_expediente`, `termino_expediente`, `email`, `senha`, `tipo`) VALUES
-(1, 'Restaurante Sabor Caseiro Ltda.', 'Novo Sabor Caseiro', '12.345.678/0001-90', '(11) 99999-9999', '987.654.321-00', '98.765.432-1', '5611-2', 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'novocontato@saborcaseiro.com', 'NovaSenhaSegura2', 1),
-(2, 'Mercado Bom Preço Ltda.', 'Bom Preço', '23.456.789/0001-91', '(21) 99876-5432', '987.654.321-00', '98.765.432-1', '4711-3', 'Avenida Brasil', 456, 'Zona Sul', 'Rio de Janeiro', 'RJ', '20000-000', '07:00:00', '23:00:00', 'contato@bompreco.com', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', 2),
-(3, 'Restaurante Delícias do Campo Ltda.', 'Delícias do Campo', '34.567.890/0001-92', '(31) 91234-5678', '654.321.987-00', '65.432.198-7', '5611-2', 'Rua Tranquila', 789, 'Bairro Novo', 'Belo Horizonte', 'MG', '30000-000', '11:00:00', '23:00:00', 'contato@deliciasdocampo.com', 'senhaSegura789', 1),
-(4, 'Supermercado Sempre Fresco Ltda.', 'Sempre Fresco', '45.678.901/0001-93', '(41) 98765-6789', '321.987.654-00', '32.198.765-4', '4711-3', 'Rua Principal', 321, 'Zona Norte', 'Curitiba', 'PR', '80000-000', '08:00:00', '22:00:00', 'contato@semprefresco.com', 'senhaSuper123', 2),
-(5, 'Restaurante Sabores do Mar Ltda.', 'Sabores do Mar', '56.789.012/0001-94', '(51) 97654-3210', '210.987.654-00', '21.098.765-4', '5611-2', 'Rua da Praia', 654, 'Centro', 'Porto Alegre', 'RS', '90000-000', '12:00:00', '23:00:00', 'contato@saboresdomar.com', 'senhaSabores123', 1),
-(6, NULL, 'Novo Sabor Caseiro', '12.345.678/0001-90', '(11) 99999-9999', NULL, NULL, NULL, 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'contato@saborcaseiro.com', '$2y$12$yNISLT2y2pcczjlwjFWIgecvHU2Lig6XuIqZHefoOW5MEtIHZPtuq', NULL);
+INSERT INTO `estabelecimentos` (`id_estab`, `razao_social`, `nome_fantasia`, `cnpj`, `telefone`, `cpf_titular`, `rg_titular`, `cnae`, `logradouro`, `numero`, `bairro`, `cidade`, `estado`, `cep`, `inicio_expediente`, `termino_expediente`, `email`, `senha`) VALUES
+(1, 'Restaurante Sabor Caseiro Ltda.', 'Novo Sabor Caseiro', '12.345.678/0001-90', '(11) 99999-9999', '987.654.321-00', '98.765.432-1', '5611-2', 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'novocontato@saborcaseiro.com', 'NovaSenhaSegura2'),
+(2, 'Mercado Bom Preço Ltda.', 'Bom Preço', '23.456.789/0001-91', '(21) 99876-5432', '987.654.321-00', '98.765.432-1', '4711-3', 'Avenida Brasil', 456, 'Zona Sul', 'Rio de Janeiro', 'RJ', '20000-000', '07:00:00', '23:00:00', 'contato@bompreco.com', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.'),
+(3, 'Restaurante Delícias do Campo Ltda.', 'Delícias do Campo', '34.567.890/0001-92', '(31) 91234-5678', '654.321.987-00', '65.432.198-7', '5611-2', 'Rua Tranquila', 789, 'Bairro Novo', 'Belo Horizonte', 'MG', '30000-000', '11:00:00', '23:00:00', 'contato@deliciasdocampo.com', 'senhaSegura789'),
+(4, 'Supermercado Sempre Fresco Ltda.', 'Sempre Fresco', '45.678.901/0001-93', '(41) 98765-6789', '321.987.654-00', '32.198.765-4', '4711-3', 'Rua Principal', 321, 'Zona Norte', 'Curitiba', 'PR', '80000-000', '08:00:00', '22:00:00', 'contato@semprefresco.com', 'senhaSuper123'),
+(5, 'Restaurante Sabores do Mar Ltda.', 'Sabores do Mar', '56.789.012/0001-94', '(51) 97654-3210', '210.987.654-00', '21.098.765-4', '5611-2', 'Rua da Praia', 654, 'Centro', 'Porto Alegre', 'RS', '90000-000', '12:00:00', '23:00:00', 'contato@saboresdomar.com', 'senhaSabores123'),
+(6, NULL, 'Novo Sabor Caseiro', '12.345.678/0001-90', '(11) 99999-9999', NULL, NULL, NULL, 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'contato@saborcaseiro.com', '$2y$12$yNISLT2y2pcczjlwjFWIgecvHU2Lig6XuIqZHefoOW5MEtIHZPtuq');
 
 --
 -- Acionadores `estabelecimentos`
@@ -607,7 +606,11 @@ INSERT INTO `historico_clientes` (`id_alteracao`, `id_cliente`, `campo_alterado`
 (2, 1, 'email', 'adenor@teste.com', '(19) 97179-4122', '2025-01-16 09:16:35'),
 (3, 1, 'telefone', '', '971794122', '2025-01-16 09:18:33'),
 (4, 1, 'email', '(19) 97179-4122', 'adenor@teste.com', '2025-01-16 09:18:33'),
-(5, 1, 'senha', '123456789', 'NovaSenhaSegura1', '2025-01-16 09:42:21');
+(5, 1, 'senha', '123456789', 'NovaSenhaSegura1', '2025-01-16 09:42:21'),
+(6, 7, 'telefone', '19971794122', '19971794126', '2025-02-22 09:38:55'),
+(7, 7, 'telefone', '19971794126', '19971794122', '2025-02-22 09:39:18'),
+(8, 7, 'email', 'teste@exemplo.com', 'teste01@exemplo.com', '2025-02-22 09:39:18'),
+(9, 7, 'email', 'teste01@exemplo.com', 'teste@exemplo.com', '2025-02-22 11:41:39');
 
 -- --------------------------------------------------------
 
@@ -827,25 +830,6 @@ INSERT INTO `status_pedidos` (`id_status`, `descricao`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `tipo_estabelecimentos`
---
-
-CREATE TABLE `tipo_estabelecimentos` (
-  `id_tipo` int(11) NOT NULL,
-  `descricao` varchar(60) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Despejando dados para a tabela `tipo_estabelecimentos`
---
-
-INSERT INTO `tipo_estabelecimentos` (`id_tipo`, `descricao`) VALUES
-(1, 'restaurante'),
-(2, 'mercado');
-
--- --------------------------------------------------------
-
---
 -- Estrutura para view `pedidos_estabelecimento`
 --
 DROP TABLE IF EXISTS `pedidos_estabelecimento`;
@@ -894,8 +878,7 @@ ALTER TABLE `enderecos_clientes`
 -- Índices de tabela `estabelecimentos`
 --
 ALTER TABLE `estabelecimentos`
-  ADD PRIMARY KEY (`id_estab`),
-  ADD KEY `fk_estabelecimentos_tipos` (`tipo`);
+  ADD PRIMARY KEY (`id_estab`);
 
 --
 -- Índices de tabela `formas_pagamentos`
@@ -955,12 +938,6 @@ ALTER TABLE `status_pedidos`
   ADD PRIMARY KEY (`id_status`);
 
 --
--- Índices de tabela `tipo_estabelecimentos`
---
-ALTER TABLE `tipo_estabelecimentos`
-  ADD PRIMARY KEY (`id_tipo`);
-
---
 -- AUTO_INCREMENT para tabelas despejadas
 --
 
@@ -998,7 +975,7 @@ ALTER TABLE `formas_pagamentos`
 -- AUTO_INCREMENT de tabela `historico_clientes`
 --
 ALTER TABLE `historico_clientes`
-  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de tabela `historico_estabelecimentos`
@@ -1037,12 +1014,6 @@ ALTER TABLE `status_pedidos`
   MODIFY `id_status` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT de tabela `tipo_estabelecimentos`
---
-ALTER TABLE `tipo_estabelecimentos`
-  MODIFY `id_tipo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
 -- Restrições para tabelas despejadas
 --
 
@@ -1052,12 +1023,6 @@ ALTER TABLE `tipo_estabelecimentos`
 ALTER TABLE `enderecos_clientes`
   ADD CONSTRAINT `fk_endereco_cliente` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`),
   ADD CONSTRAINT `fk_enderecos` FOREIGN KEY (`id_endereco`) REFERENCES `enderecos` (`id_endereco`);
-
---
--- Restrições para tabelas `estabelecimentos`
---
-ALTER TABLE `estabelecimentos`
-  ADD CONSTRAINT `fk_estabelecimentos_tipos` FOREIGN KEY (`tipo`) REFERENCES `tipo_estabelecimentos` (`id_tipo`);
 
 --
 -- Restrições para tabelas `historico_clientes`
