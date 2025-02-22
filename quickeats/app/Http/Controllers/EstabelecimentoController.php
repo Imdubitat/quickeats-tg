@@ -112,4 +112,40 @@ class EstabelecimentoController extends Controller
 
         return redirect()->back()->with('success', 'Status atualizado com sucesso.');
     }
+
+    // Método para ir para a página de adm
+    public function exibirAdmRestaurante() 
+    {
+        return view('adm_restaurante');
+    }
+
+    public function exibirInfoRestaurante() 
+    {
+        $id_res = Auth::guard('estabelecimento')->id();
+
+        $cadastro = DB::table('estabelecimentos')
+        ->where('id_estab', $id_res)->get();
+
+        return view('info_restaurante', compact('cadastro'));
+    }
+
+    public function alteraCadastro(Request $request) 
+    {
+        $id_res = Auth::guard('estabelecimento')->id();
+
+        // Validação dos dados
+        $request->validate([
+            'telefone' => ['required', 'string', 'max:11'],
+            'email' => ['required', 'email', 'max:100', 'unique:estabelecimentos,email,' . $id_res . ',id_estab',],
+        ]);
+
+        // Capturando os dados validados
+        $telefone = $request->input('telefone');
+        $email = $request->input('email');
+
+        // Atualizando os dados no modelo
+        Estabelecimento::atualizarEstabelecimento($id_res, $telefone, $email);
+
+        return redirect()->back()->with('success', 'Usuário atualizado com sucesso!');
+    }
 }

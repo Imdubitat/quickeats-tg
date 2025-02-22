@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable; // Importando Authenticatable para autenticação
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class Estabelecimento extends Authenticatable
 {
@@ -58,5 +59,11 @@ class Estabelecimento extends Authenticatable
             'email' => $data['emailSignup'],
             'senha' => Hash::make($data['senhaSignup']),
         ]);
+    }
+
+    // Método para atualizar o cliente usando stored procedure
+    public static function atualizarEstabelecimento($id_res, $telefone, $email)
+    {
+        return DB::statement('CALL atualizar_estabelecimento(?, ?, ?)', [$id_res, $telefone, $email]);
     }
 }

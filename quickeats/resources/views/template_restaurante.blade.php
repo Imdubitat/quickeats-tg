@@ -53,7 +53,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="">Dashboard </a></li>
-                                <li><a class="dropdown-item" href="">Minha conta</a></li>
+                                <li><a class="dropdown-item" href="{{ route('adm_restaurante') }}">Minha conta</a></li>
                                 <li>
                                     <form action="" method="POST">
                                         @csrf

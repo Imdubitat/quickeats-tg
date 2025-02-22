@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Tempo de geração: 22/02/2025 às 16:28
+-- Host: 127.0.0.1
+-- Tempo de geração: 22/02/2025 às 20:21
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -58,8 +58,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `atualizar_cliente` (IN `p_id_client
 UPDATE clientes SET telefone = p_telefone, email = p_email WHERE id_cliente = p_id_cliente; 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `atualizar_estabelecimento` (IN `p_id_estab` INT, IN `p_nome_fantasia` VARCHAR(40), IN `p_cpf_titular` VARCHAR(14), IN `p_rg_titular` VARCHAR(12), IN `p_telefone` VARCHAR(15), IN `p_logradouro` VARCHAR(40), IN `p_numero` INT, IN `p_bairro` VARCHAR(40), IN `p_cidade` VARCHAR(40), IN `p_estado` VARCHAR(2), IN `p_cep` VARCHAR(9), IN `p_inicio_expediente` TIME, IN `p_termino_expediente` TIME, IN `p_email` VARCHAR(100))   BEGIN  
-UPDATE estabelecimentos SET nome_fantasia = p_nome_fantasia, cpf_titular = p_cpf_titular, rg_titular = p_rg_titular, telefone = p_telefone, logradouro = p_logradouro, numero = p_numero, bairro = p_bairro, cidade = p_cidade, estado = p_estado, cep = p_cep, inicio_expediente = p_inicio_expediente, termino_expediente = p_termino_expediente, email = p_email WHERE id_estab = p_id_estab;   
+CREATE DEFINER=`root`@`localhost` PROCEDURE `atualizar_estabelecimento` (IN `p_id_estab` INT, IN `p_telefone` VARCHAR(15), IN `p_email` VARCHAR(255))   BEGIN
+    UPDATE estabelecimentos 
+    SET telefone = p_telefone, email = p_email 
+    WHERE id_estab = p_id_estab; 
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `cadastrar_endereco` (IN `p_id_cliente` INT, IN `p_logradouro` VARCHAR(100), IN `p_numero` INT, IN `p_bairro` VARCHAR(100), IN `p_cidade` VARCHAR(100), IN `p_estado` VARCHAR(2), IN `p_CEP` VARCHAR(9))   BEGIN
@@ -338,7 +340,7 @@ INSERT INTO `clientes` (`id_cliente`, `nome`, `cpf`, `data_nasc`, `telefone`, `e
 (3, 'Roberto Almeida Costa', '152.987.654-01', '1988-12-03', '(21) 99988-7766', 'roberto.almeida@teste.com', 'minhaSenha456', 1),
 (4, 'Carla Beatriz Ferreira', '254.632.198-87', '1992-04-22', '(31) 91234-5678', 'carla.ferreira@teste.com', 'outraSenha789', 1),
 (5, 'Pedro Henrique Souza', '345.768.902-65', '2001-09-10', '(41) 96543-2109', 'pedro.souza@teste.com', 'senhaPedro123', 1),
-(6, 'Ronaldo Silveira', '1234567891', '2002-02-22', '195226512', 'ronaldo@teste.com', '$2y$12$RjB8fKNNrPDTEW4xbMNoIuDnasjQ7vbn9.okm/lUpbm07jdbHJbCK', 0),
+(6, 'Ronaldo Silveira', '1234567891', '2002-02-22', '195226512', 'ronaldo@teste.com.br', '$2y$12$RjB8fKNNrPDTEW4xbMNoIuDnasjQ7vbn9.okm/lUpbm07jdbHJbCK', 0),
 (7, 'teste', '49333379851', '2001-03-02', '19971794122', 'teste@exemplo.com', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', 0);
 
 --
@@ -463,12 +465,12 @@ CREATE TABLE `estabelecimentos` (
 --
 
 INSERT INTO `estabelecimentos` (`id_estab`, `razao_social`, `nome_fantasia`, `cnpj`, `telefone`, `cpf_titular`, `rg_titular`, `cnae`, `logradouro`, `numero`, `bairro`, `cidade`, `estado`, `cep`, `inicio_expediente`, `termino_expediente`, `email`, `senha`) VALUES
-(1, 'Restaurante Sabor Caseiro Ltda.', 'Novo Sabor Caseiro', '12.345.678/0001-90', '(11) 99999-9999', '987.654.321-00', '98.765.432-1', '5611-2', 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'novocontato@saborcaseiro.com', 'NovaSenhaSegura2'),
+(1, 'Restaurante Sabor Caseiro Ltda.', 'Novo Sabor Caseiro', '12.345.678/0001-90', '11999999999', '987.654.321-00', '98.765.432-1', '5611-2', 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'teste@email.com', 'NovaSenhaSegura2'),
 (2, 'Mercado Bom Preço Ltda.', 'Bom Preço', '23.456.789/0001-91', '(21) 99876-5432', '987.654.321-00', '98.765.432-1', '4711-3', 'Avenida Brasil', 456, 'Zona Sul', 'Rio de Janeiro', 'RJ', '20000-000', '07:00:00', '23:00:00', 'contato@bompreco.com', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.'),
 (3, 'Restaurante Delícias do Campo Ltda.', 'Delícias do Campo', '34.567.890/0001-92', '(31) 91234-5678', '654.321.987-00', '65.432.198-7', '5611-2', 'Rua Tranquila', 789, 'Bairro Novo', 'Belo Horizonte', 'MG', '30000-000', '11:00:00', '23:00:00', 'contato@deliciasdocampo.com', 'senhaSegura789'),
 (4, 'Supermercado Sempre Fresco Ltda.', 'Sempre Fresco', '45.678.901/0001-93', '(41) 98765-6789', '321.987.654-00', '32.198.765-4', '4711-3', 'Rua Principal', 321, 'Zona Norte', 'Curitiba', 'PR', '80000-000', '08:00:00', '22:00:00', 'contato@semprefresco.com', 'senhaSuper123'),
 (5, 'Restaurante Sabores do Mar Ltda.', 'Sabores do Mar', '56.789.012/0001-94', '(51) 97654-3210', '210.987.654-00', '21.098.765-4', '5611-2', 'Rua da Praia', 654, 'Centro', 'Porto Alegre', 'RS', '90000-000', '12:00:00', '23:00:00', 'contato@saboresdomar.com', 'senhaSabores123'),
-(6, NULL, 'Novo Sabor Caseiro', '12.345.678/0001-90', '(11) 99999-9999', NULL, NULL, NULL, 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'contato@saborcaseiro.com', '$2y$12$yNISLT2y2pcczjlwjFWIgecvHU2Lig6XuIqZHefoOW5MEtIHZPtuq');
+(6, NULL, 'Novo Sabor Caseiro', '12.345.678/0001-90', '1199999999', NULL, NULL, NULL, 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'contato@saborcaseiro.com', '$2y$12$yNISLT2y2pcczjlwjFWIgecvHU2Lig6XuIqZHefoOW5MEtIHZPtuq');
 
 --
 -- Acionadores `estabelecimentos`
@@ -610,7 +612,8 @@ INSERT INTO `historico_clientes` (`id_alteracao`, `id_cliente`, `campo_alterado`
 (6, 7, 'telefone', '19971794122', '19971794126', '2025-02-22 09:38:55'),
 (7, 7, 'telefone', '19971794126', '19971794122', '2025-02-22 09:39:18'),
 (8, 7, 'email', 'teste@exemplo.com', 'teste01@exemplo.com', '2025-02-22 09:39:18'),
-(9, 7, 'email', 'teste01@exemplo.com', 'teste@exemplo.com', '2025-02-22 11:41:39');
+(9, 7, 'email', 'teste01@exemplo.com', 'teste@exemplo.com', '2025-02-22 11:41:39'),
+(10, 6, 'email', 'ronaldo@teste.com', 'ronaldo@teste.com.br', '2025-02-22 14:22:01');
 
 -- --------------------------------------------------------
 
@@ -646,7 +649,16 @@ INSERT INTO `historico_estabelecimentos` (`id_alteracao`, `id_estab`, `campo_alt
 (12, 1, 'cidade', 'São Paulo', 'Belo Horizonte', '2025-01-16 09:34:35'),
 (13, 1, 'estado', 'SP', 'MG', '2025-01-16 09:34:35'),
 (14, 1, 'senha', 'senhaSegura123', 'NovaSenhaSegura2', '2025-01-16 09:44:47'),
-(15, 2, 'senha', 'senhaSegura456', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', '2025-02-19 21:06:59');
+(15, 2, 'senha', 'senhaSegura456', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', '2025-02-19 21:06:59'),
+(16, 1, 'telefone', '(11) 99999-9999', '11999999999', '2025-02-22 15:54:38'),
+(17, 1, 'email', 'novocontato@saborcaseiro.com', 'teste@email.com', '2025-02-22 15:54:38'),
+(18, 6, 'email', 'contato@saborcaseiro.com', 'contato@saborcaseiro.com.b', '2025-02-22 16:09:17'),
+(19, 6, 'email', 'contato@saborcaseiro.com.b', 'contato@saborcaseiro.com.br', '2025-02-22 16:09:22'),
+(20, 6, 'email', 'contato@saborcaseiro.com.br', 'contato@saborcaseiro.com', '2025-02-22 16:13:47'),
+(21, 6, 'email', 'contato@saborcaseiro.com', 'contato@saborcaseiro.com.br', '2025-02-22 16:19:16'),
+(22, 6, 'telefone', '(11) 99999-9999', '(11) 99999-9998', '2025-02-22 16:20:27'),
+(23, 6, 'telefone', '(11) 99999-9998', '1199999999', '2025-02-22 16:20:59'),
+(24, 6, 'email', 'contato@saborcaseiro.com.br', 'contato@saborcaseiro.com', '2025-02-22 16:21:06');
 
 -- --------------------------------------------------------
 
@@ -717,7 +729,7 @@ CREATE TABLE `pedidos` (
 --
 
 INSERT INTO `pedidos` (`id_pedido`, `id_cliente`, `valor_total`, `forma_pagamento`, `data_compra`, `status_entrega`, `endereco`) VALUES
-(1, 1, 79.80, 1, '2025-01-16 12:31:16', 3, 2),
+(1, 1, 79.80, 1, '2025-01-16 12:31:16', 6, 2),
 (2, 2, 23.90, 2, '2025-01-16 12:31:16', 3, 3),
 (3, 3, 149.70, 1, '2025-01-16 12:31:16', 4, 1),
 (4, 4, 42.50, 3, '2025-01-16 12:31:16', 3, 4),
@@ -726,7 +738,7 @@ INSERT INTO `pedidos` (`id_pedido`, `id_cliente`, `valor_total`, `forma_pagament
 (7, 1, 50.00, 1, '2025-02-18 14:04:09', 6, 3),
 (8, 6, 151.50, 2, '2025-02-19 15:10:04', 2, 1),
 (9, 7, 32.40, 1, '2025-02-19 21:06:19', 6, 3),
-(10, 7, 71.70, 1, '2025-02-20 07:55:21', 6, 3),
+(10, 7, 71.70, 1, '2025-02-20 07:55:21', 3, 3),
 (11, 7, 501.90, 2, '2025-02-20 08:21:19', 6, 5);
 
 -- --------------------------------------------------------
@@ -825,7 +837,8 @@ INSERT INTO `status_pedidos` (`id_status`, `descricao`) VALUES
 (4, 'em rota de entrega'),
 (5, 'finalizado'),
 (6, 'aguardando cancelamento'),
-(7, 'cancelado');
+(7, 'cancelado'),
+(8, 'recusado');
 
 -- --------------------------------------------------------
 
@@ -975,13 +988,13 @@ ALTER TABLE `formas_pagamentos`
 -- AUTO_INCREMENT de tabela `historico_clientes`
 --
 ALTER TABLE `historico_clientes`
-  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de tabela `historico_estabelecimentos`
 --
 ALTER TABLE `historico_estabelecimentos`
-  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT de tabela `itens_pedidos`
@@ -1011,7 +1024,7 @@ ALTER TABLE `produtos`
 -- AUTO_INCREMENT de tabela `status_pedidos`
 --
 ALTER TABLE `status_pedidos`
-  MODIFY `id_status` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_status` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Restrições para tabelas despejadas

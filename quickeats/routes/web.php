@@ -78,4 +78,13 @@ Route::middleware('auth:estabelecimento')->group(function () {
 
     // Alterar status pedido
     Route::post('/pedidos-status/{id}', [EstabelecimentoController::class, 'alterarStatus'])->name('pedidos_status');
+
+    // Página de alteração cadastral
+    Route::get('/adm-restaurante', [EstabelecimentoController::class, 'exibirAdmRestaurante'])->name('adm_restaurante');
+
+    // Página de alteração cadastral
+    Route::get('/info-restaurante', [EstabelecimentoController::class, 'exibirInfoRestaurante'])->name('info_restaurante');
+
+    // Alterar cadastro
+    Route::post('/mudar-cadastro/restaurante', [EstabelecimentoController::class, 'alteraCadastro'])->name('altera_cadastro_res');
 });
