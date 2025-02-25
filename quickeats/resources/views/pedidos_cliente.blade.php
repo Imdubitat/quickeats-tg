@@ -35,10 +35,15 @@
                 Cancelados
             </button>
         </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="recusados-tab" data-bs-toggle="tab" data-bs-target="#recusados" type="button" role="tab">
+                Recusados
+            </button>
+        </li>
     </ul>
 
     <div class="tab-content mt-3" id="pedidosTabsContent">
-    @foreach(['pendentes' => 2, 'preparacao' => 3, 'rota' => 4, 'finalizados' => 5, 'aguarda_cancela' => 6, 'cancelados' => 7] as $tab => $status)
+    @foreach(['pendentes' => 2, 'preparacao' => 3, 'rota' => 4, 'finalizados' => 5, 'aguarda_cancela' => 6, 'cancelados' => 7, 'recusados' => 8] as $tab => $status)
         <div class="tab-pane fade @if($loop->first) show active @endif" id="{{ $tab }}" role="tabpanel">
             <div class="row">
                 @php
