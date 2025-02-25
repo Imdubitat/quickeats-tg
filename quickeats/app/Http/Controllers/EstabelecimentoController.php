@@ -148,4 +148,43 @@ class EstabelecimentoController extends Controller
 
         return redirect()->back()->with('success', 'Usuário atualizado com sucesso!');
     }
+
+    public function exibirProdutosRestaurante() 
+    {
+        $id_res = Auth::guard('estabelecimento')->id();
+
+        $produtos = DB::table('produtos')
+        ->join('categorias_produtos', 'produtos.id_categoria', '=', 'categorias_produtos.id_categoria')
+        ->where('produtos.id_estab', $id_res)
+        ->select('produtos.*', 'categorias_produtos.descricao as categoria_descricao') // Altere 'descricao' para o campo correto
+        ->get();
+
+        // Obter as categorias dos produtos
+        $categorias = DB::table('categorias_produtos')->get();
+
+        return view('produtos_restaurante', compact('produtos', 'categorias'));
+    }
+
+    public function cadastrarProduto(Request $request)
+    {
+        // Validação dos dados do formulário
+        $validated = $request->validate([
+            'nome' => 'required|string|max:255',
+            'valor' => 'required|numeric|min:0.01',
+            'id_categoria' => 'required|exists:categorias_produtos,id_categoria',
+            'qtd_estoque' => 'required|integer|min:0',
+        ]);
+
+        // Inserção do produto na tabela 'produtos'
+        DB::table('produtos')->insert([
+            'nome' => $validated['nome'],
+            'valor' => $validated['valor'],
+            'id_categoria' => $validated['id_categoria'],
+            'qtd_estoque' => $validated['qtd_estoque'],
+            'id_estab' => Auth::guard('estabelecimento')->id(), // Estabelecimento do usuário logado
+        ]);
+
+        // Redirecionar de volta com uma mensagem de sucesso
+        return redirect()->route('produtos_restaurante')->with('success', 'Produto cadastrado com sucesso!');
+    }
 }

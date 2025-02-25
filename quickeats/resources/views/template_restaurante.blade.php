@@ -28,7 +28,7 @@
                             <a class="nav-link text-white text-nowrap" href="{{ route('pedidos_restaurante') }}">Pedidos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white text-nowrap" href="">Produtos</a>
+                            <a class="nav-link text-white text-nowrap" href="{{ route('produtos_restaurante') }}">Produtos</a>
                         </li>
                         <li>
                             <a class="nav-link text-white text-nowrap" href="">Estoque</a>
@@ -82,7 +82,7 @@
                         <a class="dropdown-item" href="{{ route('pedidos_restaurante') }}">Pedidos</a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="">Produtos</a>
+                        <a class="dropdown-item" href="{{ route('produtos_restaurante') }}">Produtos</a>
                     </li>
                     <li>
                         <a class="dropdown-item" href="">Estoque</a>

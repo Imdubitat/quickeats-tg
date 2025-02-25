@@ -88,4 +88,10 @@ Route::middleware('auth:estabelecimento')->group(function () {
 
     // Alterar cadastro
     Route::post('/mudar-cadastro/restaurante', [EstabelecimentoController::class, 'alteraCadastro'])->name('altera_cadastro_res');
+
+    // Página de produtos
+    Route::get('/produtos-restaurante', [EstabelecimentoController::class, 'exibirProdutosRestaurante'])->name('produtos_restaurante');
+
+    // Cadastrar produto
+    Route::post('/cadastrar-produto', [EstabelecimentoController::class, 'cadastrarProduto'])->name('cadastar_produto');
 });
