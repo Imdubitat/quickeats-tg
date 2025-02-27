@@ -31,7 +31,7 @@
                             <a class="nav-link text-white text-nowrap" href="{{ route('produtos_restaurante') }}">Produtos</a>
                         </li>
                         <li>
-                            <a class="nav-link text-white text-nowrap" href="">Estoque</a>
+                            <a class="nav-link text-white text-nowrap" href="{{ route('estoque_restaurante') }}">Estoque</a>
                         </li>
                     </ul>
 
@@ -85,7 +85,7 @@
                         <a class="dropdown-item" href="{{ route('produtos_restaurante') }}">Produtos</a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="">Estoque</a>
+                        <a class="dropdown-item" href="{{ route('estoque_restaurante') }}">Estoque</a>
                     </li>
                     <li><a class="dropdown-item" href="">Dashboard </a></li>
                     <li><a class="dropdown-item" href="{{ route('adm_restaurante') }}">Minha conta</a></li>

@@ -156,7 +156,7 @@ class EstabelecimentoController extends Controller
         $produtos = DB::table('produtos')
         ->join('categorias_produtos', 'produtos.id_categoria', '=', 'categorias_produtos.id_categoria')
         ->where('produtos.id_estab', $id_res)
-        ->select('produtos.*', 'categorias_produtos.descricao as categoria_descricao') // Altere 'descricao' para o campo correto
+        ->select('produtos.*', 'categorias_produtos.descricao as categoria_descricao') 
         ->get();
 
         // Obter as categorias dos produtos
@@ -186,5 +186,30 @@ class EstabelecimentoController extends Controller
 
         // Redirecionar de volta com uma mensagem de sucesso
         return redirect()->route('produtos_restaurante')->with('success', 'Produto cadastrado com sucesso!');
+    }
+
+    public function exibirEstoqueRestaurante()
+    {
+        $id_res = Auth::guard('estabelecimento')->id();
+
+        $produtos = DB::table('produtos')
+        ->where('id_estab', $id_res)
+        ->get();
+
+        return view('estoque_restaurante', compact('produtos'));
+    }
+
+    public function atualizarEstoque(Request $request, $id)
+    {
+        $request->validate([
+            'qtd_estoque' => 'required|integer|min:0'
+        ]);
+
+        // Atualiza diretamente no banco sem precisar recuperar o objeto
+        DB::table('produtos')
+            ->where('id_produto', $id)
+            ->update(['qtd_estoque' => $request->qtd_estoque]);
+
+        return redirect()->back()->with('success', 'Estoque atualizado com sucesso!');
     }
 }
