@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 22/02/2025 às 20:21
+-- Tempo de geração: 28/02/2025 às 21:02
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -100,7 +100,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `clientes_por_estabelecimento` (IN `
     ORDER BY c.nome;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `contagem_pedidos_mes` (IN `p_id_estab` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `contagem_pedidos_c_mes` (IN `p_id_estab` INT)   BEGIN
     SELECT 
         MONTH(p.data_compra) AS mes,
         YEAR(p.data_compra) AS ano,
@@ -113,10 +113,53 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `contagem_pedidos_mes` (IN `p_id_est
         produtos pr ON ip.id_produto = pr.id_produto
     WHERE 
         pr.id_estab = p_id_estab
+    AND 
+    	p.status_entrega = 7
     GROUP BY 
         ano, mes
     ORDER BY 
         ano, mes;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `contagem_pedidos_f_mes` (IN `p_id_estab` INT)   BEGIN
+    SELECT 
+        MONTH(p.data_compra) AS mes,
+        YEAR(p.data_compra) AS ano,
+        COUNT(DISTINCT p.id_pedido) AS total_pedidos
+    FROM 
+        pedidos p
+    INNER JOIN 
+        itens_pedidos ip ON p.id_pedido = ip.id_pedido
+    INNER JOIN 
+        produtos pr ON ip.id_produto = pr.id_produto
+    WHERE 
+        pr.id_estab = p_id_estab
+    AND 
+    	p.status_entrega = 5
+    GROUP BY 
+        ano, mes
+    ORDER BY 
+        ano, mes;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `exibir_categorias_mais_populares_por_estabelecimento` (IN `p_id_estab` INT)   BEGIN
+    SELECT 
+        c.descricao, 
+        COUNT(DISTINCT ip.id_pedido) AS total_vendas
+    FROM 
+        pedidos p
+    INNER JOIN 
+        itens_pedidos ip ON p.id_pedido = ip.id_pedido
+    INNER JOIN 
+        produtos pr ON ip.id_produto = pr.id_produto
+    INNER JOIN 
+        categorias_produtos c ON pr.id_categoria = c.id_categoria
+    WHERE 
+        pr.id_estab = p_id_estab
+    GROUP BY 
+        c.descricao
+    ORDER BY 
+        total_vendas DESC;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `exibir_enderecos_cliente` (IN `p_id_cliente` INT)   BEGIN
@@ -174,6 +217,29 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `exibir_pedidos_estabelecimento` (IN
     INNER JOIN enderecos_clientes AS ec ON c.id_cliente = ec.id_cliente
     INNER JOIN enderecos AS e ON ec.id_endereco = e.id_endereco
     WHERE pr.id_estab = p_id_estab
+    GROUP BY p.id_pedido
+    ORDER BY p.data_compra DESC;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `exibir_pedidos_f_estabelecimento` (IN `p_id_estab` INT)   BEGIN
+    SELECT 
+        p.id_pedido,
+        c.nome AS nome_cliente,
+        p.data_compra,
+        p.status_entrega,
+        p.valor_total,
+        GROUP_CONCAT(DISTINCT CONCAT(pr.nome, ' x ', ip.qtd_produto) SEPARATOR ', ') AS produtos,
+        f.descricao AS forma_pagamento,
+        CONCAT(e.logradouro, ', ', e.numero, ', ', e.bairro, ', ', e.cidade, ' - ', e.estado, ', ', e.cep) AS endereco
+    FROM pedidos AS p
+    INNER JOIN clientes AS c ON p.id_cliente = c.id_cliente
+    INNER JOIN itens_pedidos AS ip ON p.id_pedido = ip.id_pedido
+    INNER JOIN produtos AS pr ON ip.id_produto = pr.id_produto
+    INNER JOIN formas_pagamentos AS f ON p.forma_pagamento = f.id_formapag
+    INNER JOIN enderecos_clientes AS ec ON c.id_cliente = ec.id_cliente
+    INNER JOIN enderecos AS e ON ec.id_endereco = e.id_endereco
+    WHERE pr.id_estab = p_id_estab
+    AND p.status_entrega = 5
     GROUP BY p.id_pedido
     ORDER BY p.data_compra DESC;
 END$$
@@ -305,7 +371,9 @@ CREATE TABLE `categorias_produtos` (
 INSERT INTO `categorias_produtos` (`id_categoria`, `descricao`) VALUES
 (1, 'alimentos'),
 (2, 'comidas preparadas'),
-(3, 'higiene e beleza');
+(3, 'higiene e beleza'),
+(4, 'bebidas'),
+(5, 'sobremesa');
 
 -- --------------------------------------------------------
 
@@ -683,7 +751,19 @@ INSERT INTO `itens_pedidos` (`id_pedido`, `id_produto`, `qtd_produto`) VALUES
 (9, 2, 1),
 (10, 7, 2),
 (10, 3, 1),
-(11, 1, 21);
+(11, 1, 21),
+(12, 8, 5),
+(12, 9, 3),
+(13, 7, 12),
+(14, 3, 2),
+(14, 8, 2),
+(15, 9, 2),
+(16, 3, 1),
+(16, 9, 1),
+(16, 8, 1),
+(17, 3, 1),
+(17, 7, 2),
+(17, 8, 2);
 
 -- --------------------------------------------------------
 
@@ -723,17 +803,23 @@ CREATE TABLE `pedidos` (
 --
 
 INSERT INTO `pedidos` (`id_pedido`, `id_cliente`, `valor_total`, `forma_pagamento`, `data_compra`, `status_entrega`, `endereco`) VALUES
-(1, 1, 79.80, 1, '2025-01-16 12:31:16', 6, 2),
+(1, 1, 79.80, 1, '2025-02-16 12:31:16', 7, 2),
 (2, 2, 23.90, 2, '2025-01-16 12:31:16', 3, 3),
 (3, 3, 149.70, 1, '2025-01-16 12:31:16', 4, 1),
 (4, 4, 42.50, 3, '2025-01-16 12:31:16', 3, 4),
 (5, 5, 51.60, 2, '2025-01-16 12:31:16', 2, 2),
 (6, 1, 7.98, 1, '2025-01-16 12:33:00', 5, 2),
 (7, 1, 50.00, 1, '2025-02-18 14:04:09', 6, 3),
-(8, 6, 151.50, 2, '2025-02-19 15:10:04', 2, 1),
+(8, 6, 151.50, 2, '2025-01-19 15:10:04', 5, 1),
 (9, 7, 32.40, 1, '2025-02-19 21:06:19', 6, 3),
-(10, 7, 71.70, 1, '2025-02-20 07:55:21', 3, 3),
-(11, 7, 501.90, 2, '2025-02-20 08:21:19', 6, 5);
+(10, 7, 71.70, 1, '2025-01-20 07:55:21', 5, 3),
+(11, 7, 501.90, 2, '2025-02-20 08:21:19', 6, 5),
+(12, 6, 160.20, 1, '2025-02-28 15:05:57', 5, 1),
+(13, 6, 190.80, 1, '2025-02-28 15:42:14', 5, 1),
+(14, 6, 94.80, 1, '2025-02-28 15:42:45', 5, 1),
+(15, 6, 81.80, 1, '2025-02-28 15:43:03', 5, 1),
+(16, 6, 88.30, 1, '2025-02-28 15:43:21', 7, 1),
+(17, 6, 86.70, 1, '2025-01-28 15:43:44', 7, 1);
 
 --
 -- Acionadores `pedidos`
@@ -790,11 +876,13 @@ CREATE TABLE `produtos` (
 INSERT INTO `produtos` (`id_produto`, `nome`, `valor`, `id_categoria`, `id_estab`, `qtd_estoque`) VALUES
 (1, 'Arroz Branco 5kg', 23.90, 1, 2, 27),
 (2, 'Feijão Carioca 1kg', 8.50, 1, 2, 94),
-(3, 'Pizza Calabresa', 39.90, 2, 6, 14),
+(3, 'Pizza Calabresa', 39.90, 2, 6, 9),
 (4, 'Peixe Grelhado', 49.90, 2, 5, 12),
 (5, 'Sabonete Líquido 500ml', 12.90, 3, 4, 26),
 (6, 'Macarrão Instantâneo 80g', 3.99, 1, 3, 188),
-(7, 'BreadSticks', 15.90, 2, 6, 46);
+(7, 'BreadSticks', 15.90, 2, 6, 32),
+(8, 'Coca-Cola', 7.50, 4, 6, 198),
+(9, 'Pizza Morango com Chocolate', 40.90, 5, 6, 18);
 
 -- --------------------------------------------------------
 
@@ -967,7 +1055,7 @@ ALTER TABLE `status_pedidos`
 -- AUTO_INCREMENT de tabela `categorias_produtos`
 --
 ALTER TABLE `categorias_produtos`
-  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de tabela `clientes`
@@ -1009,7 +1097,7 @@ ALTER TABLE `historico_estabelecimentos`
 -- AUTO_INCREMENT de tabela `itens_pedidos`
 --
 ALTER TABLE `itens_pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de tabela `logs_tokens`
@@ -1021,13 +1109,13 @@ ALTER TABLE `logs_tokens`
 -- AUTO_INCREMENT de tabela `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de tabela `produtos`
 --
 ALTER TABLE `produtos`
-  MODIFY `id_produto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_produto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de tabela `status_pedidos`

@@ -100,4 +100,7 @@ Route::middleware('auth:estabelecimento')->group(function () {
 
     // Atualizar estoque
     Route::post('/estoque/{id}/atualizar-estoque', [EstabelecimentoController::class, 'atualizarEstoque'])->name('atualizar_estoque');
+
+    // Página de métricas
+    Route::get('/dashboard-restaurante', [EstabelecimentoController::class, 'exibirDashboardRestaurante'])->name('dashboard_restaurante');
 });

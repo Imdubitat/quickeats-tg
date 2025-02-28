@@ -52,7 +52,7 @@
                                 <i id="minhaConta" class='fas fa-user-alt' style="color: white;"></i>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="">Dashboard </a></li>
+                                <li><a class="dropdown-item" href="{{ route('dashboard_restaurante') }}">Dashboard </a></li>
                                 <li><a class="dropdown-item" href="{{ route('adm_restaurante') }}">Minha conta</a></li>
                                 <li><a class="dropdown-item" href="{{ route('logout') }}">Log out</a></li>
                             </ul>
@@ -87,7 +87,7 @@
                     <li>
                         <a class="dropdown-item" href="{{ route('estoque_restaurante') }}">Estoque</a>
                     </li>
-                    <li><a class="dropdown-item" href="">Dashboard </a></li>
+                    <li><a class="dropdown-item" href="{{ route('dashboard_restaurante') }}">Dashboard </a></li>
                     <li><a class="dropdown-item" href="{{ route('adm_restaurante') }}">Minha conta</a></li>
                     <li><a class="dropdown-item" href="{{ route('logout') }}">Log out</a></li>
                 </ul>
