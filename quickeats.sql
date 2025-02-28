@@ -267,12 +267,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `realizar_pedido` (IN `p_id_cliente`
     SET valor_total = p_valor_total
     WHERE id_pedido = p_id_pedido;
 
-    -- Atualizar o estoque dos produtos
-    UPDATE produtos p
-    JOIN itens_pedidos ip ON p.id_produto = ip.id_produto
-    SET p.qtd_estoque = p.qtd_estoque - ip.qtd_produto
-    WHERE ip.id_pedido = p_id_pedido;
-
     -- Esvaziar o carrinho do cliente
     DELETE FROM carrinho WHERE id_cliente = p_id_cliente;
 
@@ -740,6 +734,21 @@ INSERT INTO `pedidos` (`id_pedido`, `id_cliente`, `valor_total`, `forma_pagament
 (9, 7, 32.40, 1, '2025-02-19 21:06:19', 6, 3),
 (10, 7, 71.70, 1, '2025-02-20 07:55:21', 3, 3),
 (11, 7, 501.90, 2, '2025-02-20 08:21:19', 6, 5);
+
+--
+-- Acionadores `pedidos`
+--
+DELIMITER $$
+CREATE TRIGGER `atualiza_estoque` AFTER UPDATE ON `pedidos` FOR EACH ROW BEGIN
+    IF OLD.status_entrega = 2 AND NEW.status_entrega = 3 THEN
+        UPDATE produtos p
+        JOIN itens_pedidos ip ON p.id_produto = ip.id_produto
+        SET p.qtd_estoque = p.qtd_estoque - ip.qtd_produto
+        WHERE ip.id_pedido = NEW.id_pedido;
+    END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
