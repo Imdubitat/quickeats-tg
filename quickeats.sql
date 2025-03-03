@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 03/03/2025 às 01:25
+-- Tempo de geração: 03/03/2025 às 01:52
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -362,15 +362,6 @@ CREATE TABLE `avaliacoes` (
   `id_pedido` int(11) NOT NULL,
   `nota` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Despejando dados para a tabela `avaliacoes`
---
-
-INSERT INTO `avaliacoes` (`id_avaliacao`, `id_pedido`, `nota`) VALUES
-(1, 10, 5),
-(2, 18, 3),
-(3, 19, 2);
 
 -- --------------------------------------------------------
 
