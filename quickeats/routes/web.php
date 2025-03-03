@@ -62,6 +62,9 @@ Route::middleware('auth:cliente')->group(function () {
 
     // Alterar cadastro
     Route::post('/alterar-cadastro/cliente', [ClienteController::class, 'alterarCadastro'])->name('altera_cadastro');
+
+    // Avaliar pedido
+    Route::post('/avaliar-pedido/{id}', [ClienteController::class, 'avaliarPedido'])->name('avaliar_pedido');
 });
 
 

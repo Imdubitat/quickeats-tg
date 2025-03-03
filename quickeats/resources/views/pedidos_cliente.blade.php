@@ -4,6 +4,12 @@
 
 @section('content')
 <section class="px-5" style="margin-top: 15rem;">
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
     <ul class="nav nav-tabs" id="pedidosTabs" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="pendentes-tab" data-bs-toggle="tab" data-bs-target="#pendentes" type="button" role="tab">
@@ -74,13 +80,52 @@
                                     <strong>Produtos:</strong> {{ $p->produtos }}
                                 </p>
                                 @if($p->status_entrega == 1 || $p->status_entrega == 2 
-                                || $p->status_entrega == 3  || $p->status_entrega == 4) 
-                                    {{-- Se o pedido estiver aguardando aprovação --}}
+                                    || $p->status_entrega == 3  || $p->status_entrega == 4) 
                                     <form action="{{ route('cancelar_pedido', $p->id_pedido) }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="novo_status" value="6">
                                         <button type="submit" class="btn btn-outline-danger w-100">Cancelar pedido</button>
                                     </form>
+                                @elseif($p->status_entrega == 5)
+                                    @if(!$p->avaliado)
+                                        {{-- Formulário de avaliação --}}
+                                        <form action="{{ route('avaliar_pedido', $p->id_pedido) }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="nota" id="rating-value" value="">
+                                            <div class="rating">
+                                                <input type="radio" id="star5-{{ $p->id_pedido }}" name="nota" value="5"/>
+                                                <label for="star5-{{ $p->id_pedido }}" title="5 estrelas">&#9733;</label>
+                                                <input type="radio" id="star4-{{ $p->id_pedido }}" name="nota" value="4"/>
+                                                <label for="star4-{{ $p->id_pedido }}" title="4 estrelas">&#9733;</label>
+                                                <input type="radio" id="star3-{{ $p->id_pedido }}" name="nota" value="3"/>
+                                                <label for="star3-{{ $p->id_pedido }}" title="3 estrelas">&#9733;</label>
+                                                <input type="radio" id="star2-{{ $p->id_pedido }}" name="nota" value="2"/>
+                                                <label for="star2-{{ $p->id_pedido }}" title="2 estrelas">&#9733;</label>
+                                                <input type="radio" id="star1-{{ $p->id_pedido }}" name="nota" value="1"/>
+                                                <label for="star1-{{ $p->id_pedido }}" title="1 estrela">&#9733;</label>
+                                            </div>
+                                            <button type="submit" class="btn btn-custom4 w-100">Avaliar pedido</button>
+                                        </form>
+                                        @else
+                                            <p class="fs-5 fw-bold text-center">Avaliação:</p>
+                                            <div class="rating">
+                                                {{-- Estrela 5 --}}
+                                                <input type="radio" id="star5-{{ $p->id_pedido }}" disabled {{ $p->nota == 5 ? 'checked' : '' }} />
+                                                <label for="star5-{{ $p->id_pedido }}" title="5 estrelas">&#9733;</label>
+                                                {{-- Estrela 4 --}}
+                                                <input type="radio" id="star4-{{ $p->id_pedido }}" disabled {{ $p->nota == 4 ? 'checked' : '' }} />
+                                                <label for="star4-{{ $p->id_pedido }}" title="4 estrelas">&#9733;</label>
+                                                {{-- Estrela 3 --}}
+                                                <input type="radio" id="star3-{{ $p->id_pedido }}" disabled {{ $p->nota == 3 ? 'checked' : '' }} />
+                                                <label for="star3-{{ $p->id_pedido }}" title="3 estrelas">&#9733;</label>
+                                                {{-- Estrela 2 --}}
+                                                <input type="radio" id="star2-{{ $p->id_pedido }}" disabled {{ $p->nota == 2 ? 'checked' : '' }} />
+                                                <label for="star2-{{ $p->id_pedido }}" title="2 estrelas">&#9733;</label>
+                                                {{-- Estrela 1 --}}
+                                                <input type="radio" id="star1-{{ $p->id_pedido }}" disabled {{ $p->nota == 1 ? 'checked' : '' }} />
+                                                <label for="star1-{{ $p->id_pedido }}" title="1 estrela">&#9733;</label>
+                                            </div>
+                                        @endif
                                 @endif
                             </div>
                         </div>
@@ -93,6 +138,5 @@
         </div>
     @endforeach
 </div>
-
 </section>
 @endsection

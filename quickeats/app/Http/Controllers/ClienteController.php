@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cliente;
+use App\Models\Avaliacao;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -226,15 +227,42 @@ class ClienteController extends Controller
         return redirect()->route('carrinho')->with('success', 'Pedido realizado!');
     }
 
+    public function avaliarPedido(Request $request, $id)
+    {
+        $id_cliente = Auth::guard('cliente')->id();
+        $pedido = DB::select("SELECT * FROM pedidos WHERE id_pedido = ?", [$id]);
+
+        if (empty($pedido)) { // Como DB::select() retorna um array, verificamos se está vazio
+            return redirect()->back()->with('error', 'Pedido não encontrado.');
+        }
+
+        Avaliacao::avaliarPedido($id_cliente, $id, $request->nota);
+
+        return redirect()->back()->with('success', 'Avaliação realizada com sucesso!');
+    }
+
     public function exibirPaginaPedidos()
     {
         $id_cliente = Auth::guard('cliente')->id();
 
-        // Executando o procedure e obtendo os pedidos
+        // Executando a procedure e obtendo os pedidos
         $pedidos = DB::select("CALL exibir_pedidos_cliente(?)", [$id_cliente]);
+
+        // Verificar quais pedidos já foram avaliados e obter a nota
+        foreach ($pedidos as $pedido) {
+            $avaliacao = DB::table('avaliacoes')
+                ->where('id_pedido', $pedido->id_pedido)
+                ->select('nota')
+                ->first(); // Retorna a primeira correspondência
+
+            // Adiciona os dados de avaliação ao pedido
+            $pedido->avaliado = !is_null($avaliacao);
+            $pedido->nota = $avaliacao->nota ?? null;
+        }
 
         return view('pedidos_cliente', compact('pedidos'));
     }
+    
 
     public function cancelarPedido(Request $request, $id)
     {
@@ -266,7 +294,6 @@ class ClienteController extends Controller
 
         return view('info_cliente', compact('cadastro'));
     }
-    
 
     // Método para salvar alterações
     public function alterarCadastro(Request $request) 
