@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Cliente;
 use App\Models\Avaliacao;
+use App\Models\Pedido;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -222,7 +223,7 @@ class ClienteController extends Controller
             return redirect()->back()->with('error', 'Endereço não selecionado.');
         }
 
-        DB::select('CALL realizar_pedido(?, ?, ?)', [$id_cliente, $id_endereco, $id_pagamento]);
+        Pedido::realizarPedido($id_cliente, $id_endereco, $id_pagamento);
 
         return redirect()->route('carrinho')->with('success', 'Pedido realizado!');
     }
