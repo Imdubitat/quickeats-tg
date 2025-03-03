@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Tempo de geração: 28/02/2025 às 21:02
+-- Host: localhost
+-- Tempo de geração: 03/03/2025 às 01:25
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -62,6 +62,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `atualizar_estabelecimento` (IN `p_i
     UPDATE estabelecimentos 
     SET telefone = p_telefone, email = p_email 
     WHERE id_estab = p_id_estab; 
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `avaliar_pedido` (IN `p_id_cliente` INT, IN `p_id_pedido` INT, IN `p_nota` INT)   BEGIN
+    -- Verifica se o pedido pertence ao cliente antes de inserir a avaliação
+    IF EXISTS (
+        SELECT 1 
+        FROM pedidos 
+        WHERE id_pedido = p_id_pedido AND id_cliente = p_id_cliente
+    ) THEN
+        INSERT INTO avaliacoes (id_pedido, nota) VALUES (p_id_pedido, p_nota);
+    END IF;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `cadastrar_endereco` (IN `p_id_cliente` INT, IN `p_logradouro` VARCHAR(100), IN `p_numero` INT, IN `p_bairro` VARCHAR(100), IN `p_cidade` VARCHAR(100), IN `p_estado` VARCHAR(2), IN `p_CEP` VARCHAR(9))   BEGIN
@@ -339,6 +350,27 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `realizar_pedido` (IN `p_id_cliente`
 END$$
 
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `avaliacoes`
+--
+
+CREATE TABLE `avaliacoes` (
+  `id_avaliacao` int(11) NOT NULL,
+  `id_pedido` int(11) NOT NULL,
+  `nota` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `avaliacoes`
+--
+
+INSERT INTO `avaliacoes` (`id_avaliacao`, `id_pedido`, `nota`) VALUES
+(1, 10, 5),
+(2, 18, 3),
+(3, 19, 2);
 
 -- --------------------------------------------------------
 
@@ -960,6 +992,13 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 
 --
+-- Índices de tabela `avaliacoes`
+--
+ALTER TABLE `avaliacoes`
+  ADD PRIMARY KEY (`id_avaliacao`),
+  ADD KEY `fk_pedido_avaliacao` (`id_pedido`);
+
+--
 -- Índices de tabela `categorias_produtos`
 --
 ALTER TABLE `categorias_produtos`
@@ -1052,6 +1091,12 @@ ALTER TABLE `status_pedidos`
 --
 
 --
+-- AUTO_INCREMENT de tabela `avaliacoes`
+--
+ALTER TABLE `avaliacoes`
+  MODIFY `id_avaliacao` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de tabela `categorias_produtos`
 --
 ALTER TABLE `categorias_produtos`
@@ -1126,6 +1171,12 @@ ALTER TABLE `status_pedidos`
 --
 -- Restrições para tabelas despejadas
 --
+
+--
+-- Restrições para tabelas `avaliacoes`
+--
+ALTER TABLE `avaliacoes`
+  ADD CONSTRAINT `fk_pedido_avaliacao` FOREIGN KEY (`id_pedido`) REFERENCES `pedidos` (`id_pedido`);
 
 --
 -- Restrições para tabelas `enderecos_clientes`
