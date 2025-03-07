@@ -67,6 +67,19 @@ Route::middleware('auth:cliente')->group(function () {
     Route::post('/avaliar-pedido/{id}', [ClienteController::class, 'avaliarPedido'])->name('avaliar_pedido');
 });
 
+//Rota para solicitação de link para redefinição de senha via email
+Route::post('esqueceu-senha/cliente', [ClienteController::class, 'esqueceuSenhaCliente'])->name('esqueceuSenhaCliente');
+
+// Rota para o envio do email com o link para redefinição de senha
+Route::get('/reset-senha/cliente/', [ClienteController::class, 'resetSenhaCliente'])->name('resetSenhaCliente');
+
+// Rota para a definição de uma nova senha
+Route::post('nova-senha/cliente', [ClienteController::class, 'definirNovaSenhaCliente'])->name('definirNovaSenhaCliente');
+
+//Rota adicional para evitar o acesso indevido a rota de nova senha (Vou verificar a viabilidade de fazer um middleware para isso)
+Route::get('nova-senha/cliente', function () {
+    return redirect()->route('Index')->with('error', 'Acesso inválido!');
+});
 
 // -------------------------------------------- Rotas do estabelecimento ---------------------------------------------------------
 Route::post('restaurante/cadastro', [EstabelecimentoController::class, 'cadastrarEstabelecimento'])->name('cadastro_restaurante');
@@ -106,4 +119,18 @@ Route::middleware('auth:estabelecimento')->group(function () {
 
     // Página de métricas
     Route::get('/dashboard-restaurante', [EstabelecimentoController::class, 'exibirDashboardRestaurante'])->name('dashboard_restaurante');
+});
+
+// Rota para solicitação de link para redefinição de senha via email
+Route::post('esqueceu-senha/estabelecimento', [EstabelecimentoController::class, 'esqueceuSenhaEstabelecimento'])->name('esqueceuSenhaEstabelecimento');
+
+// Rota para o envio do email com o link para redefinição de senha
+Route::get('/reset-senha/estabelecimento', [EstabelecimentoController::class, 'resetSenhaEstabelecimento'])->name('resetSenhaEstabelecimento');
+
+// Rota para a definição de uma nova senha
+Route::post('nova-senha/estabelecimento', [EstabelecimentoController::class, 'definirNovaSenhaEstabelecimento'])->name('definirNovaSenhaEstabelecimento');
+
+// Rota adicional para evitar o acesso indevido à rota de nova senha (Vou verificar a viabilidade de fazer um middleware para isso)
+Route::get('nova-senha/estabelecimento', function () {
+    return redirect()->route('Index')->with('error', 'Acesso inválido!');
 });
