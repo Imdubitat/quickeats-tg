@@ -68,12 +68,14 @@
 
             <!-- Estoque Baixo -->
             <div class="col-md-4">
-                <div class="card bg-danger text-white">
-                    <div class="card-body">
-                        <h5 class="card-title">📉 Estoque Baixo</h5>
-                        <h2>3 Itens</h2>
+                <a href="{{ route('estoque_restaurante') }}" class="text-decoration-none">
+                    <div class="card bg-danger text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">📉 Estoque Baixo</h5>
+                            <h2>{{ $estoqueBaixo }}</h2>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     </div>
