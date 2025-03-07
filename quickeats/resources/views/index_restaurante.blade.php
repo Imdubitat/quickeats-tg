@@ -40,6 +40,9 @@
                     <div class="d-flex justify-content-center">
                         <p>Ainda não tem uma conta? <a href="#" data-bs-toggle="modal" data-bs-target="#signupModal">Cadastre-se</a></p>
                     </div>
+                    <div class="text-center mb-3">
+                        <a class="" data-bs-toggle="modal" data-bs-target="#forgotPasswordModalEstab" style="cursor: pointer;">Esqueci a senha</a>
+                    </div>
                     <div class="d-flex justify-content-center">
                         <button type="submit" class="btn btn-custom4 w-50">Entrar</button>
                     </div>
@@ -146,6 +149,31 @@
                     <div class="d-flex justify-content-center">
                         <button type="submit" class="btn btn-custom4 w-50">Cadastrar</button>
                     </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de redefinição de senha -->
+<div class="modal fade" id="forgotPasswordModalEstab" tabindex="-1" aria-labelledby="forgotPAsswordModalLabelEstab" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-4 shadow">
+            <div class="modal-header p-5 pb-4 border-bottom-0">
+                <h1 class="fw-bold mb-0 fs-2">Reset de senha</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-5 pt-0">
+                <form action="{{ route('esqueceuSenhaEstabelecimento') }}" method="POST">
+                    @csrf
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control rounded-3 @error('emailResetSenhaEstab') is-invalid @enderror" id="floatingForgotPasswordEstab" name="emailResetSenhaEstab" placeholder="name@example.com" value="{{ old('emailResetSenhaEstab') }}" required>
+                        <label for="floatingForgotPasswordEstab">Email address</label>
+                        @error('emailResetSenhaEstab')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Enviar</button>
                 </form>
             </div>
         </div>

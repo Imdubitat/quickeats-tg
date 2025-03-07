@@ -8,7 +8,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB; // Para interagir com o banco de dados
 use App\Http\Controllers\Controller; // Para estender a classe base do Laravel
-
+use App\Rules\validaCelular;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ResetSenhaEmail; 
+use App\Models\ResetSenha; 
+use App\Models\LogsToken;   
+use Illuminate\Support\Facades\Hash;
 
 class EstabelecimentoController extends Controller
 {
@@ -84,7 +90,12 @@ class EstabelecimentoController extends Controller
         $emRota = collect($pedidos)->where('status_entrega', 4)->count();
         $finalizados = collect($pedidos)->where('status_entrega', 5)->count();
 
-        return view('home_restaurante', compact('totalPedidos', 'pendentes', 'preparacao', 'emRota', 'finalizados'));
+        $estoqueBaixo = DB::table('produtos')
+                            ->where('id_estab', $id_estabelecimento)
+                            ->where('qtd_estoque', '<', 10)
+                            ->count();
+
+        return view('home_restaurante', compact('totalPedidos', 'pendentes', 'preparacao', 'emRota', 'finalizados', 'estoqueBaixo'));
     }
 
     public function exibirPaginaPedidos()
@@ -305,5 +316,113 @@ class EstabelecimentoController extends Controller
 
         // Retornar a view com os dados
         return view('dashboard_restaurante', compact('data'));
+    }
+
+    public function esqueceuSenhaEstabelecimento(Request $request){
+        // Corrigido para corresponder ao campo correto
+        $email = $request->input('emailResetSenhaEstab'); 
+    
+        // Buscar o cliente pelo email no banco de dados
+        $estabelecimento = Estabelecimento::where('email', $email)->first();
+    
+        // Verificar se o cliente foi encontrado
+        if ($estabelecimento) {
+            // Gerar um token para redefinição de senha
+            $token = Str::random(60);
+            
+            // Inserir o token no banco de dados para esse email
+            ResetSenha::create([
+                'id_usuario' => $estabelecimento->id_estab,
+                'tipo_usuario' => 'cliente',
+                'email' => $estabelecimento->email,
+                'criado_em' => now(),
+                'token' => $token,
+            ]);
+    
+            // Enviar o email de redefinição de senha
+            Mail::to($estabelecimento->email)->send(new ResetSenhaEmail($estabelecimento, $token, 'estabelecimento'));
+    
+            return redirect()->back()->with('status', 'Email de redefinição de senha enviado!');
+        } else {
+            return redirect()->back()->with('error', 'Email não encontrado');
+        }
+    }
+    
+
+    public function resetSenhaEstabelecimento(Request $request){
+        $email = $request->query('email');
+        $token = $request->query('token');
+
+        if (!$email || !$token) {
+            return redirect()->route('index')->with('error', 'Acesso inválido.');
+        }
+    
+        $resetRecord = ResetSenha::where('email', $email)->where('token', $token)->first();
+    
+        if (!$resetRecord) {
+            return redirect()->route('index')->with('error', 'Link de redefinição de senha inválido ou expirado.');
+        }
+
+        $estabelecimento = Estabelecimento::where('email', $email);
+    
+        $expireTime = config('auth.passwords.estabelecimentos.expire');
+        if (now()->diffInMinutes($resetRecord->criado_em) > $expireTime) {
+            LogsToken::create([
+                'id_usuario' => $estabelecimento->id_estab,
+                'email' => $resetRecord->email,
+                'motivo' => 'redefinição de senha',
+                'tipo_usuario' => 'estabelecimento',
+                'token' => $resetRecord->token,
+                'criado_em' => $resetRecord->criado_em,
+                'usado_em' => now(),
+            ]);
+    
+            ResetSenha::where('email', $email)->delete();
+    
+            return redirect()->route('index')->with('error', 'O link de redefinição de senha expirou.');
+        }
+    
+        session(['email' => $email, 'token' => $token]);
+    
+        return view('nova_senhaEstab', compact('token', 'email'));
+    }
+
+    public function definirNovaSenhaEstabelecimento(Request $request){
+        // Valida a entrada
+        $request->validate([
+            'new_password' => 'required|min:8', // Adicione outras regras de validação conforme necessário
+        ]);
+
+        /// Obtém o email da sessão
+        $email = session('email');
+
+        // Verifique se o token é válido e se o email existe na tabela resets_senha_clientes
+        $resetRecord = ResetSenha::where('email', $email)->first();
+    
+        if (!$resetRecord) {
+            return redirect()->route('index')->with('error', 'Link de redefinição de senha inválido ou expirado.');
+        }else {
+
+            // Busca o cliente pelo ID
+            $estabelecimento = Estabelecimento::where('email', $email)->first();
+
+            LogsToken::create([
+                'id_usuario' => $estabelecimento->id_estab,
+                'email' => $resetRecord->email,
+                'motivo' => 'redefinição de senha',
+                'tipo_usuario' => 'estabelecimento',
+                'token' => $resetRecord->token,
+                'criado_em' => $resetRecord->criado_em,
+                'usado_em' => now(),
+            ]);
+
+            ResetSenha::where('email', $email)->delete();
+            
+            // Atualiza a senha
+            $estabelecimento->senha = Hash::make($request->input('new_password'));
+            $estabelecimento->save();
+            
+            return redirect()->route('index')->with('success', 'Senha redefinida com sucesso');
+        }
     }
 }
