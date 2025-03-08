@@ -106,6 +106,18 @@ class EstabelecimentoController extends Controller
         // Executando o procedure e obtendo os pedidos
         $pedidos = DB::select("CALL exibir_pedidos_estabelecimento(?)", [$id_estabelecimento]);
 
+        // Verificar quais pedidos já foram avaliados e obter a nota
+        foreach ($pedidos as $pedido) {
+            $avaliacao = DB::table('avaliacoes')
+                ->where('id_pedido', $pedido->id_pedido)
+                ->select('nota')
+                ->first(); // Retorna a primeira correspondência
+
+            // Adiciona os dados de avaliação ao pedido
+            $pedido->avaliado = !is_null($avaliacao);
+            $pedido->nota = $avaliacao->nota ?? null;
+        }
+
         return view('pedidos_restaurante', compact('pedidos'));
     }
 

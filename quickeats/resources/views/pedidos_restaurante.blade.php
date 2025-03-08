@@ -92,6 +92,27 @@
                                         <input type="hidden" name="novo_status" value="4">
                                         <button type="submit" class="btn btn-primary">Marcar como Pronto</button>
                                     </form>
+                                @elseif($pedido->status_entrega == 5)
+                                    @if($pedido->avaliado)
+                                        <p class="fs-5 fw-bold text-center">Avaliação:</p>
+                                        <div class="rating">
+                                            {{-- Estrela 5 --}}
+                                            <input type="radio" id="star5-{{ $pedido->id_pedido }}" disabled {{ $pedido->nota == 5 ? 'checked' : '' }} />
+                                            <label for="star5-{{ $pedido->id_pedido }}" title="5 estrelas">&#9733;</label>
+                                            {{-- Estrela 4 --}}
+                                            <input type="radio" id="star4-{{ $pedido->id_pedido }}" disabled {{ $pedido->nota == 4 ? 'checked' : '' }} />
+                                            <label for="star4-{{ $pedido->id_pedido }}" title="4 estrelas">&#9733;</label>
+                                            {{-- Estrela 3 --}}
+                                            <input type="radio" id="star3-{{ $pedido->id_pedido }}" disabled {{ $pedido->nota == 3 ? 'checked' : '' }} />
+                                            <label for="star3-{{ $pedido->id_pedido }}" title="3 estrelas">&#9733;</label>
+                                            {{-- Estrela 2 --}}
+                                            <input type="radio" id="star2-{{ $pedido->id_pedido }}" disabled {{ $pedido->nota == 2 ? 'checked' : '' }} />
+                                            <label for="star2-{{ $pedido->id_pedido }}" title="2 estrelas">&#9733;</label>
+                                            {{-- Estrela 1 --}}
+                                            <input type="radio" id="star1-{{ $pedido->id_pedido }}" disabled {{ $pedido->nota == 1 ? 'checked' : '' }} />
+                                            <label for="star1-{{ $pedido->id_pedido }}" title="1 estrela">&#9733;</label>
+                                        </div>
+                                    @endif
                                 @elseif($pedido->status_entrega == 6) 
                                     <div class="d-flex gap-2">
                                         <form action="{{ route('pedidos_status', $pedido->id_pedido) }}" method="POST">
