@@ -80,12 +80,25 @@
                                     <strong>Produtos:</strong> {{ $p->produtos }}
                                 </p>
                                 @if($p->status_entrega == 1 || $p->status_entrega == 2 
-                                    || $p->status_entrega == 3  || $p->status_entrega == 4) 
+                                    || $p->status_entrega == 3) 
                                     <form action="{{ route('cancelar_pedido', $p->id_pedido) }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="novo_status" value="6">
                                         <button type="submit" class="btn btn-outline-danger w-100">Cancelar pedido</button>
                                     </form>
+                                @elseif($p->status_entrega == 4)
+                                    <div class="d-flex gap-2"> 
+                                        <form action="{{ route('receber_pedido', $p->id_pedido) }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="novo_status" value="5">
+                                            <button type="submit" class="btn btn-primary">Marcar como recebido</button>
+                                        </form>
+                                        <form action="{{ route('cancelar_pedido', $p->id_pedido) }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="novo_status" value="6">
+                                            <button type="submit" class="btn btn-outline-danger">Cancelar pedido</button>
+                                        </form>
+                                    </div>
                                 @elseif($p->status_entrega == 5)
                                     @if(!$p->avaliado)
                                         {{-- Formulário de avaliação --}}

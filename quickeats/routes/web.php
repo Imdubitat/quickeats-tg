@@ -65,6 +65,9 @@ Route::middleware('auth:cliente')->group(function () {
 
     // Avaliar pedido
     Route::post('/avaliar-pedido/{id}', [ClienteController::class, 'avaliarPedido'])->name('avaliar_pedido');
+
+    // Receber pedido
+    Route::post('/receber-pedido/{id}', [ClienteController::class, 'receberPedido'])->name('receber_pedido');
 });
 
 //Rota para solicitação de link para redefinição de senha via email

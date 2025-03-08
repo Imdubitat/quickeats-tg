@@ -269,7 +269,21 @@ class ClienteController extends Controller
 
         return view('pedidos_cliente', compact('pedidos'));
     }
-    
+
+    public function receberPedido(Request $request, $id)
+    {
+        // Verificar se o pedido existe
+        $pedido = DB::select("SELECT * FROM pedidos WHERE id_pedido = ?", [$id]);
+
+        if (empty($pedido)) { // Como DB::select() retorna um array, verificamos se está vazio
+            return redirect()->back()->with('error', 'Pedido não encontrado.');
+        }
+
+        // Atualizar o status do pedido
+        DB::update("UPDATE pedidos SET status_entrega = ? WHERE id_pedido = ?", [$request->novo_status, $id]);
+
+        return redirect()->back()->with('success', 'Pedido finalizado!');
+    }
 
     public function cancelarPedido(Request $request, $id)
     {
