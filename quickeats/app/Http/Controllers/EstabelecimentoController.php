@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Estabelecimento;
+use App\Models\ConfirmacaoEmail;
+use App\Mail\ConfirmaEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB; // Para interagir com o banco de dados
@@ -20,33 +22,62 @@ class EstabelecimentoController extends Controller
 {
     public function cadastrarEstabelecimento(Request $request)
     {
-
-        // Valida apenas os campos obrigatórios para o cadastro inicial
-        $validatedData = $request->validate([
-            'nomeFantasiaSignup' => 'required|string|max:55',
-            'cnpjSignup' => 'required|string|max:18',
-            'telefoneSignup' => 'required|string|max:15',
-            'logradouroSignup' => 'required|string|max:100',
-            'numeroSignup' => 'required|numeric',
-            'bairroSignup' => 'required|string|max:100',
-            'cidadeSignup' => 'required|string|max:100',
-            'estadoSignup' => 'required|string|max:2',
-            'cepSignup' => 'required|string|max:9',
-            'inicioExpedienteSignup' => 'required|string|max:255',
-            'terminoExpedienteSignup' => 'required|string|max:255',
-            'emailSignup' => 'required|string|email|max:255|unique:estabelecimentos,email',
-            'senhaSignup' => 'required|string|min:8',
-        ]);
-
         try {
+            // Valida apenas os campos obrigatórios para o cadastro inicial
+            $validatedData = $request->validate([
+                'nomeFantasiaSignup' => 'required|string|max:55',
+                'cnpjSignup' => 'required|string|max:18',
+                'telefoneSignup' => 'required|string|max:15',
+                'logradouroSignup' => 'required|string|max:100',
+                'numeroSignup' => 'required|numeric',
+                'bairroSignup' => 'required|string|max:100',
+                'cidadeSignup' => 'required|string|max:100',
+                'estadoSignup' => 'required|string|max:2',
+                'cepSignup' => 'required|string|max:9',
+                'inicioExpedienteSignup' => 'required|string|max:255',
+                'terminoExpedienteSignup' => 'required|string|max:255',
+                'emailSignup' => 'required|string|email|max:255|unique:estabelecimentos,email',
+                'senhaSignup' => 'required|string|min:8',
+            ]);
+
             // Chama o método para criar o estabelecimento no model
             $estabelecimento = Estabelecimento::cadastrarEstabelecimento($validatedData);
 
+            if (!$estabelecimento) {
+                return redirect()->back()->with('error', 'Erro ao cadastrar estabelecimento. Tente novamente.');
+            }
+
+            // Gerar o token de confirmação
+            $token = Str::random(60);
+
+            // Inserir o token no banco de dados
+            $confirmacao = ConfirmacaoEmail::create([
+                'email' => $estabelecimento->email,
+                'token' => $token,
+                'criado_em' => now(),
+                'id_usuario' => $estabelecimento->id_estab,
+                'tipo_usuario' => 'estabelecimento',
+            ]);
+
+            if (!$confirmacao) {
+                return redirect()->back()->with('error', 'Erro ao cadastrar estabelecimento. Tente novamente.');
+            }
+
+            // Envio do e-mail de confirmação
+            try {
+                Mail::to($estabelecimento->email)->send(new ConfirmaEmail($token, $estabelecimento->email, 'estabelecimento'));
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Erro ao enviar e-mail de confirmação.');
+            }
+
             return redirect()->route('index_restaurante')->with('success', 'Estabelecimento cadastrado com sucesso!');
-        } catch (\Throwable $th) {
-            return redirect()->back()->with('error', 'Ocorreu um erro ao cadastrar o estabelecimento. Tente novamente.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Ocorreu um erro inesperado. Tente novamente.');
         }
     }
+
 
     public function realizarLogin(Request $request)
     {
@@ -56,16 +87,16 @@ class EstabelecimentoController extends Controller
             'senhaLogin' => 'required|string|min:8',
         ]);
 
-        // $email_verificado = Estabelecimento::where('email', $validatedData['emailLogin'])->where('email_verificado', 1)->first();
+        $email_verificado = Estabelecimento::where('email', $validatedData['emailLogin'])->where('email_verificado', 1)->first();
 
         // Tentar autenticar o cliente usando o guard 'cliente'
         if (Auth::guard('estabelecimento')->attempt(['email' => $request->input('emailLogin'), 'password' => $request->input('senhaLogin')])) {
-            // if($email_verificado){
+            if($email_verificado){
                 // Login bem-sucedido, redirecionar para a página inicial do profissional
                 return redirect()->route('home_restaurante')->with('success', 'Login realizado com sucesso!');
-            // } else {
-            //     return redirect()->back()->with('error', 'Email não verificado!');
-            // }
+            } else {
+                return redirect()->back()->with('error', 'Email não verificado!');
+            }
         } else {
             // Login falhou, redirecionar de volta com uma mensagem de erro
             return redirect()->back()->with('error', 'Email ou senha inválidos');

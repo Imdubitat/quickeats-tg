@@ -13,6 +13,7 @@ Route::get('/quickeats', [Controller::class, 'exibirIndex'])->name('index');
 Route::get('/clientes', [Controller::class, 'exibirIndexCliente'])->name('index_cliente');
 Route::get('/restaurantes', [Controller::class, 'exibirIndexRestaurante'])->name('index_restaurante');
 Route::get('/logout', [Controller::class, 'logout'])->name('logout');
+Route::get('/confirma-email', [Controller::class, 'confirmaEmail'])->name('confirma_email');
 
 // -------------------------------------------- Rotas do cliente ---------------------------------------------------------
 Route::post('cliente/login', [ClienteController::class, 'realizarLogin'])->name('login_cliente');

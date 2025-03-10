@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Cliente;
 use App\Models\Avaliacao;
 use App\Models\Pedido;
+use App\Models\ConfirmacaoEmail;
+use App\Mail\ConfirmaEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -18,9 +20,9 @@ use Illuminate\Support\Facades\Hash;
 
 class ClienteController extends Controller
 {
-    // Função para salvar o cliente no banco de dados
     public function cadastrarCliente(Request $request)
-    {
+{
+    try {
         // Valida os dados enviados pelo modal
         $validatedData = $request->validate([
             'nomeSignup' => 'required|string|max:50',
@@ -31,17 +33,45 @@ class ClienteController extends Controller
             'senhaSignup' => 'required|string|min:8',
         ]);
 
-        try {
-            // Chama o método para criar o cliente no model
-            $cliente = Cliente::cadastrarCliente($validatedData);
+        // Chama o método para criar o cliente no model
+        $cliente = Cliente::cadastrarCliente($validatedData);
 
-            // Redireciona para a página com uma mensagem de sucesso
-            return redirect()->route('index_cliente')->with('success', 'Cliente cadastrado com sucesso. Por favor, verifique seu e-mail!');
-        } catch (\Exception $e) {
-            // Se ocorrer um erro, redireciona com uma mensagem de erro
-            return redirect()->back()->with('error', 'Ocorreu um erro ao cadastrar o cliente. Tente novamente.');
+        if (!$cliente) {
+            return redirect()->back()->with('error', 'Erro ao cadastrar cliente. Tente novamente.');
         }
+
+        // Gerar o token de confirmação
+        $token = Str::random(60);
+
+        // Inserir o token no banco de dados
+        $confirmacao = ConfirmacaoEmail::create([
+            'email' => $cliente->email,
+            'token' => $token,
+            'criado_em' => now(),
+            'id_usuario' => $cliente->id_cliente,
+            'tipo_usuario' => 'cliente',
+        ]);
+
+        if (!$confirmacao) {
+            return redirect()->back()->with('error', 'Erro ao cadastrar cliente. Tente novamente.');
+        }
+
+        // Envio do e-mail de confirmação
+        try {
+            Mail::to($cliente->email)->send(new ConfirmaEmail($token, $cliente->email, 'cliente'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Erro ao enviar e-mail de confirmação.');
+        }        
+
+        // Redireciona para a página com uma mensagem de sucesso
+        return redirect()->route('index_cliente')->with('success', 'Cliente cadastrado com sucesso. Por favor, verifique seu e-mail!');
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return redirect()->back()->withErrors($e->errors())->withInput();
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Ocorreu um erro inesperado. Tente novamente.');
     }
+}
+
 
     public function realizarLogin(Request $request)
     {
@@ -51,16 +81,16 @@ class ClienteController extends Controller
             'senhaLogin' => 'required|string|min:8',
         ]);
 
-        //$email_verificado = Cliente::where('email', $validatedData['emailLogin'])->where('email_verificado', 1)->first();
+        $email_verificado = Cliente::where('email', $validatedData['emailLogin'])->where('email_verificado', 1)->first();
 
         // Tentar autenticar o cliente usando o guard 'cliente'
         if (Auth::guard('cliente')->attempt(['email' => $request->input('emailLogin'), 'password' => $request->input('senhaLogin')])) {
-            // if($email_verificado){
-            //     // Login bem-sucedido, redirecionar para a página inicial do profissional
+            if($email_verificado){
+                // Login bem-sucedido, redirecionar para a página inicial do profissional
                 return redirect()->route('home_cliente')->with('success', 'Login realizado com sucesso!');
-            // } else {
-            //     return redirect()->back()->with('error', 'Email não verificado!');
-            // }
+            } else {
+                return redirect()->back()->with('error', 'Email não verificado!');
+            }
         } else {
             // Login falhou, redirecionar de volta com uma mensagem de erro
             return redirect()->back()->with('error', 'Email ou senha inválidos');
