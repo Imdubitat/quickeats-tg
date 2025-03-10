@@ -15,7 +15,14 @@
 @endsection
 
 @section('content')
-
+<section class="px-5" style="margin-top: 15rem;">
+    @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+    @endif
+</section>
 @endsection
 
 <!-- Modal de login-->
