@@ -17,6 +17,7 @@ use App\Mail\ResetSenhaEmail;
 use App\Models\ResetSenha;
 use App\Models\LogsToken; 
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class ClienteController extends Controller
 {
@@ -410,27 +411,26 @@ class ClienteController extends Controller
         $resetRecord = ResetSenha::where('email', $email)->where('token', $token)->first();
     
         if (!$resetRecord) {
-            return redirect()->route('index')->with('error', 'Link de redefinição de senha inválido ou expirado.');
+            return redirect()->route('index_cliente')->with('error', 'Link de redefinição de senha inválido ou expirado.');
         }
     
         // Busca o cliente pelo ID
         $cliente = Cliente::where('email', $email)->first();
 
-        $expireTime = config('auth.passwords.clientes.expire');
-        if (now()->diffInMinutes($resetRecord->criado_em) > $expireTime) {
+        if (Carbon::parse($resetRecord->criado_em)->addMinutes(1)->isPast()) {
             LogsToken::create([
                 'id_usuario' => $cliente->id_cliente,
                 'email' => $resetRecord->email,
-                'motivo' => 'redefinição de senha',
+                'motivo' => 'token expirado - redefinição de senha',
                 'tipo_usuario' => 'cliente',
                 'token' => $resetRecord->token,
                 'criado_em' => $resetRecord->criado_em,
                 'usado_em' => now(),
             ]);
     
-            ResetSenha::where('email', $email)->delete();
+            ResetSenha::where('email', $email)->where('tipo_usuario', 'cliente')->delete();
     
-            return redirect()->route('index')->with('error', 'O link de redefinição de senha expirou.');
+            return redirect()->route('index_cliente')->with('error', 'O link de redefinição de senha expirou.');
         }
     
         session(['email' => $email, 'token' => $token]);
@@ -451,7 +451,7 @@ class ClienteController extends Controller
         $resetRecord = ResetSenha::where('email', $email)->first();
     
         if (!$resetRecord) {
-            return redirect()->route('index')->with('error', 'Link de redefinição de senha inválido ou expirado.');
+            return redirect()->route('index_cliente')->with('error', 'Link de redefinição de senha inválido ou expirado.');
         }else {
 
             // Busca o cliente pelo ID
@@ -467,13 +467,13 @@ class ClienteController extends Controller
                 'usado_em' => now(),
             ]);
 
-            ResetSenha::where('email', $email)->delete();
+            ResetSenha::where('email', $email)->where('tipo_usuario', 'cliente')->delete();
             
             // Atualiza a senha
             $cliente->senha = Hash::make($request->input('new_password'));
             $cliente->save();
             
-            return redirect()->route('index')->with('success', 'Senha redefinida com sucesso');
+            return redirect()->route('index_cliente')->with('success', 'Senha redefinida com sucesso');
         }
     }
 }

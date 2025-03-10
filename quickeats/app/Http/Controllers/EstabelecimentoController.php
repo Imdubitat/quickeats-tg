@@ -17,6 +17,7 @@ use App\Mail\ResetSenhaEmail;
 use App\Models\ResetSenha; 
 use App\Models\LogsToken;   
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class EstabelecimentoController extends Controller
 {
@@ -376,7 +377,7 @@ class EstabelecimentoController extends Controller
             // Inserir o token no banco de dados para esse email
             ResetSenha::create([
                 'id_usuario' => $estabelecimento->id_estab,
-                'tipo_usuario' => 'cliente',
+                'tipo_usuario' => 'estabelecimento',
                 'email' => $estabelecimento->email,
                 'criado_em' => now(),
                 'token' => $token,
@@ -403,26 +404,25 @@ class EstabelecimentoController extends Controller
         $resetRecord = ResetSenha::where('email', $email)->where('token', $token)->first();
     
         if (!$resetRecord) {
-            return redirect()->route('index')->with('error', 'Link de redefinição de senha inválido ou expirado.');
+            return redirect()->route('index_restaurante')->with('error', 'Link de redefinição de senha inválido ou expirado.');
         }
 
-        $estabelecimento = Estabelecimento::where('email', $email);
+        $estabelecimento = Estabelecimento::where('email', $email)->first();
     
-        $expireTime = config('auth.passwords.estabelecimentos.expire');
-        if (now()->diffInMinutes($resetRecord->criado_em) > $expireTime) {
+        if (Carbon::parse($resetRecord->criado_em)->addMinutes(1)->isPast()) {
             LogsToken::create([
                 'id_usuario' => $estabelecimento->id_estab,
                 'email' => $resetRecord->email,
-                'motivo' => 'redefinição de senha',
+                'motivo' => 'token expirado - redefinição de senha',
                 'tipo_usuario' => 'estabelecimento',
                 'token' => $resetRecord->token,
                 'criado_em' => $resetRecord->criado_em,
                 'usado_em' => now(),
             ]);
     
-            ResetSenha::where('email', $email)->delete();
+            ResetSenha::where('email', $email)->where('tipo_usuario', 'estabelecimento')->delete();
     
-            return redirect()->route('index')->with('error', 'O link de redefinição de senha expirou.');
+            return redirect()->route('index_restaurante')->with('error', 'O link de redefinição de senha expirou.');
         }
     
         session(['email' => $email, 'token' => $token]);
@@ -443,7 +443,7 @@ class EstabelecimentoController extends Controller
         $resetRecord = ResetSenha::where('email', $email)->first();
     
         if (!$resetRecord) {
-            return redirect()->route('index')->with('error', 'Link de redefinição de senha inválido ou expirado.');
+            return redirect()->route('index_restaurante')->with('error', 'Link de redefinição de senha inválido ou expirado.');
         }else {
 
             // Busca o cliente pelo ID
@@ -459,13 +459,13 @@ class EstabelecimentoController extends Controller
                 'usado_em' => now(),
             ]);
 
-            ResetSenha::where('email', $email)->delete();
-            
+            ResetSenha::where('email', $email)->where('tipo_usuario', 'estabelecimento')->delete();
+
             // Atualiza a senha
             $estabelecimento->senha = Hash::make($request->input('new_password'));
             $estabelecimento->save();
             
-            return redirect()->route('index')->with('success', 'Senha redefinida com sucesso');
+            return redirect()->route('index_restaurante')->with('success', 'Senha redefinida com sucesso');
         }
     }
 }

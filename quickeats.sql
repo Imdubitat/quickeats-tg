@@ -799,7 +799,7 @@ CREATE TABLE `logs_tokens` (
   `id_token` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `motivo` enum('confirmação de email','redefinição de senha') NOT NULL,
+  `motivo` enum('confirmação de email','redefinição de senha','token expirado - confirmação de email','token expirado - redefinição de senha') NOT NULL,
   `tipo_usuario` enum('cliente','estabelecimento') NOT NULL,
   `token` varchar(255) NOT NULL,
   `criado_em` datetime NOT NULL,
