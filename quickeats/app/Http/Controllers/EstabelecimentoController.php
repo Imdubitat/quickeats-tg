@@ -270,95 +270,85 @@ class EstabelecimentoController extends Controller
 
     public function exibirDashboardRestaurante()
     {
-        // Supondo que você tenha o ID do estabelecimento armazenado na sessão ou no contexto do usuário logado.
-        $idEstab = Auth::guard('estabelecimento')->id(); // Substitua pelo método que você usa para obter o id do estabelecimento
+        $idEstab = Auth::guard('estabelecimento')->id();
 
         // Obter o total de clientes
         $clientes = DB::select('CALL clientes_por_estabelecimento(?)', [$idEstab]);
-        $totalClientes = $clientes ? count($clientes) : 0;
+        $totalClientes = !empty($clientes) ? count($clientes) : 0;
 
         // Obter o total de pedidos do estabelecimento
         $pedidos = DB::select('CALL exibir_pedidos_f_estabelecimento(?)', [$idEstab]);
-        $totalPedidos = $pedidos ? count($pedidos) : 0;
+        $totalPedidos = !empty($pedidos) ? count($pedidos) : 0;
 
-        // Obter o prato mais vendido do estabelecimento (usando a view pedidos_estabelecimento)
+        // Obter o prato mais vendido
         $produtosMaisPopulares = DB::select('CALL exibir_produtos_mais_populares_por_estabelecimento(?)', [$idEstab]);
-        $pratoMaisVendido = $produtosMaisPopulares ? $produtosMaisPopulares[0] : null;
+        $pratoMaisVendido = !empty($produtosMaisPopulares) ? $produtosMaisPopulares[0] : null;
 
-        // Obter o faturamento mensal do estabelecimento (soma dos valores dos pedidos no mês atual)
+        // Obter faturamento mensal
         $faturamentoMensalData = DB::select('CALL faturamento_estabelecimento(?)', [$idEstab]);
         $faturamentoMensal = collect($faturamentoMensalData)->firstWhere('mes', now()->month);
-
-        // Se não houver dados para o mês atual, o faturamento será 0
         $faturamentoMensal = $faturamentoMensal ? $faturamentoMensal->faturamento : 0;
 
-        // Obter pedidos finalizados por mês do estabelecimento
-        $pedidosPorMes = DB::select('CALL contagem_pedidos_f_mes(?)', [$idEstab]);
-
-        // Obter pedidos cancelados por mês do estabelecimento
-        $canceladosPorMes = DB::select('CALL contagem_pedidos_c_mes(?)', [$idEstab]);
+        // Obter pedidos finalizados e cancelados por mês
+        $pedidosPorMes = DB::select('CALL contagem_pedidos_f_mes(?)', [$idEstab]) ?? [];
+        $canceladosPorMes = DB::select('CALL contagem_pedidos_c_mes(?)', [$idEstab]) ?? [];
 
         // Obter categorias populares
-        $categoriasPopulares = DB::select('CALL exibir_categorias_mais_populares_por_estabelecimento(?)', [$idEstab]);
+        $categoriasPopulares = DB::select('CALL exibir_categorias_mais_populares_por_estabelecimento(?)', [$idEstab]) ?? [];
 
-        // Preparar os dados para a view, sem alterar as variáveis existentes
+        // Preparar os dados para a view
         $data = [
             'total_clientes' => $totalClientes,
             'total_pedidos' => $totalPedidos,
             'prato_mais_vendido' => $pratoMaisVendido ? $pratoMaisVendido->produto : 'Nenhum prato vendido',
             'faturamento_mensal' => number_format($faturamentoMensal, 2, ',', '.'),
-            'pratos_labels' => [$pratoMaisVendido->produto], // Usando apenas o prato mais vendido
-            'pratos_vendas' => [$pratoMaisVendido->total_vendas],
-            
-            // Novos dados para os gráficos (sem map())
+            'pratos_labels' => $pratoMaisVendido ? [$pratoMaisVendido->produto] : [],
+            'pratos_vendas' => $pratoMaisVendido ? [$pratoMaisVendido->total_vendas] : [],
             'pedidos_por_mes' => [],
+            'cancelados_por_mes' => [],
             'produtos_populares' => [],
             'categorias_populares' => [],
+            'faturamento' => []
         ];
 
-        // Preencher os dados de pedidos finalizados por mês
         foreach ($pedidosPorMes as $item) {
             $data['pedidos_por_mes'][] = [
-                'mes' => $item->mes,
-                'ano' => $item->ano, // Certifique-se de que "ano" está presente
-                'total_pedidos' => $item->total_pedidos,
+                'mes' => $item->mes ?? 0,
+                'ano' => $item->ano ?? 0,
+                'total_pedidos' => $item->total_pedidos ?? 0,
             ];
         }
 
-        // Preencher os dados de pedidos cancelados por mês
         foreach ($canceladosPorMes as $item) {
             $data['cancelados_por_mes'][] = [
-                'mes' => $item->mes,
-                'ano' => $item->ano, // Certifique-se de que "ano" está presente
-                'total_pedidos' => $item->total_pedidos,
+                'mes' => $item->mes ?? 0,
+                'ano' => $item->ano ?? 0,
+                'total_pedidos' => $item->total_pedidos ?? 0,
             ];
         }
 
-        // Preencher os dados de produtos populares
         foreach ($produtosMaisPopulares as $produto) {
             $data['produtos_populares'][] = [
-                'nome_produto' => $produto->produto,
-                'total_vendas' => $produto->total_vendas,
+                'nome_produto' => $produto->produto ?? 'Desconhecido',
+                'total_vendas' => $produto->total_vendas ?? 0,
             ];
         }
 
-        // Preencher os dados de categorias populares
         foreach ($categoriasPopulares as $categoria) {
             $data['categorias_populares'][] = [
-                'nome_categoria' => $categoria->descricao,
-                'total_vendas' => $categoria->total_vendas,
+                'nome_categoria' => $categoria->descricao ?? 'Desconhecida',
+                'total_vendas' => $categoria->total_vendas ?? 0,
             ];
         }
 
         foreach ($faturamentoMensalData as $faturamento) {
             $data['faturamento'][] = [
-                'ano' => $faturamento->ano,
-                'mes' => $faturamento->mes,
-                'faturamento' => $faturamento->faturamento
+                'ano' => $faturamento->ano ?? 0,
+                'mes' => $faturamento->mes ?? 0,
+                'faturamento' => $faturamento->faturamento ?? 0,
             ];
         }
 
-        // Retornar a view com os dados
         return view('dashboard_restaurante', compact('data'));
     }
 
