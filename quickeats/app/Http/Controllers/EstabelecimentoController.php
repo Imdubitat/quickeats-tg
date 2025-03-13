@@ -121,13 +121,14 @@ class EstabelecimentoController extends Controller
         $preparacao = collect($pedidos)->where('status_entrega', 3)->count();
         $emRota = collect($pedidos)->where('status_entrega', 4)->count();
         $finalizados = collect($pedidos)->where('status_entrega', 5)->count();
+        $avaliacao = DB::select('CALL calcular_media_avaliacoes(?)', [$id_estabelecimento]);
 
         $estoqueBaixo = DB::table('produtos')
                             ->where('id_estab', $id_estabelecimento)
                             ->where('qtd_estoque', '<', 10)
                             ->count();
 
-        return view('home_restaurante', compact('totalPedidos', 'pendentes', 'preparacao', 'emRota', 'finalizados', 'estoqueBaixo'));
+        return view('home_restaurante', compact('totalPedidos', 'pendentes', 'preparacao', 'emRota', 'finalizados', 'estoqueBaixo', 'avaliacao'));
     }
 
     public function exibirPaginaPedidos()
@@ -296,6 +297,8 @@ class EstabelecimentoController extends Controller
         // Obter categorias populares
         $categoriasPopulares = DB::select('CALL exibir_categorias_mais_populares_por_estabelecimento(?)', [$idEstab]) ?? [];
 
+        $avaliacao = DB::select('CALL calcular_media_avaliacoes(?)', [$idEstab]);
+
         // Preparar os dados para a view
         $data = [
             'total_clientes' => $totalClientes,
@@ -308,7 +311,7 @@ class EstabelecimentoController extends Controller
             'cancelados_por_mes' => [],
             'produtos_populares' => [],
             'categorias_populares' => [],
-            'faturamento' => []
+            'faturamento' => [],
         ];
 
         foreach ($pedidosPorMes as $item) {
@@ -349,7 +352,7 @@ class EstabelecimentoController extends Controller
             ];
         }
 
-        return view('dashboard_restaurante', compact('data'));
+        return view('dashboard_restaurante', compact('data', 'avaliacao'));
     }
 
     public function esqueceuSenhaEstabelecimento(Request $request){
@@ -457,5 +460,12 @@ class EstabelecimentoController extends Controller
             
             return redirect()->route('index_restaurante')->with('success', 'Senha redefinida com sucesso');
         }
+    }
+
+    public function calcularMediaAvaliacao()
+    {
+
+
+        return view('dashboard_restaurante', compact('data'));
     }
 }

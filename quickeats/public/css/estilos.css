@@ -97,6 +97,6 @@ html, body {
     transition: color 0.3s;
 }
 
-    .rating input:checked ~ label {
-        color: gold;
-    }
+.rating input:checked ~ label {
+    color: gold;
+}

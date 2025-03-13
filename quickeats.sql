@@ -94,6 +94,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `cadastrar_produto` (IN `p_nome` VAR
 INSERT INTO produtos (nome, valor, id_categoria, id_estab, qtd_estoque) VALUES (p_nome, p_valor, p_id_categoria, p_id_estab, p_qtd_estoque);  
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `calcular_media_avaliacoes` (IN `p_id_estab` INT)   BEGIN
+    SELECT 
+        COALESCE(ROUND(AVG(a.nota), 1), 0) AS media_avaliacao
+    FROM avaliacoes a
+    INNER JOIN pedidos pe ON pe.id_pedido = a.id_pedido
+    WHERE EXISTS (
+        SELECT 1 
+        FROM itens_pedidos ip
+        INNER JOIN produtos p ON p.id_produto = ip.id_produto
+        WHERE ip.id_pedido = pe.id_pedido
+        AND p.id_estab = 2
+    );
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `clientes_por_estabelecimento` (IN `p_id_estab` INT)   BEGIN
     SELECT DISTINCT 
         c.id_cliente, 

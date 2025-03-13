@@ -9,8 +9,17 @@
 <section class="container px-5 mx-auto" style="margin-top: 15rem;">
     <div class="container mt-5">
         <div class="row">
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card text-white bg-info h-100">
+                    <div class="card-header">Média de Avaliações</div>
+                    <div class="card-body d-flex justify-content-center align-items-center">
+                        <h5 class="card-title">{{ $avaliacao[0]->media_avaliacao }}</h5>
+                        <h5 class="text-warning d-inline">&#9733;</h5>
+                    </div>
+                </div>
+            </div>
             <!-- Total de Clientes -->
-            <div class="col-md-6 col-lg-3 mb-4">
+            <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card text-white bg-primary h-100">
                     <div class="card-header">Total de Clientes</div>
                     <div class="card-body d-flex justify-content-center align-items-center">
@@ -20,7 +29,7 @@
             </div>
             
             <!-- Total de Pedidos -->
-            <div class="col-md-6 col-lg-3 mb-4">
+            <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card text-white bg-success h-100">
                     <div class="card-header">Total de Pedidos Finalizados</div>
                     <div class="card-body d-flex justify-content-center align-items-center">
@@ -28,9 +37,10 @@
                     </div>
                 </div>
             </div>
-
+        </div>
+        <div class="row justify-content-center">
             <!-- Pratos Populares -->
-            <div class="col-md-6 col-lg-3 mb-4">
+            <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card text-white bg-warning h-100">
                     <div class="card-header">Produto Mais Popular</div>
                     <div class="card-body d-flex justify-content-center align-items-center">
@@ -40,7 +50,7 @@
             </div>
 
             <!-- Faturamento Mensal -->
-            <div class="col-md-6 col-lg-3 mb-4">
+            <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card text-white bg-danger h-100">
                     <div class="card-header">Faturamento Mensal</div>
                     <div class="card-body d-flex justify-content-center align-items-center">

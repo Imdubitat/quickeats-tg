@@ -9,8 +9,17 @@
 @section('content')
 <section style="margin-top: 14rem;">
     <div class="container mt-4">
-        <h2 class="mb-4">📊 Dashboard Resumido</h2>
-        
+        <div class="row align-items-center mb-4">
+            <div class="col-md-4">
+                <h2>📊 Dashboard Resumido</h2>
+            </div>
+            <div class="col-md-8">
+                <h6 class="fw-bold d-inline">Avaliação: {{ $avaliacao[0]->media_avaliacao }} </h6>
+                <h6 class="text-warning d-inline">&#9733;</h6>
+            </div>
+
+        </div>
+
         <div class="row">
             <!-- Total de Pedidos -->
             <div class="col-md-4">
