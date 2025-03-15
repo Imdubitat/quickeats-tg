@@ -16,62 +16,63 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\ResetSenhaEmail;
 use App\Models\ResetSenha;
 use App\Models\LogsToken; 
+use App\Models\Endereco;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
 class ClienteController extends Controller
 {
     public function cadastrarCliente(Request $request)
-{
-    try {
-        // Valida os dados enviados pelo modal
-        $validatedData = $request->validate([
-            'nomeSignup' => 'required|string|max:50',
-            'cpfSignup' => 'required|string|max:11',
-            'dataNascSignup' => 'required|string|max:50',
-            'telefoneSignup' => 'required|string|max:11',
-            'emailSignup' => 'required|string|email|max:100|unique:clientes,email',
-            'senhaSignup' => 'required|string|min:8',
-        ]);
-
-        // Chama o método para criar o cliente no model
-        $cliente = Cliente::cadastrarCliente($validatedData);
-
-        if (!$cliente) {
-            return redirect()->back()->with('error', 'Erro ao cadastrar cliente. Tente novamente.');
-        }
-
-        // Gerar o token de confirmação
-        $token = Str::random(60);
-
-        // Inserir o token no banco de dados
-        $confirmacao = ConfirmacaoEmail::create([
-            'email' => $cliente->email,
-            'token' => $token,
-            'criado_em' => now(),
-            'id_usuario' => $cliente->id_cliente,
-            'tipo_usuario' => 'cliente',
-        ]);
-
-        if (!$confirmacao) {
-            return redirect()->back()->with('error', 'Erro ao cadastrar cliente. Tente novamente.');
-        }
-
-        // Envio do e-mail de confirmação
+    {
         try {
-            Mail::to($cliente->email)->send(new ConfirmaEmail($token, $cliente->email, 'cliente'));
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Erro ao enviar e-mail de confirmação.');
-        }        
+            // Valida os dados enviados pelo modal
+            $validatedData = $request->validate([
+                'nomeSignup' => 'required|string|max:50',
+                'cpfSignup' => 'required|string|max:11',
+                'dataNascSignup' => 'required|string|max:50',
+                'telefoneSignup' => 'required|string|max:11',
+                'emailSignup' => 'required|string|email|max:100|unique:clientes,email',
+                'senhaSignup' => 'required|string|min:8',
+            ]);
 
-        // Redireciona para a página com uma mensagem de sucesso
-        return redirect()->route('index_cliente')->with('success', 'Cliente cadastrado com sucesso. Por favor, verifique seu e-mail!');
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        return redirect()->back()->withErrors($e->errors())->withInput();
-    } catch (\Exception $e) {
-        return redirect()->back()->with('error', 'Ocorreu um erro inesperado. Tente novamente.');
+            // Chama o método para criar o cliente no model
+            $cliente = Cliente::cadastrarCliente($validatedData);
+
+            if (!$cliente) {
+                return redirect()->back()->with('error', 'Erro ao cadastrar cliente. Tente novamente.');
+            }
+
+            // Gerar o token de confirmação
+            $token = Str::random(60);
+
+            // Inserir o token no banco de dados
+            $confirmacao = ConfirmacaoEmail::create([
+                'email' => $cliente->email,
+                'token' => $token,
+                'criado_em' => now(),
+                'id_usuario' => $cliente->id_cliente,
+                'tipo_usuario' => 'cliente',
+            ]);
+
+            if (!$confirmacao) {
+                return redirect()->back()->with('error', 'Erro ao cadastrar cliente. Tente novamente.');
+            }
+
+            // Envio do e-mail de confirmação
+            try {
+                Mail::to($cliente->email)->send(new ConfirmaEmail($token, $cliente->email, 'cliente'));
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Erro ao enviar e-mail de confirmação.');
+            }        
+
+            // Redireciona para a página com uma mensagem de sucesso
+            return redirect()->route('index_cliente')->with('success', 'Cliente cadastrado com sucesso. Por favor, verifique seu e-mail!');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Ocorreu um erro inesperado. Tente novamente.');
+        }
     }
-}
 
 
     public function realizarLogin(Request $request)
@@ -400,7 +401,8 @@ class ClienteController extends Controller
         }
     }
 
-    public function resetSenhaCliente(Request $request) {
+    public function resetSenhaCliente(Request $request) 
+    {
         $email = $request->query('email');
         $token = $request->query('token');
 
@@ -438,7 +440,8 @@ class ClienteController extends Controller
         return view('nova_senhaCliente', compact('token', 'email'));
     }    
 
-    public function definirNovaSenhaCliente(Request $request){
+    public function definirNovaSenhaCliente(Request $request)
+    {
         // Valida a entrada
         $request->validate([
             'new_password' => 'required|min:8', // Adicione outras regras de validação conforme necessário
@@ -474,6 +477,49 @@ class ClienteController extends Controller
             $cliente->save();
             
             return redirect()->route('index_cliente')->with('success', 'Senha redefinida com sucesso');
+        }
+    }
+
+    public function controleEnderecos() 
+    {
+        // Captura o id do cliente da sessão
+        $id_cliente = Auth::guard('cliente')->id();
+
+        $enderecos =  DB::select('CALL exibir_enderecos_cliente(?)', [$id_cliente]);
+
+        return view('endereco_cliente', compact('enderecos'));
+    }
+
+    public function cadastrarEndereco(Request $request)
+    {
+        // Validação dos dados
+        $request->validate([
+            'cep' => 'required|string|max:9', // 00000-000 formato
+            'estado' => 'required|string|max:2',
+            'cidade' => 'required|string|max:100',
+            'bairro' => 'required|string|max:100',
+            'logradouro' => 'required|string|max:150',
+            'numero' => 'required|numeric'
+        ]);
+
+        // Captura o id do cliente da sessão
+        $id_cliente = Auth::guard('cliente')->id();
+
+        try {
+            // Chamada do método no Model
+            Endereco::cadastrar(
+                $id_cliente, 
+                $request->logradouro, 
+                $request->numero, 
+                $request->bairro, 
+                $request->cidade, 
+                $request->estado, 
+                $request->cep
+            );
+
+            return redirect()->back()->with('success', 'Endereço cadastrado com sucesso!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Erro ao cadastrar endereço: ' . $e->getMessage());
         }
     }
 }

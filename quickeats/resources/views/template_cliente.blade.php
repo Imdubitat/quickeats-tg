@@ -56,6 +56,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ route('adm_cliente') }}">Meu perfil</a></li>
+                                <li><a class="dropdown-item" href="{{ route('enderecos') }}">Meus Endereços</a></li>
                                 <li><a class="dropdown-item" href="{{ route('logout') }}">Log out</a></li>
                             </ul>
                         </li>

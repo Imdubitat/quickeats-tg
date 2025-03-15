@@ -69,6 +69,12 @@ Route::middleware('auth:cliente')->group(function () {
 
     // Receber pedido
     Route::post('/receber-pedido/{id}', [ClienteController::class, 'receberPedido'])->name('receber_pedido');
+
+    // Página de cadastro e visualização de endereços
+    Route::get('/enderecos', [ClienteController::class, 'controleEnderecos'])->name('enderecos');
+
+    // Cadastrar Endereço
+    Route::post('/cadastrar-endereco', [ClienteController::class, 'cadastrarEndereco'])->name('cadastrar_endereco');
 });
 
 //Rota para solicitação de link para redefinição de senha via email
