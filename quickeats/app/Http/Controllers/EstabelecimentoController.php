@@ -355,7 +355,8 @@ class EstabelecimentoController extends Controller
         return view('dashboard_restaurante', compact('data', 'avaliacao'));
     }
 
-    public function esqueceuSenhaEstabelecimento(Request $request){
+    public function esqueceuSenhaEstabelecimento(Request $request)
+    {
         // Corrigido para corresponder ao campo correto
         $email = $request->input('emailResetSenhaEstab'); 
     
@@ -386,7 +387,8 @@ class EstabelecimentoController extends Controller
     }
     
 
-    public function resetSenhaEstabelecimento(Request $request){
+    public function resetSenhaEstabelecimento(Request $request)
+    {
         $email = $request->query('email');
         $token = $request->query('token');
 
@@ -423,7 +425,8 @@ class EstabelecimentoController extends Controller
         return view('nova_senhaEstab', compact('token', 'email'));
     }
 
-    public function definirNovaSenhaEstabelecimento(Request $request){
+    public function definirNovaSenhaEstabelecimento(Request $request)
+    {
         // Valida a entrada
         $request->validate([
             'new_password' => 'required|min:8', // Adicione outras regras de validação conforme necessário
