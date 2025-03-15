@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\EstabelecimentoController;
+use App\Http\Controllers\AdministradorController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -143,4 +144,18 @@ Route::post('nova-senha/estabelecimento', [EstabelecimentoController::class, 'de
 // Rota adicional para evitar o acesso indevido à rota de nova senha (Vou verificar a viabilidade de fazer um middleware para isso)
 Route::get('nova-senha/estabelecimento', function () {
     return redirect()->route('Index')->with('error', 'Acesso inválido!');
+});
+
+// -------------------------------------------- Rotas do administrador ---------------------------------------------------------
+
+Route::get('/administrador', function () { return view('index_admin'); });
+Route::get('/logout-admin', [AdministradorController::class, 'realizarLogout'])->name('logout_admin');
+
+// Rota para realização de login dos administradores
+Route::post('administrador/login', [AdministradorController::class, 'realizarLogin'])->name('login_admin');
+
+// Rotas privadas (requer autenticação do cliente)
+Route::middleware('auth:administrador')->group(function () {
+    // Página inicial do cliente
+    Route::get('/home-admin', [AdministradorController::class, 'exibirPaginaInicial'])->name('home_admin');
 });

@@ -368,6 +368,26 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `administradores`
+--
+
+CREATE TABLE `administradores` (
+  `id_admin` int(11) NOT NULL,
+  `nome` varchar(50) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `senha` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `administradores`
+--
+
+INSERT INTO `administradores` (`id_admin`, `nome`, `email`, `senha`) VALUES
+(1, 'Rodrigo', 'admin@teste.com', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6');
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `avaliacoes`
 --
 

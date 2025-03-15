@@ -52,6 +52,12 @@ return [
             'driver' => 'session',
             'provider' => 'estabelecimentos',
         ],
+
+        // Guard para os administradores
+        'administrador' => [
+            'driver' => 'session',
+            'provider' => 'administradores',
+        ],
     ],
 
     /*
@@ -83,10 +89,16 @@ return [
             'model' => App\Models\Cliente::class,
         ],
 
-        // Provider para profissionais usando o model Estabelecimento
+        // Provider para estabelecimentos usando o model Estabelecimento
         'estabelecimentos' => [
             'driver' => 'eloquent',
             'model' => App\Models\Estabelecimento::class,
+        ],
+
+        // Provider para administradores usando o model Administrador
+        'administradores' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Administrador::class,
         ],
 
         // 'users' => [
