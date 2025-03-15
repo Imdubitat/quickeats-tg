@@ -522,4 +522,40 @@ class ClienteController extends Controller
             return redirect()->back()->with('error', 'Erro ao cadastrar endereço: ' . $e->getMessage());
         }
     }
+
+    public function editarEndereco(Request $request, $id)
+    {
+        // Buscar o endereço pelo ID
+        $endereco = DB::select("SELECT * FROM enderecos WHERE id_endereco = ?", [$id]);
+
+        if (!$endereco) {
+            return redirect()->back()->with('error', 'Endereço não encontrado.');
+        }
+
+        // Atualizar os dados do endereço
+        DB::update("UPDATE enderecos SET logradouro = ?, numero = ?, bairro = ?, cidade = ?, estado = ?, cep = ? WHERE id_endereco = ?", [
+            $request->logradouro,
+            $request->numero,
+            $request->bairro,
+            $request->cidade,
+            $request->estado,
+            $request->cep,
+            $id
+        ]);
+
+        return redirect()->back()->with('success', 'Endereço atualizado com sucesso!');
+    }
+
+    public function excluirEndereco(Request $request, $id)
+    {
+        // Captura o id do cliente da sessão
+        $id_cliente = Auth::guard('cliente')->id();
+
+        DB::table('enderecos_clientes')
+        ->where('id_endereco', $id)
+        ->where('id_cliente', $id_cliente)
+        ->delete();
+    
+        return redirect()->back()->with('success', 'Endereço excluído com sucesso!');
+    }
 }

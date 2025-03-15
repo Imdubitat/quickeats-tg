@@ -76,6 +76,12 @@ Route::middleware('auth:cliente')->group(function () {
 
     // Cadastrar Endereço
     Route::post('/cadastrar-endereco', [ClienteController::class, 'cadastrarEndereco'])->name('cadastrar_endereco');
+
+    // Editar endereço
+    Route::post('/enderecos/editar/{id}', [ClienteController::class, 'editarEndereco'])->name('editar_endereco');
+
+    // Excluir endereco
+    Route::post('/enderecos/excluir/{id}', [ClienteController::class, 'excluirEndereco'])->name('excluir_endereco');
 });
 
 //Rota para solicitação de link para redefinição de senha via email
