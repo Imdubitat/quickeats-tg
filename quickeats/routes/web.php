@@ -164,4 +164,10 @@ Route::post('administrador/login', [AdministradorController::class, 'realizarLog
 Route::middleware('auth:administrador')->group(function () {
     // Página inicial do cliente
     Route::get('/home-admin', [AdministradorController::class, 'exibirPaginaInicial'])->name('home_admin');
+
+    // Página com todos os restaurantes
+    Route::get('/admin/restaurantes', [AdministradorController::class, 'exibirRestaurantes'])->name('admin_restaurantes');
+
+    // Página com todos os clientes
+    Route::get('/admin/clientes', [AdministradorController::class, 'exibirClientes'])->name('admin_clientes');
 });

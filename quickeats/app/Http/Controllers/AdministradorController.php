@@ -43,4 +43,22 @@ class AdministradorController extends Controller
         // Redirecionar para a página de login
         return redirect('/administrador')->with('success', 'Logout realizado com sucesso.');
     }
+
+    public function exibirRestaurantes()
+    {
+        $restaurantes = DB::table('estabelecimentos')->get();
+
+        return view('admin_restaurantes', compact('restaurantes'));
+    }
+
+    public function exibirClientes()
+    {
+        $clientes = DB::table('clientes')->get();
+        
+        foreach ($clientes as $cliente) {
+            $cliente->enderecos = DB::select("CALL exibir_enderecos_cliente(?)", [$cliente->id_cliente]);
+        }
+
+        return view('admin_clientes', compact('clientes'));
+    }
 }

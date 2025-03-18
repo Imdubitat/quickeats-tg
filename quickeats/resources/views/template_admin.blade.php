@@ -25,10 +25,10 @@
                 <div class="collapse navbar-collapse" id="nav-principal">
                     <ul class="navbar-nav me-auto d-flex flex-nowrap">
                         <li class="nav-item">
-                            <a class="nav-link text-white text-nowrap" href="">Restaurantes</a>
+                            <a class="nav-link text-white text-nowrap" href="{{ route('admin_restaurantes') }}">Restaurantes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white text-nowrap" href="">Clientes</a>
+                            <a class="nav-link text-white text-nowrap" href="{{ route('admin_clientes') }}">Clientes</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white text-nowrap" href="">Mensagens</a>
