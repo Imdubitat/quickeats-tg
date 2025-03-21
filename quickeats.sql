@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Tempo de geração: 15/03/2025 às 22:18
+-- Host: 127.0.0.1
+-- Tempo de geração: 21/03/2025 às 21:33
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -165,6 +165,29 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `contagem_pedidos_f_mes` (IN `p_id_e
         ano, mes
     ORDER BY 
         ano, mes;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `escolher_plano` (IN `p_id_estab` INT, IN `p_id_plano` INT)   BEGIN
+    DECLARE v_plano_atual INT;
+
+    -- Verifica se o estabelecimento já tem um plano ativo
+    SELECT id_plano INTO v_plano_atual
+    FROM planos_estabelecimentos
+    WHERE id_estab = p_id_estab AND ativo = 1
+    LIMIT 1;
+
+    -- Se já tiver um plano ativo, desativa ele
+    IF v_plano_atual IS NOT NULL THEN
+        UPDATE planos_estabelecimentos
+        SET ativo = 0
+        WHERE id_estab = p_id_estab;
+    END IF;
+
+    -- Insere ou atualiza o novo plano como ativo
+    INSERT INTO planos_estabelecimentos (id_estab, id_plano, ativo)
+    VALUES (p_id_estab, p_id_plano, 1)
+    ON DUPLICATE KEY UPDATE id_plano = VALUES(id_plano), ativo = 1;
+
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `exibir_categorias_mais_populares_por_estabelecimento` (IN `p_id_estab` INT)   BEGIN
@@ -456,22 +479,23 @@ CREATE TABLE `clientes` (
   `telefone` varchar(15) NOT NULL,
   `email` varchar(255) NOT NULL,
   `senha` varchar(255) NOT NULL,
-  `email_verificado` tinyint(1) NOT NULL
+  `email_verificado` tinyint(1) NOT NULL,
+  `perfil_ativo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `clientes`
 --
 
-INSERT INTO `clientes` (`id_cliente`, `nome`, `cpf`, `data_nasc`, `telefone`, `email`, `senha`, `email_verificado`) VALUES
-(1, 'Adenor Gonçalves da Silva', '716.802.680-15', '2000-01-07', '971794122', 'adenor@teste.com', 'NovaSenhaSegura1', 1),
-(2, 'Mariana Oliveira Santos', '437.215.098-76', '1995-06-15', '(11) 98765-4321', 'mariana.santos@teste.com', 'senhaSegura123', 1),
-(3, 'Roberto Almeida Costa', '152.987.654-01', '1988-12-03', '(21) 99988-7766', 'roberto.almeida@teste.com', 'minhaSenha456', 1),
-(4, 'Carla Beatriz Ferreira', '254.632.198-87', '1992-04-22', '(31) 91234-5678', 'carla.ferreira@teste.com', 'outraSenha789', 1),
-(5, 'Pedro Henrique Souza', '345.768.902-65', '2001-09-10', '(41) 96543-2109', 'pedro.souza@teste.com', 'senhaPedro123', 1),
-(6, 'Ronaldo Silveira', '1234567891', '2002-02-22', '195226512', 'ronaldo@teste.com.br', '$2y$12$RjB8fKNNrPDTEW4xbMNoIuDnasjQ7vbn9.okm/lUpbm07jdbHJbCK', 0),
-(7, 'teste', '49333379851', '2001-03-02', '19971794122', 'teste@exemplo.com', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', 0),
-(30, 'teste2', '12957597802', '2001-03-02', '19994298868', 'rodrigooliveirafeitosa@gmail.com', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', 1);
+INSERT INTO `clientes` (`id_cliente`, `nome`, `cpf`, `data_nasc`, `telefone`, `email`, `senha`, `email_verificado`, `perfil_ativo`) VALUES
+(1, 'Adenor Gonçalves da Silva', '716.802.680-15', '2000-01-07', '971794122', 'adenor@teste.com', 'NovaSenhaSegura1', 1, 0),
+(2, 'Mariana Oliveira Santos', '437.215.098-76', '1995-06-15', '(11) 98765-4321', 'mariana.santos@teste.com', 'senhaSegura123', 1, 1),
+(3, 'Roberto Almeida Costa', '152.987.654-01', '1988-12-03', '(21) 99988-7766', 'roberto.almeida@teste.com', 'minhaSenha456', 1, 1),
+(4, 'Carla Beatriz Ferreira', '254.632.198-87', '1992-04-22', '(31) 91234-5678', 'carla.ferreira@teste.com', 'outraSenha789', 1, 1),
+(5, 'Pedro Henrique Souza', '345.768.902-65', '2001-09-10', '(41) 96543-2109', 'pedro.souza@teste.com', 'senhaPedro123', 1, 1),
+(6, 'Ronaldo Silveira', '1234567891', '2002-02-22', '195226512', 'ronaldo@teste.com.br', '$2y$12$RjB8fKNNrPDTEW4xbMNoIuDnasjQ7vbn9.okm/lUpbm07jdbHJbCK', 1, 1),
+(7, 'teste', '49333379851', '2001-03-02', '19971794122', 'teste@exemplo.com', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', 0, 1),
+(30, 'teste2', '12957597802', '2001-03-02', '19994298868', 'rodrigooliveirafeitosa@gmail.com', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', 1, 1);
 
 --
 -- Acionadores `clientes`
@@ -593,21 +617,22 @@ CREATE TABLE `estabelecimentos` (
   `termino_expediente` time NOT NULL,
   `email` varchar(255) NOT NULL,
   `senha` varchar(255) NOT NULL,
-  `email_verificado` tinyint(4) NOT NULL
+  `email_verificado` tinyint(4) NOT NULL,
+  `perfil_ativo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `estabelecimentos`
 --
 
-INSERT INTO `estabelecimentos` (`id_estab`, `razao_social`, `nome_fantasia`, `cnpj`, `telefone`, `cpf_titular`, `rg_titular`, `cnae`, `logradouro`, `numero`, `bairro`, `cidade`, `estado`, `cep`, `inicio_expediente`, `termino_expediente`, `email`, `senha`, `email_verificado`) VALUES
-(1, 'Restaurante Sabor Caseiro Ltda.', 'Novo Sabor Caseiro', '12.345.678/0001-90', '11999999999', '987.654.321-00', '98.765.432-1', '5611-2', 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'teste@email.com', 'NovaSenhaSegura2', 0),
-(2, 'Mercado Bom Preço Ltda.', 'Bom Preço', '23.456.789/0001-91', '(21) 99876-5432', '987.654.321-00', '98.765.432-1', '4711-3', 'Avenida Brasil', 456, 'Zona Sul', 'Rio de Janeiro', 'RJ', '20000-000', '07:00:00', '23:00:00', 'contato@bompreco.com', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', 1),
-(3, 'Restaurante Delícias do Campo Ltda.', 'Delícias do Campo', '34.567.890/0001-92', '(31) 91234-5678', '654.321.987-00', '65.432.198-7', '5611-2', 'Rua Tranquila', 789, 'Bairro Novo', 'Belo Horizonte', 'MG', '30000-000', '11:00:00', '23:00:00', 'contato@deliciasdocampo.com', 'senhaSegura789', 0),
-(4, 'Supermercado Sempre Fresco Ltda.', 'Sempre Fresco', '45.678.901/0001-93', '(41) 98765-6789', '321.987.654-00', '32.198.765-4', '4711-3', 'Rua Principal', 321, 'Zona Norte', 'Curitiba', 'PR', '80000-000', '08:00:00', '22:00:00', 'contato@semprefresco.com', 'senhaSuper123', 0),
-(5, 'Restaurante Sabores do Mar Ltda.', 'Sabores do Mar', '56.789.012/0001-94', '(51) 97654-3210', '210.987.654-00', '21.098.765-4', '5611-2', 'Rua da Praia', 654, 'Centro', 'Porto Alegre', 'RS', '90000-000', '12:00:00', '23:00:00', 'contato@saboresdomar.com', 'senhaSabores123', 0),
-(6, NULL, 'Novo Sabor Caseiro', '12.345.678/0001-90', '1199999999', NULL, NULL, NULL, 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'contato@saborcaseiro.com', '$2y$12$yNISLT2y2pcczjlwjFWIgecvHU2Lig6XuIqZHefoOW5MEtIHZPtuq', 0),
-(12, NULL, 'teste', '15454655', '54656', NULL, NULL, NULL, 'teste', 123, 'teste', 'teste', 'sp', '13183271', '08:00:00', '14:00:00', 'rodrigooliveirafeitosa@gmail.com', '$2y$12$4bMJUaZjqN4GRi/T7s6lj.jK4OFpHxPdKJ1PZRT9IUqB6SJvKehrK', 1);
+INSERT INTO `estabelecimentos` (`id_estab`, `razao_social`, `nome_fantasia`, `cnpj`, `telefone`, `cpf_titular`, `rg_titular`, `cnae`, `logradouro`, `numero`, `bairro`, `cidade`, `estado`, `cep`, `inicio_expediente`, `termino_expediente`, `email`, `senha`, `email_verificado`, `perfil_ativo`) VALUES
+(1, 'Restaurante Sabor Caseiro Ltda.', 'Novo Sabor Caseiro', '12.345.678/0001-90', '11999999999', '987.654.321-00', '98.765.432-1', '5611-2', 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'teste@email.com', 'NovaSenhaSegura2', 0, 0),
+(2, 'Mercado Bom Preço Ltda.', 'Bom Preço', '23.456.789/0001-91', '(21) 99876-5432', '987.654.321-00', '98.765.432-1', '4711-3', 'Avenida Brasil', 456, 'Zona Sul', 'Rio de Janeiro', 'RJ', '20000-000', '07:00:00', '23:00:00', 'contato@bompreco.com', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', 1, 1),
+(3, 'Restaurante Delícias do Campo Ltda.', 'Delícias do Campo', '34.567.890/0001-92', '(31) 91234-5678', '654.321.987-00', '65.432.198-7', '5611-2', 'Rua Tranquila', 789, 'Bairro Novo', 'Belo Horizonte', 'MG', '30000-000', '11:00:00', '23:00:00', 'contato@deliciasdocampo.com', 'senhaSegura789', 0, 1),
+(4, 'Supermercado Sempre Fresco Ltda.', 'Sempre Fresco', '45.678.901/0001-93', '(41) 98765-6789', '321.987.654-00', '32.198.765-4', '4711-3', 'Rua Principal', 321, 'Zona Norte', 'Curitiba', 'PR', '80000-000', '08:00:00', '22:00:00', 'contato@semprefresco.com', 'senhaSuper123', 0, 1),
+(5, 'Restaurante Sabores do Mar Ltda.', 'Sabores do Mar', '56.789.012/0001-94', '(51) 97654-3210', '210.987.654-00', '21.098.765-4', '5611-2', 'Rua da Praia', 654, 'Centro', 'Porto Alegre', 'RS', '90000-000', '12:00:00', '23:00:00', 'contato@saboresdomar.com', 'senhaSabores123', 0, 1),
+(6, NULL, 'Novo Sabor Caseiro', '12.345.678/0001-90', '1199999999', NULL, NULL, NULL, 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'contato@saborcaseiro.com', '$2y$12$yNISLT2y2pcczjlwjFWIgecvHU2Lig6XuIqZHefoOW5MEtIHZPtuq', 1, 1),
+(12, NULL, 'teste', '15454655', '54656', NULL, NULL, NULL, 'teste', 123, 'teste', 'teste', 'sp', '13183271', '08:00:00', '14:00:00', 'rodrigooliveirafeitosa@gmail.com', '$2y$12$4bMJUaZjqN4GRi/T7s6lj.jK4OFpHxPdKJ1PZRT9IUqB6SJvKehrK', 1, 1);
 
 --
 -- Acionadores `estabelecimentos`
@@ -975,6 +1000,47 @@ CREATE TABLE `pedidos_estabelecimento` (
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `planos`
+--
+
+CREATE TABLE `planos` (
+  `id_plano` int(11) NOT NULL,
+  `nome` varchar(60) NOT NULL,
+  `valor` decimal(10,2) NOT NULL,
+  `beneficios` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `planos`
+--
+
+INSERT INTO `planos` (`id_plano`, `nome`, `valor`, `beneficios`) VALUES
+(1, 'Básico', 49.90, '- Relatórios de vendas\r\n- Taxa por pedido reduzida (5%)'),
+(2, 'Premium', 99.90, '- Relatórios de vendas\r\n- Destaque na busca\r\n- Taxa reduzida por pedido (3%)');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `planos_estabelecimentos`
+--
+
+CREATE TABLE `planos_estabelecimentos` (
+  `id_estab` int(11) NOT NULL,
+  `id_plano` int(11) NOT NULL,
+  `ativo` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `planos_estabelecimentos`
+--
+
+INSERT INTO `planos_estabelecimentos` (`id_estab`, `id_plano`, `ativo`) VALUES
+(6, 1, 0),
+(6, 2, 1);
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `produtos`
 --
 
@@ -1165,6 +1231,19 @@ ALTER TABLE `pedidos`
   ADD KEY `fk_endereco_pedidos` (`endereco`);
 
 --
+-- Índices de tabela `planos`
+--
+ALTER TABLE `planos`
+  ADD PRIMARY KEY (`id_plano`);
+
+--
+-- Índices de tabela `planos_estabelecimentos`
+--
+ALTER TABLE `planos_estabelecimentos`
+  ADD KEY `fk_planos_estabelecimento` (`id_estab`),
+  ADD KEY `fk_planos` (`id_plano`);
+
+--
 -- Índices de tabela `produtos`
 --
 ALTER TABLE `produtos`
@@ -1255,6 +1334,12 @@ ALTER TABLE `pedidos`
   MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
+-- AUTO_INCREMENT de tabela `planos`
+--
+ALTER TABLE `planos`
+  MODIFY `id_plano` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT de tabela `produtos`
 --
 ALTER TABLE `produtos`
@@ -1310,6 +1395,13 @@ ALTER TABLE `pedidos`
   ADD CONSTRAINT `fk_pagamento_pedido` FOREIGN KEY (`forma_pagamento`) REFERENCES `formas_pagamentos` (`id_formapag`),
   ADD CONSTRAINT `fk_pedidos_clientes` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`),
   ADD CONSTRAINT `fk_status_pedidos` FOREIGN KEY (`status_entrega`) REFERENCES `status_pedidos` (`id_status`);
+
+--
+-- Restrições para tabelas `planos_estabelecimentos`
+--
+ALTER TABLE `planos_estabelecimentos`
+  ADD CONSTRAINT `fk_planos` FOREIGN KEY (`id_plano`) REFERENCES `planos` (`id_plano`),
+  ADD CONSTRAINT `fk_planos_estabelecimento` FOREIGN KEY (`id_estab`) REFERENCES `estabelecimentos` (`id_estab`);
 
 --
 -- Restrições para tabelas `produtos`

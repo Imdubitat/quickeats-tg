@@ -136,6 +136,12 @@ Route::middleware('auth:estabelecimento')->group(function () {
 
     // Página de métricas
     Route::get('/dashboard-restaurante', [EstabelecimentoController::class, 'exibirDashboardRestaurante'])->name('dashboard_restaurante');
+
+    // Página de planos
+    Route::get('/planos-restaurante', [EstabelecimentoController::class, 'exibirPlanosdRestaurante'])->name('planos_restaurante');
+
+    // Rota para escolher plano
+    Route::post('/escolher-plano', [EstabelecimentoController::class, 'escolherPlano'])->name('escolher_plano');
 });
 
 // Rota para solicitação de link para redefinição de senha via email
@@ -170,4 +176,16 @@ Route::middleware('auth:administrador')->group(function () {
 
     // Página com todos os clientes
     Route::get('/admin/clientes', [AdministradorController::class, 'exibirClientes'])->name('admin_clientes');
+
+    // Ativar perfil de clientes
+    Route::put('/clientes/{id}/ativar', [AdministradorController::class, 'ativarCliente'])->name('ativar_cliente');
+
+    // Desativar perfil de clientes
+    Route::put('/clientes/{id}/desativar', [AdministradorController::class, 'desativarCliente'])->name('desativar_cliente');
+
+    // Ativar perfil de restaurantes
+    Route::put('/restaurantes/{id}/ativar', [AdministradorController::class, 'ativarRestaurantes'])->name('ativar_restaurantes');
+
+    // Desativar perfil de restaurantes
+    Route::put('/restaurantes/{id}/desativar', [AdministradorController::class, 'desativarRestaurantes'])->name('desativar_restaurantes');
 });
