@@ -16,7 +16,7 @@
             <th>Telefone</th>
             <th>CPF titular</th>
             <th>E-mail</th>
-            <th></th>
+            <th>Ações</th>
         </tr>
         @foreach($restaurantes as $r)
             <tr>
@@ -24,7 +24,20 @@
                 <td>{{ $r->telefone }}</td>
                 <td>{{ $r->cpf_titular }}</td>
                 <td>{{ $r->email }}</td>
-                <td><a id="details" class="btn btn-custom ms-4" data-bs-toggle="modal" data-bs-target="#detailsModal-{{ $r->id_estab }}">Detalhes</a></td>
+                <td>
+                    <a id="details" class="btn btn-custom4 ms-4" data-bs-toggle="modal" data-bs-target="#detailsModal-{{ $r->id_estab }}">Detalhes</a>
+                    <form action="{{ route('desativar_restaurantes', $r->id_estab) }}" method="POST" style="display:inline;">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class="btn btn-danger ms-2" {{ $r->perfil_ativo == 0 ? 'disabled' : '' }}>Desativar</button>
+                    </form>
+
+                    <form action="{{ route('ativar_restaurantes', $r->id_estab) }}" method="POST" style="display:inline;">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class="btn btn-success ms-2" {{ $r->perfil_ativo == 1 ? 'disabled' : '' }}>Ativar</button>
+                    </form>
+                </td>
             </tr>
         @endforeach
     </table>

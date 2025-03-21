@@ -84,14 +84,19 @@ class ClienteController extends Controller
         ]);
 
         $email_verificado = Cliente::where('email', $validatedData['emailLogin'])->where('email_verificado', 1)->first();
+        $perfil_ativo = Cliente::where('email', $validatedData['emailLogin'])->where('perfil_ativo', 1)->first();
 
         // Tentar autenticar o cliente usando o guard 'cliente'
         if (Auth::guard('cliente')->attempt(['email' => $request->input('emailLogin'), 'password' => $request->input('senhaLogin')])) {
-            if($email_verificado){
-                // Login bem-sucedido, redirecionar para a página inicial do profissional
-                return redirect()->route('home_cliente')->with('success', 'Login realizado com sucesso!');
+            if($perfil_ativo){
+                if($email_verificado){
+                    // Login bem-sucedido, redirecionar para a página inicial do profissional
+                    return redirect()->route('home_cliente')->with('success', 'Login realizado com sucesso!');
+                } else {
+                    return redirect()->back()->with('error', 'Email não verificado!');
+                }
             } else {
-                return redirect()->back()->with('error', 'Email não verificado!');
+                return redirect()->back()->with('error', 'Seu perfil está desativado');
             }
         } else {
             // Login falhou, redirecionar de volta com uma mensagem de erro

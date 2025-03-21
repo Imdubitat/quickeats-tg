@@ -16,7 +16,7 @@
             <th>CPF</th>
             <th>Telefone</th>
             <th>E-mail</th>
-            <th></th>
+            <th>Ações</th>
         </tr>
         @foreach($clientes as $c)
             <tr>
@@ -24,7 +24,20 @@
                 <td>{{ $c->telefone }}</td>
                 <td>{{ $c->cpf }}</td>
                 <td>{{ $c->email }}</td>
-                <td><a id="details" class="btn btn-custom ms-4" data-bs-toggle="modal" data-bs-target="#detailsModal-{{ $c->id_cliente }}">Detalhes</a></td>
+                <td>
+                    <a id="details" class="btn btn-custom4 ms-4" data-bs-toggle="modal" data-bs-target="#detailsModal-{{ $c->id_cliente }}">Detalhes</a>
+                    <form action="{{ route('desativar_cliente', $c->id_cliente) }}" method="POST" style="display:inline;">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class="btn btn-danger ms-2" {{ $c->perfil_ativo == 0 ? 'disabled' : '' }}>Desativar</button>
+                    </form>
+
+                    <form action="{{ route('ativar_cliente', $c->id_cliente) }}" method="POST" style="display:inline;">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class="btn btn-success ms-2" {{ $c->perfil_ativo == 1 ? 'disabled' : '' }}>Ativar</button>
+                    </form>
+                </td>
             </tr>
         @endforeach
     </table>

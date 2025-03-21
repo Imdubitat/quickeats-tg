@@ -61,4 +61,28 @@ class AdministradorController extends Controller
 
         return view('admin_clientes', compact('clientes'));
     }
+
+    public function ativarCliente($id)
+    {
+        DB::table('clientes')->where('id_cliente', $id)->update(['perfil_ativo' => 1]);
+        return redirect()->back()->with('success', 'Cliente ativado com sucesso!');
+    }
+
+    public function desativarCliente($id)
+    {
+        DB::table('clientes')->where('id_cliente', $id)->update(['perfil_ativo' => 0]);
+        return redirect()->back()->with('success', 'Cliente desativado com sucesso!');
+    }
+
+    public function ativarRestaurantes($id)
+    {
+        DB::table('estabelecimentos')->where('id_estab', $id)->update(['perfil_ativo' => 1]);
+        return redirect()->back()->with('success', 'Restaurante ativado com sucesso!');
+    }
+
+    public function desativarRestaurantes($id)
+    {
+        DB::table('estabelecimentos')->where('id_estab', $id)->update(['perfil_ativo' => 0]);
+        return redirect()->back()->with('success', 'Restaurante desativado com sucesso!');
+    }
 }
