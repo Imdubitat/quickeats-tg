@@ -82,6 +82,17 @@ Route::middleware('auth:cliente')->group(function () {
 
     // Excluir endereco
     Route::post('/enderecos/excluir/{id}', [ClienteController::class, 'excluirEndereco'])->name('excluir_endereco');
+
+    // Exibir mensagens de suporte
+    Route::get('/clientes/lista-chamados', [ClienteController::class, 'exibirChamados'])->name('listar_chamados_cliente');
+
+    // Enviar mensagem para o suporte
+    Route::post('/clientes/abrir-chamado', [ClienteController::class, 'abrirChamado'])->name('abrir_chamado_cliente');
+
+    Route::get('/cliente/chamados/{id_chat}/mensagens', [ClienteController::class, 'buscarMensagens']);
+
+    // Responder chamados
+    Route::post('/cliente/responder-chamado', [ClienteController::class, 'responderChamado'])->name('cliente_responder_chamado');
 });
 
 //Rota para solicitação de link para redefinição de senha via email
@@ -142,6 +153,17 @@ Route::middleware('auth:estabelecimento')->group(function () {
 
     // Rota para escolher plano
     Route::post('/escolher-plano', [EstabelecimentoController::class, 'escolherPlano'])->name('escolher_plano');
+
+    // Exibir mensagens de suporte
+    Route::get('/estab/lista-chamados', [EstabelecimentoController::class, 'exibirChamados'])->name('listar_chamados_estab');
+
+    // Enviar mensagem para o suporte
+    Route::post('/estab/abrir-chamado', [EstabelecimentoController::class, 'abrirChamado'])->name('abrir_chamado_estab');
+
+    Route::get('/estab/chamados/{id_chat}/mensagens', [EstabelecimentoController::class, 'buscarMensagens']);
+
+    // Responder chamados
+    Route::post('/estab/responder-chamado', [EstabelecimentoController::class, 'responderChamado'])->name('estab_responder_chamado');
 });
 
 // Rota para solicitação de link para redefinição de senha via email
@@ -188,4 +210,13 @@ Route::middleware('auth:administrador')->group(function () {
 
     // Desativar perfil de restaurantes
     Route::put('/restaurantes/{id}/desativar', [AdministradorController::class, 'desativarRestaurantes'])->name('desativar_restaurantes');
+
+    // Exibir chamados
+    Route::get('/admin/chamados', [AdministradorController::class, 'exibirChamados'])->name('chamados_admin');
+
+    // Responder chamados
+    Route::post('/admin/responder-chamado/cliente', [AdministradorController::class, 'responderChamadoCliente'])->name('responder_chamado_cliente');
+    Route::post('/admin/responder-chamado/estab', [AdministradorController::class, 'responderChamadoEstab'])->name('responder_chamado_estab');
+
+    Route::get('/chamados/{id_chat}/mensagens', [AdministradorController::class, 'buscarMensagens']);
 });

@@ -31,7 +31,7 @@
                             <a class="nav-link text-white text-nowrap" href="{{ route('admin_clientes') }}">Clientes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white text-nowrap" href="">Mensagens</a>
+                            <a class="nav-link text-white text-nowrap" href="{{ route('chamados_admin') }}">Mensagens</a>
                         </li>
                     </ul>
 
@@ -59,9 +59,9 @@
             <div class="offcanvas-body">
                 <ul class="nav flex-column">
                     <li class="nav-item"><a class="nav-link text-dark" href="{{ route('adm_cliente') }}">Minha conta</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="">Restaurantes</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="">Clientes</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="">Mensagens</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="{{ route('admin_restaurantes') }}">Restaurantes</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="{{ route('admin_clientes') }}">Clientes</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="{{ route('chamados_admin') }}">Mensagens</a></li>
                     <li><a class="dropdown-item" href="{{ route('logout') }}">Log out</a></li>
                 </ul>
             </div>

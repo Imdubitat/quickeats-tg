@@ -62,14 +62,14 @@
         <div class="row">
             <div class="col-md-6 mb-5">
                 <h3>ENTRE EM CONTATO</h3>
-                <form>
+                <form action="" method="post">
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" placeholder="Seu email">
                     </div>
                     <div class="mb-3">
                         <label for="message" class="form-label">Mensagem</label>
-                        <textarea class="form-control" id="message" rows="3" placeholder="Sua mensagem"></textarea>
+                        <textarea class="form-control" id="message" rows="5" placeholder="Sua mensagem"></textarea>
                     </div>
                     <button type="submit" class="btn btn-custom">Enviar</button>
                 </form>

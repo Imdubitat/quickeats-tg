@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Estabelecimento;
 use App\Models\ConfirmacaoEmail;
+use App\Models\MensagensEstab;
 use App\Mail\ConfirmaEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -510,5 +511,96 @@ class EstabelecimentoController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Erro ao escolher o plano.');
         }
+    }
+
+    public function exibirChamados()
+    {
+        $id_estab = Auth::guard('estabelecimento')->id();
+
+        // Seleciona as últimas mensagens de cada chat, agrupando pelo id_chat
+        $mensagens = DB::table('mensagens_estab')
+        ->where('id_remetente', $id_estab)
+        ->orWhere('id_destinatario', $id_estab)
+        ->orderBy('data_envio', 'desc')  // Ordena por data de envio para pegar a última mensagem
+        ->get()
+        ->groupBy('id_chat')  // Agrupa as mensagens pelo id_chat
+        ->map(function ($mensagensChat) {
+            return $mensagensChat->first();  // Pega a primeira mensagem de cada grupo (última mensagem do chat)
+        });
+
+        $categorias = DB::table('categorias_chamado')
+        ->get();
+
+        return view('chamados_estab', compact('mensagens', 'categorias', 'id_estab'));
+    }
+
+    public function buscarMensagens($id_chat)
+    {
+        $id_estab = Auth::guard('estabelecimento')->id();
+
+        // Busca todas as mensagens do chat específico
+        $mensagens = DB::table('mensagens_estab')
+            ->where('id_chat', $id_chat)
+            ->orderBy('data_envio', 'asc')
+            ->get();
+
+        return response()->json($mensagens);
+    }
+
+    public function abrirChamado(Request $request)
+    {
+        $id_estab = auth()->guard('estabelecimento')->id();
+        $id_chat = (string) Str::uuid();
+
+        // Criando a mensagem
+        $mensagens = MensagensEstab::create([
+            'id_chat' => $id_chat,
+            'id_remetente' => $id_estab,
+            'id_destinatario' => 1,
+            'categoria' => $request->categoria,
+            'mensagem' => $request->mensagem,
+            'data_envio' => now(),
+            'ativo' => 1,
+        ]);
+
+        return redirect()->back()->with('success', 'Mensagem enviada com sucesso!');
+    }
+
+    public function responderChamado(Request $request)
+    {
+        $id_estab = auth()->guard('estabelecimento')->id();
+        $chatId = $request->input('id_chat');
+        $resposta = $request->input('resposta');
+    
+        // Busca a última mensagem do chat para descobrir o destinatário
+        $ultimaMensagem = MensagensEstab::where('id_chat', $chatId)
+            ->orderBy('data_envio', 'desc')
+            ->first();
+    
+        // Se não houver mensagens no chat, atribui o próprio admin como destinatário
+        if (!$ultimaMensagem) {
+            $id_destinatario = 1;  // Caso não exista histórico, o destinatário pode ser o admin ou qualquer outra lógica
+        } else {
+            // Verifica quem é o destinatário da última mensagem
+            $id_destinatario = ($ultimaMensagem->id_remetente == Auth::id()) 
+                ? $ultimaMensagem->id_destinatario 
+                : $ultimaMensagem->id_remetente;
+
+                $categoria = $ultimaMensagem->categoria;
+        }
+    
+        // Cria uma nova mensagem no banco de dados
+        $novaMensagem = new MensagensEstab();
+        $novaMensagem->id_chat = $chatId;
+        $novaMensagem->id_remetente = $id_estab;  // O remetente é o usuário logado
+        $novaMensagem->id_destinatario = $id_destinatario;  // O destinatário é o oposto da última mensagem
+        $novaMensagem->categoria = $categoria;
+        $novaMensagem->mensagem = $resposta;
+        $novaMensagem->data_envio = now();  // A data de envio é a hora atual
+        $novaMensagem->ativo = 1;
+        $novaMensagem->save();
+    
+        // Redireciona ou retorna uma resposta para o usuário
+        return redirect()->back()->with('success', 'Resposta enviada com sucesso!');
     }
 }

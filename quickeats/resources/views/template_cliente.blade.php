@@ -57,6 +57,7 @@
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ route('adm_cliente') }}">Meu perfil</a></li>
                                 <li><a class="dropdown-item" href="{{ route('enderecos') }}">Meus Endereços</a></li>
+                                <li><a class="dropdown-item" href="{{ route('listar_chamados_cliente') }}">Suporte</a></li>
                                 <li><a class="dropdown-item" href="{{ route('logout') }}">Log out</a></li>
                             </ul>
                         </li>
@@ -82,7 +83,9 @@
                         </form>
                     </li>
                     <li class="nav-item"><a class="nav-link text-dark" href="{{ route('adm_cliente') }}">Minha conta</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="">Meus pedidos</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="{{ route('pedidos_cliente') }}">Meus pedidos</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="{{ route('enderecos') }}">Meus Endereços</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="{{ route('listar_chamados_cliente') }}">Suporte</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="{{ route('carrinho') }}">Meu carrinho</a></li>
                     <li class="nav-item">
                         <a class="nav-link text-dark" href="">Restaurantes</a>

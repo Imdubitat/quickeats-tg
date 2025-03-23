@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Tempo de geração: 21/03/2025 às 21:33
+-- Host: localhost
+-- Tempo de geração: 23/03/2025 às 19:43
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -446,6 +446,44 @@ CREATE TABLE `carrinho` (
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `categorias_chamado`
+--
+
+CREATE TABLE `categorias_chamado` (
+  `id` int(11) NOT NULL,
+  `nome` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `categorias_chamado`
+--
+
+INSERT INTO `categorias_chamado` (`id`, `nome`) VALUES
+(1, 'Problema com pedido (atraso, erro, item faltando)'),
+(2, 'Pedido cancelado sem motivo'),
+(3, 'Problema com pagamento'),
+(4, 'Cupom de desconto não aplicado'),
+(5, 'Entrega atrasada'),
+(6, 'Pedido entregue no endereço errado'),
+(7, 'Produto chegou danificado'),
+(8, 'Pedido não foi entregue'),
+(9, 'Informação errada no cardápio'),
+(10, 'Restaurante não respondeu à solicitação'),
+(11, 'Produto indisponível no pedido'),
+(12, 'Problema para fazer login'),
+(13, 'Esqueci minha senha'),
+(14, 'E-mail ou telefone não reconhecido'),
+(15, 'Conta bloqueada ou desativada'),
+(16, 'Problema na localização do cliente'),
+(17, 'Pedido cancelado pelo cliente após retirada'),
+(18, 'Problema com pagamento do entregador'),
+(19, 'Sugestão de melhoria'),
+(20, 'Problema técnico no aplicativo/site'),
+(21, 'Dúvida sobre o serviço');
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `categorias_produtos`
 --
 
@@ -632,7 +670,7 @@ INSERT INTO `estabelecimentos` (`id_estab`, `razao_social`, `nome_fantasia`, `cn
 (4, 'Supermercado Sempre Fresco Ltda.', 'Sempre Fresco', '45.678.901/0001-93', '(41) 98765-6789', '321.987.654-00', '32.198.765-4', '4711-3', 'Rua Principal', 321, 'Zona Norte', 'Curitiba', 'PR', '80000-000', '08:00:00', '22:00:00', 'contato@semprefresco.com', 'senhaSuper123', 0, 1),
 (5, 'Restaurante Sabores do Mar Ltda.', 'Sabores do Mar', '56.789.012/0001-94', '(51) 97654-3210', '210.987.654-00', '21.098.765-4', '5611-2', 'Rua da Praia', 654, 'Centro', 'Porto Alegre', 'RS', '90000-000', '12:00:00', '23:00:00', 'contato@saboresdomar.com', 'senhaSabores123', 0, 1),
 (6, NULL, 'Novo Sabor Caseiro', '12.345.678/0001-90', '1199999999', NULL, NULL, NULL, 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'contato@saborcaseiro.com', '$2y$12$yNISLT2y2pcczjlwjFWIgecvHU2Lig6XuIqZHefoOW5MEtIHZPtuq', 1, 1),
-(12, NULL, 'teste', '15454655', '54656', NULL, NULL, NULL, 'teste', 123, 'teste', 'teste', 'sp', '13183271', '08:00:00', '14:00:00', 'rodrigooliveirafeitosa@gmail.com', '$2y$12$4bMJUaZjqN4GRi/T7s6lj.jK4OFpHxPdKJ1PZRT9IUqB6SJvKehrK', 1, 1);
+(12, NULL, 'teste', '15454655', '54656', NULL, NULL, NULL, 'teste', 123, 'teste', 'teste', 'sp', '13183271', '08:00:00', '14:00:00', 'rodrigooliveirafeitosa@gmail.com', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', 1, 1);
 
 --
 -- Acionadores `estabelecimentos`
@@ -825,7 +863,10 @@ INSERT INTO `historico_estabelecimentos` (`id_alteracao`, `id_estab`, `campo_alt
 (24, 6, 'email', 'contato@saborcaseiro.com.br', 'contato@saborcaseiro.com', '2025-02-22 16:21:06'),
 (25, 12, 'senha', '$2y$12$wC7HEvaHP3td2g77Yeu/bOquY6W/YNFJfySwzfTezeULELGQdnDv.', '$2y$12$5EQIZn14KfCvb0cE3FJouemV36Csf.rC7OOiOd6PBX5WdAGPLjJHq', '2025-03-10 16:36:50'),
 (26, 12, 'senha', '$2y$12$5EQIZn14KfCvb0cE3FJouemV36Csf.rC7OOiOd6PBX5WdAGPLjJHq', '$2y$12$1kcaVuigyXvlNRlTEjjFLuZ0EveQWHU6phkrQtwA1Opz/rmP5y9b2', '2025-03-10 17:05:13'),
-(27, 12, 'senha', '$2y$12$1kcaVuigyXvlNRlTEjjFLuZ0EveQWHU6phkrQtwA1Opz/rmP5y9b2', '$2y$12$4bMJUaZjqN4GRi/T7s6lj.jK4OFpHxPdKJ1PZRT9IUqB6SJvKehrK', '2025-03-10 17:09:52');
+(27, 12, 'senha', '$2y$12$1kcaVuigyXvlNRlTEjjFLuZ0EveQWHU6phkrQtwA1Opz/rmP5y9b2', '$2y$12$4bMJUaZjqN4GRi/T7s6lj.jK4OFpHxPdKJ1PZRT9IUqB6SJvKehrK', '2025-03-10 17:09:52'),
+(28, 6, 'senha', '$2y$12$yNISLT2y2pcczjlwjFWIgecvHU2Lig6XuIqZHefoOW5MEtIHZPtuq', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', '2025-03-20 20:22:45'),
+(29, 12, 'senha', '$2y$12$4bMJUaZjqN4GRi/T7s6lj.jK4OFpHxPdKJ1PZRT9IUqB6SJvKehrK', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', '2025-03-20 20:23:25'),
+(30, 12, 'senha', '$2y$12$4bMJUaZjqN4GRi/T7s6lj.jK4OFpHxPdKJ1PZRT9IUqB6SJvKehrK', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', '2025-03-23 15:41:11');
 
 -- --------------------------------------------------------
 
@@ -914,6 +955,66 @@ INSERT INTO `logs_tokens` (`id_token`, `id_usuario`, `email`, `motivo`, `tipo_us
 (29, 30, 'rodrigooliveirafeitosa@gmail.com', 'token expirado - redefinição de senha', 'cliente', 'm5lYvtNPUV7ZTyKpNKNYJKPXn4GqnlBNdQLK3o0MsHaYsl8oUN1Bf2LIy0nm', '2025-03-10 20:14:51', '2025-03-10 20:16:07'),
 (30, 30, 'rodrigooliveirafeitosa@gmail.com', 'redefinição de senha', 'cliente', 'DK7SBSKYD1SANxoMfhSPtToYlAFsH15yIjDO8ordnwiKlkXhp6UPY6KlkVtw', '2025-03-10 20:17:19', '2025-03-10 20:17:37'),
 (31, 30, 'rodrigooliveirafeitosa@gmail.com', 'token expirado - redefinição de senha', 'cliente', 'caaM3LC8UYZMatLCqtCGtfa9EsuOrj6SsEQe3niMfLA0dR4lRvkQQPVgOoRO', '2025-03-10 20:18:13', '2025-03-10 20:19:33');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `mensagens_cliente`
+--
+
+CREATE TABLE `mensagens_cliente` (
+  `id_mensagem` int(11) NOT NULL,
+  `id_chat` char(36) NOT NULL,
+  `id_remetente` int(11) NOT NULL,
+  `id_destinatario` int(11) NOT NULL,
+  `categoria` enum('Problema com pedido (atraso, erro, item faltando)','Pedido cancelado sem motivo','Problema com pagamento','Cupom de desconto não aplicado','Entrega atrasada','Pedido entregue no endereço errado','Produto chegou danificado','Pedido não foi entregue','Informação errada no cardápio','Restaurante não respondeu à solicitação','Produto indisponível no pedido','Problema para fazer login','Esqueci minha senha','E-mail ou telefone não reconhecido','Conta bloqueada ou desativada','Problema na localização do cliente','Pedido cancelado pelo cliente após retirada','Problema com pagamento do entregador','Sugestão de melhoria','Problema técnico no aplicativo/site','Dúvida sobre o serviço') NOT NULL,
+  `mensagem` text NOT NULL,
+  `data_envio` datetime NOT NULL,
+  `ativo` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `mensagens_cliente`
+--
+
+INSERT INTO `mensagens_cliente` (`id_mensagem`, `id_chat`, `id_remetente`, `id_destinatario`, `categoria`, `mensagem`, `data_envio`, `ativo`) VALUES
+(1, '1e7793c5-937f-4a93-8358-457f81a53c3f', 30, 1, 'Sugestão de melhoria', 'tudo', '2025-03-21 00:48:33', 1),
+(2, '1e7793c5-937f-4a93-8358-457f81a53c3f', 1, 30, 'Sugestão de melhoria', 'ok', '2025-03-21 01:01:27', 1),
+(3, '1e7793c5-937f-4a93-8358-457f81a53c3f', 1, 30, 'Sugestão de melhoria', 'Obrigado', '2025-03-21 01:05:18', 1),
+(4, '1e7793c5-937f-4a93-8358-457f81a53c3f', 1, 30, 'Sugestão de melhoria', 'fodase', '2025-03-21 11:36:33', 1),
+(5, '1e7793c5-937f-4a93-8358-457f81a53c3f', 1, 30, 'Sugestão de melhoria', 'vtnc', '2025-03-21 12:15:47', 1),
+(6, '1e7793c5-937f-4a93-8358-457f81a53c3f', 30, 1, 'Sugestão de melhoria', 'Isso não se faz, parceiro. Vou te pegar nas ideia', '2025-03-23 17:42:13', 1),
+(7, '1e7793c5-937f-4a93-8358-457f81a53c3f', 30, 1, 'Sugestão de melhoria', 'gggdgerte', '2025-03-23 17:54:09', 1),
+(8, '1e7793c5-937f-4a93-8358-457f81a53c3f', 30, 1, 'Sugestão de melhoria', 'chapei', '2025-03-23 18:39:54', 1),
+(9, '1e7793c5-937f-4a93-8358-457f81a53c3f', 1, 30, 'Sugestão de melhoria', 'Opa meu nobre. Tá na paz', '2025-03-23 18:42:12', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `mensagens_estab`
+--
+
+CREATE TABLE `mensagens_estab` (
+  `id_mensagem` int(11) NOT NULL,
+  `id_chat` char(36) NOT NULL,
+  `id_remetente` int(11) NOT NULL,
+  `id_destinatario` int(11) NOT NULL,
+  `categoria` enum('Problema com pedido (atraso, erro, item faltando)','Pedido cancelado sem motivo','Problema com pagamento','Cupom de desconto não aplicado','Entrega atrasada','Pedido entregue no endereço errado','Produto chegou danificado','Pedido não foi entregue','Informação errada no cardápio','Restaurante não respondeu à solicitação','Produto indisponível no pedido','Problema para fazer login','Esqueci minha senha','E-mail ou telefone não reconhecido','Conta bloqueada ou desativada','Problema na localização do cliente','Pedido cancelado pelo cliente após retirada','Problema com pagamento do entregador','Sugestão de melhoria','Problema técnico no aplicativo/site','Dúvida sobre o serviço') NOT NULL,
+  `mensagem` text NOT NULL,
+  `data_envio` datetime NOT NULL,
+  `ativo` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `mensagens_estab`
+--
+
+INSERT INTO `mensagens_estab` (`id_mensagem`, `id_chat`, `id_remetente`, `id_destinatario`, `categoria`, `mensagem`, `data_envio`, `ativo`) VALUES
+(1, '49f89de6-dc76-45f0-a491-717f48af85ad', 12, 1, 'Pedido não foi entregue', 'Comeram meu lanche cuzaum', '2025-03-21 00:50:31', 1),
+(2, '49f89de6-dc76-45f0-a491-717f48af85ad', 1, 12, 'Pedido não foi entregue', 'Essa é a caminhada, pa pum', '2025-03-23 17:32:13', 1),
+(3, '49f89de6-dc76-45f0-a491-717f48af85ad', 12, 1, 'Pedido não foi entregue', 'se você da pum, eu tô pumba', '2025-03-23 17:56:07', 1),
+(4, '49f89de6-dc76-45f0-a491-717f48af85ad', 1, 12, 'Pedido não foi entregue', 'hakuna matata', '2025-03-23 18:42:40', 1),
+(5, '49f89de6-dc76-45f0-a491-717f48af85ad', 12, 1, 'Pedido não foi entregue', 'iiiiiiiiiiiih', '2025-03-23 18:43:00', 1);
 
 -- --------------------------------------------------------
 
@@ -1157,6 +1258,12 @@ ALTER TABLE `avaliacoes`
   ADD KEY `fk_pedido_avaliacao` (`id_pedido`);
 
 --
+-- Índices de tabela `categorias_chamado`
+--
+ALTER TABLE `categorias_chamado`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Índices de tabela `categorias_produtos`
 --
 ALTER TABLE `categorias_produtos`
@@ -1221,6 +1328,18 @@ ALTER TABLE `logs_tokens`
   ADD PRIMARY KEY (`id_token`);
 
 --
+-- Índices de tabela `mensagens_cliente`
+--
+ALTER TABLE `mensagens_cliente`
+  ADD PRIMARY KEY (`id_mensagem`);
+
+--
+-- Índices de tabela `mensagens_estab`
+--
+ALTER TABLE `mensagens_estab`
+  ADD PRIMARY KEY (`id_mensagem`);
+
+--
 -- Índices de tabela `pedidos`
 --
 ALTER TABLE `pedidos`
@@ -1274,6 +1393,12 @@ ALTER TABLE `avaliacoes`
   MODIFY `id_avaliacao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
+-- AUTO_INCREMENT de tabela `categorias_chamado`
+--
+ALTER TABLE `categorias_chamado`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
 -- AUTO_INCREMENT de tabela `categorias_produtos`
 --
 ALTER TABLE `categorias_produtos`
@@ -1313,7 +1438,7 @@ ALTER TABLE `historico_clientes`
 -- AUTO_INCREMENT de tabela `historico_estabelecimentos`
 --
 ALTER TABLE `historico_estabelecimentos`
-  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT de tabela `itens_pedidos`
@@ -1326,6 +1451,18 @@ ALTER TABLE `itens_pedidos`
 --
 ALTER TABLE `logs_tokens`
   MODIFY `id_token` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+
+--
+-- AUTO_INCREMENT de tabela `mensagens_cliente`
+--
+ALTER TABLE `mensagens_cliente`
+  MODIFY `id_mensagem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT de tabela `mensagens_estab`
+--
+ALTER TABLE `mensagens_estab`
+  MODIFY `id_mensagem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de tabela `pedidos`
