@@ -200,16 +200,16 @@ Route::middleware('auth:administrador')->group(function () {
     Route::get('/admin/clientes', [AdministradorController::class, 'exibirClientes'])->name('admin_clientes');
 
     // Ativar perfil de clientes
-    Route::put('/clientes/{id}/ativar', [AdministradorController::class, 'ativarCliente'])->name('ativar_cliente');
+    Route::put('/admin//clientes/{id}/ativar', [AdministradorController::class, 'ativarCliente'])->name('ativar_cliente');
 
     // Desativar perfil de clientes
-    Route::put('/clientes/{id}/desativar', [AdministradorController::class, 'desativarCliente'])->name('desativar_cliente');
+    Route::put('/admin//clientes/{id}/desativar', [AdministradorController::class, 'desativarCliente'])->name('desativar_cliente');
 
     // Ativar perfil de restaurantes
-    Route::put('/restaurantes/{id}/ativar', [AdministradorController::class, 'ativarRestaurantes'])->name('ativar_restaurantes');
+    Route::put('/admin//restaurantes/{id}/ativar', [AdministradorController::class, 'ativarRestaurantes'])->name('ativar_restaurantes');
 
     // Desativar perfil de restaurantes
-    Route::put('/restaurantes/{id}/desativar', [AdministradorController::class, 'desativarRestaurantes'])->name('desativar_restaurantes');
+    Route::put('/admin//restaurantes/{id}/desativar', [AdministradorController::class, 'desativarRestaurantes'])->name('desativar_restaurantes');
 
     // Exibir chamados
     Route::get('/admin/chamados', [AdministradorController::class, 'exibirChamados'])->name('chamados_admin');
@@ -219,4 +219,7 @@ Route::middleware('auth:administrador')->group(function () {
     Route::post('/admin/responder-chamado/estab', [AdministradorController::class, 'responderChamadoEstab'])->name('responder_chamado_estab');
 
     Route::get('/chamados/{id_chat}/mensagens', [AdministradorController::class, 'buscarMensagens']);
+
+    // Exibir planos ativos
+    Route::get('/admin/planos', [AdministradorController::class, 'planosAtivos'])->name('planos_ativos');
 });

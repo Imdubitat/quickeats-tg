@@ -219,4 +219,11 @@ class AdministradorController extends Controller
         // Redireciona ou retorna uma resposta para o usuário
         return redirect()->back()->with('success', 'Resposta enviada com sucesso!');
     }
+
+    public function planosAtivos() 
+    {
+        $restaurantes = DB::select('CALL exibir_planos()');
+        
+        return view('planos_admin', compact('restaurantes'));
+    }
 }

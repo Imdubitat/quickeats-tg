@@ -33,6 +33,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-white text-nowrap" href="{{ route('chamados_admin') }}">Mensagens</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white text-nowrap" href="{{ route('planos_ativos') }}">Gestão de planos</a>
+                        </li>
                     </ul>
 
                     <ul class="navbar-nav ms-auto">
