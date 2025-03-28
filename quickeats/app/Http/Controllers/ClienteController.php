@@ -120,6 +120,24 @@ class ClienteController extends Controller
         return view('catalogo_produtos', compact('produtos', 'categorias'));
     }
 
+    public function exibirRestaurantesDisponiveis()
+    {
+        $restaurantes = DB::select('CALL listar_estab()');
+
+        return view('catalogo_restaurantes', compact('restaurantes'));
+    }
+
+    public function exibirCardapio($id)
+    {
+        $restaurante = DB::table('estabelecimentos')
+                    ->where('id_estab', $id)
+                    ->first();
+
+        $produtos = DB::select('CALL exibir_produtos_estab(?)', [$id]);
+        
+        return view('cardapio_restaurante', compact('restaurante', 'produtos'));
+    }
+
     public function exibirCarrinho()
     {
         $id_cliente = auth()->guard('cliente')->id();

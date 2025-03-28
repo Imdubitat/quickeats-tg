@@ -29,6 +29,12 @@ Route::middleware('auth:cliente')->group(function () {
     // Catálogo de produtos
     Route::get('/catalogo-produtos', [ClienteController::class, 'exibirProdutosDisponiveis'])->name('catalogo_produtos');
 
+    // Catálogo de restaurantes
+    Route::get('/catalogo-restaurantes', [ClienteController::class, 'exibirRestaurantesDisponiveis'])->name('catalogo_restaurantes');
+
+    // Cardápio do restaurante
+    Route::get('/restaurante/{id}', [ClienteController::class, 'exibirCardapio'])->name('cardapio_restaurante');
+
     // Adicionar produto ao carrinho
     Route::post('/adiciona-carrinho', [ClienteController::class, 'adicionarProdutoCarrinho'])->name('adicionar_carrinho');
 

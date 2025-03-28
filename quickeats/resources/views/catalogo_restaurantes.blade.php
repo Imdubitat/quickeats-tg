@@ -1,0 +1,29 @@
+@extends('template_cliente')
+
+@section('title', 'Catálogo de restaurantes')
+
+@section('nav-buttons')
+
+@endsection
+
+@section('content')
+<section class="px-5" style="margin-top: 15rem;">
+<div class="row mx-auto">
+        @foreach($restaurantes as $r)
+            <div class="col-md-4 mb-4">
+                <input type="hidden" name="id_estab" value="{{ $r->id_estab }}">
+                <div class="card shadow rounded-4">
+                    <div class="card-body">
+                        <!-- Imagem de perfil (a ser implementado) -->
+                        <h5 class="card-title">{{ $r->nome_fantasia }}</h5>
+                        <p class="card-text">{{ $r->logradouro }}, {{ $r->numero }}<br>{{ $r->bairro }}, {{ $r->cidade }} - {{ $r->estado }}</p>
+                        <button type="button" class="btn btn-custom3" onclick="window.location.href='{{ route('cardapio_restaurante', $r->id_estab) }}'">
+                            Ver cardápio
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</section>
+@endsection

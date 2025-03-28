@@ -25,7 +25,7 @@
                 <div class="collapse navbar-collapse" id="nav-principal">
                     <ul class="navbar-nav me-auto d-flex flex-nowrap">
                         <li class="nav-item">
-                            <a class="nav-link text-white text-nowrap" href="">Restaurantes</a>
+                            <a class="nav-link text-white text-nowrap" href="{{ route('catalogo_restaurantes') }}">Restaurantes</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white text-nowrap" href="{{ route('catalogo_produtos') }}">Produtos</a>
@@ -88,7 +88,7 @@
                     <li class="nav-item"><a class="nav-link text-dark" href="{{ route('listar_chamados_cliente') }}">Suporte</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="{{ route('carrinho') }}">Meu carrinho</a></li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" href="">Restaurantes</a>
+                        <a class="nav-link text-dark" href="{{ route('catalogo_restaurantes') }}">Restaurantes</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-dark" href="{{ route('catalogo_produtos') }}">Produtos</a>
