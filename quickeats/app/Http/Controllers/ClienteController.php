@@ -113,9 +113,11 @@ class ClienteController extends Controller
 
     public function exibirProdutosDisponiveis()
     {
-        $produtos = DB::select('SELECT * FROM `produtos_disponiveis`');
+        $produtos = DB::select('CALL listar_produtos()');
 
-        return view('catalogo_produtos', compact('produtos'));
+        $categorias = DB::select('SELECT * FROM `categorias_produtos`');
+
+        return view('catalogo_produtos', compact('produtos', 'categorias'));
     }
 
     public function exibirCarrinho()
