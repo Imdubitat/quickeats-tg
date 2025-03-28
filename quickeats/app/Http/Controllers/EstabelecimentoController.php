@@ -250,6 +250,20 @@ class EstabelecimentoController extends Controller
         return redirect()->route('produtos_restaurante')->with('success', 'Produto cadastrado com sucesso!');
     }
 
+    public function atualizarProduto(Request $request)
+    {
+        $produto = DB::table('produtos')
+                    ->where('id_produto', $request->id_produto)
+                    ->update([
+                        'nome' => $request->nome,
+                        'valor' => $request->valor,
+                        'id_categoria' => $request->id_categoria,
+                        'qtd_estoque' => $request->qtd_estoque,
+                    ]);
+        
+        return redirect()->back()->with('success', 'Produto atualizado com sucesso!');
+    }
+
     public function exibirEstoqueRestaurante()
     {
         $id_res = Auth::guard('estabelecimento')->id();

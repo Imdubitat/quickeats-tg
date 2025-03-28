@@ -145,6 +145,9 @@ Route::middleware('auth:estabelecimento')->group(function () {
     // Cadastrar produto
     Route::post('/cadastrar-produto', [EstabelecimentoController::class, 'cadastrarProduto'])->name('cadastar_produto');
 
+    // Atualizar produto
+    Route::post('/produto/atualizar', [EstabelecimentoController::class, 'atualizarProduto'])->name('atualizar_produto');
+
     // Página de estoque
     Route::get('/estoque-restaurante', [EstabelecimentoController::class, 'exibirEstoqueRestaurante'])->name('estoque_restaurante');
 
