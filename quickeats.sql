@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 27/03/2025 às 18:29
+-- Tempo de geração: 28/03/2025 às 19:20
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -307,6 +307,22 @@ FROM produtos
 WHERE id_categoria = p_id_categoria;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `exibir_produtos_estab` (IN `p_id_estab` INT)   BEGIN
+    SELECT 
+        p.id_produto, 
+        p.nome as nome_produto, 
+        p.valor, 
+        p.id_categoria, 
+        c.descricao AS categoria,
+        p.id_estab, 
+        p.qtd_estoque,
+        e.nome_fantasia as estab
+    FROM produtos AS p
+    INNER JOIN categorias_produtos AS c ON p.id_categoria = c.id_categoria
+    INNER JOIN estabelecimentos AS e ON p.id_estab = e.id_estab
+    WHERE p.qtd_estoque > 0 AND p.id_estab = p_id_estab;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `exibir_produtos_mais_populares_por_estabelecimento` (IN `p_id_estab` INT)   BEGIN
   SELECT 
     p.nome AS produto,
@@ -341,9 +357,28 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `faturamento_estabelecimento` (IN `p
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listar_estab` ()   SELECT e.id_estab, e.nome_fantasia, e.telefone, e.logradouro, e.email,
-e.numero, e.bairro, e.cidade, e.estado, e.cep
-FROM estabelecimentos as e 
-ORDER BY e.nome_fantasia$$
+           e.numero, e.bairro, e.cidade, e.estado, e.cep
+    FROM estabelecimentos AS e 
+    WHERE e.email_verificado = 1 AND e.perfil_ativo = 1
+    ORDER BY e.nome_fantasia$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `listar_produtos` ()   BEGIN
+    SELECT 
+        p.id_produto, 
+        p.nome AS nome_produto, 
+        p.valor, 
+        p.id_categoria, 
+        c.descricao AS categoria,
+        p.id_estab, 
+        p.qtd_estoque,
+        e.nome_fantasia AS estab
+    FROM produtos AS p
+    INNER JOIN categorias_produtos AS c ON p.id_categoria = c.id_categoria
+    INNER JOIN estabelecimentos AS e ON p.id_estab = e.id_estab
+    WHERE p.qtd_estoque > 0
+    AND e.email_verificado = 1 
+    AND e.perfil_ativo = 1;
+END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `produtos_carrinho` (IN `p_id_cliente` INT)   BEGIN
     SELECT ca.id_cliente AS cliente, 
@@ -451,6 +486,13 @@ CREATE TABLE `carrinho` (
   `qtd_produto` int(11) NOT NULL,
   `data_adicao` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `carrinho`
+--
+
+INSERT INTO `carrinho` (`id_cliente`, `id_produto`, `qtd_produto`, `data_adicao`) VALUES
+(6, 1, 2, '2025-03-28 17:17:48');
 
 -- --------------------------------------------------------
 
@@ -1172,13 +1214,13 @@ CREATE TABLE `produtos` (
 INSERT INTO `produtos` (`id_produto`, `nome`, `valor`, `id_categoria`, `id_estab`, `qtd_estoque`) VALUES
 (1, 'Arroz Branco 5kg', 23.90, 1, 2, 24),
 (2, 'Feijão Carioca 1kg', 8.50, 1, 2, 92),
-(3, 'Pizza Calabresa', 39.90, 2, 6, 9),
+(3, 'Pizza Calabresa', 29.90, 2, 6, 9),
 (4, 'Peixe Grelhado', 49.90, 2, 5, 12),
 (5, 'Sabonete Líquido 500ml', 12.90, 3, 4, 26),
 (6, 'Macarrão Instantâneo 80g', 3.99, 1, 3, 188),
 (7, 'BreadSticks', 15.90, 2, 6, 31),
-(8, 'Coca-Cola', 7.50, 4, 6, 198),
-(9, 'Pizza Morango com Chocolate', 40.90, 5, 6, 18);
+(8, 'Coca-Cola', 7.50, 4, 6, 200),
+(9, 'Pizza Morango com Chocolate', 40.90, 5, 6, 0);
 
 -- --------------------------------------------------------
 
