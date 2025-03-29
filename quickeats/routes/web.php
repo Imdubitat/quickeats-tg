@@ -173,6 +173,9 @@ Route::middleware('auth:estabelecimento')->group(function () {
 
     // Responder chamados
     Route::post('/estab/responder-chamado', [EstabelecimentoController::class, 'responderChamado'])->name('estab_responder_chamado');
+
+    // Rota para upload de imagem
+    Route::post('/perfil/upload', [EstabelecimentoController::class, 'uploadImagemPerfil'])->name('imagem_upload');
 });
 
 // Rota para solicitação de link para redefinição de senha via email

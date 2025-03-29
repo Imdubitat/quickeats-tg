@@ -30,6 +30,7 @@ class Estabelecimento extends Authenticatable
         'email',
         'senha',
         'email_verificado',
+        'imagem_perfil',
     ];
 
     public $timestamps = false;

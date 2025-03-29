@@ -232,17 +232,32 @@ class EstabelecimentoController extends Controller
         // Validação dos dados do formulário
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
+            'descricao' => 'required|string|max:255',
             'valor' => 'required|numeric|min:0.01',
             'id_categoria' => 'required|exists:categorias_produtos,id_categoria',
             'qtd_estoque' => 'required|integer|min:0',
+            'imagem_produto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        // Verifica se o arquivo foi enviado
+        if ($request->hasFile('imagem_produto')) {
+            // Gera um nome único para a imagem
+            $imagemNome = time() . '_' . $request->file('imagem_produto')->getClientOriginalName();
+            
+            // Move a imagem para a pasta public/imagem_produto
+            $request->file('imagem_produto')->move(public_path('imagem_produto'), $imagemNome);
+        } else {
+            $imagemNome = 'sem_foto.png'; // Definir uma imagem padrão caso nenhuma seja enviada
+        }
 
         // Inserção do produto na tabela 'produtos'
         DB::table('produtos')->insert([
             'nome' => $validated['nome'],
+            'descricao' => $validated['descricao'],
             'valor' => $validated['valor'],
             'id_categoria' => $validated['id_categoria'],
             'qtd_estoque' => $validated['qtd_estoque'],
+            'imagem_produto' => $imagemNome,
             'id_estab' => Auth::guard('estabelecimento')->id(), // Estabelecimento do usuário logado
         ]);
 
@@ -252,15 +267,30 @@ class EstabelecimentoController extends Controller
 
     public function atualizarProduto(Request $request)
     {
-        $produto = DB::table('produtos')
-                    ->where('id_produto', $request->id_produto)
-                    ->update([
-                        'nome' => $request->nome,
-                        'valor' => $request->valor,
-                        'id_categoria' => $request->id_categoria,
-                        'qtd_estoque' => $request->qtd_estoque,
-                    ]);
-        
+        $produto = DB::table('produtos')->where('id_produto', $request->id_produto)->first();
+
+        // Se uma nova imagem foi enviada, faz o upload
+        if ($request->hasFile('imagem_produto')) {
+            $imagem = $request->file('imagem_produto');
+            $nomeImagem = time() . '.' . $imagem->getClientOriginalExtension();
+            $imagem->move(public_path('imagem_produto'), $nomeImagem);
+        } else {
+            // Se nenhuma nova imagem foi enviada, mantém a existente
+            $nomeImagem = $produto->imagem_produto;
+        }
+
+        // Atualiza os dados no banco
+        DB::table('produtos')
+            ->where('id_produto', $request->id_produto)
+            ->update([
+                'nome' => $request->nome,
+                'descricao' => $request->descricao,
+                'valor' => $request->valor,
+                'id_categoria' => $request->id_categoria,
+                'qtd_estoque' => $request->qtd_estoque,
+                'imagem_produto' => $nomeImagem,
+            ]);
+
         return redirect()->back()->with('success', 'Produto atualizado com sucesso!');
     }
 
@@ -616,5 +646,38 @@ class EstabelecimentoController extends Controller
     
         // Redireciona ou retorna uma resposta para o usuário
         return redirect()->back()->with('success', 'Resposta enviada com sucesso!');
+    }
+
+    public function uploadImagemPerfil(Request $request)
+    {
+        // Validação da imagem
+        $request->validate([
+            'imagem_perfil' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        // Verifica se o arquivo foi enviado
+        if ($request->hasFile('imagem_perfil')) {
+            // Recupera o usuário autenticado
+            $user = auth()->user();
+
+            // Se o usuário já possui uma imagem de perfil, exclui a imagem antiga
+            if ($user->imagem_perfil) {
+                $oldImagePath = storage_path('app/public/imagem_perfil/' . $user->imagem_perfil);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+            }
+
+            // Salva a nova imagem diretamente em public/imagem_perfil e obtém o nome do arquivo
+            $imagemNome = time() . '_' . $request->file('imagem_perfil')->getClientOriginalName();
+            $request->file('imagem_perfil')->move(public_path('imagem_perfil'), $imagemNome);
+
+            // Salva o nome do arquivo da nova imagem no banco de dados
+            $user->update(['imagem_perfil' => $imagemNome]);
+
+            return back()->with('success', 'Foto de perfil atualizada!');
+        }
+
+        return back()->with('error', 'Erro ao fazer upload da foto de perfil.');
     }
 }

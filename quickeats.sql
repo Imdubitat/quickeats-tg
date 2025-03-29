@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Tempo de geração: 28/03/2025 às 19:20
+-- Host: localhost
+-- Tempo de geração: 29/03/2025 às 18:53
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -707,21 +707,22 @@ CREATE TABLE `estabelecimentos` (
   `email` varchar(255) NOT NULL,
   `senha` varchar(255) NOT NULL,
   `email_verificado` tinyint(4) NOT NULL,
-  `perfil_ativo` tinyint(1) NOT NULL
+  `perfil_ativo` tinyint(1) NOT NULL,
+  `imagem_perfil` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `estabelecimentos`
 --
 
-INSERT INTO `estabelecimentos` (`id_estab`, `razao_social`, `nome_fantasia`, `cnpj`, `telefone`, `cpf_titular`, `rg_titular`, `cnae`, `logradouro`, `numero`, `bairro`, `cidade`, `estado`, `cep`, `inicio_expediente`, `termino_expediente`, `email`, `senha`, `email_verificado`, `perfil_ativo`) VALUES
-(1, 'Restaurante Sabor Caseiro Ltda.', 'Novo Sabor Caseiro', '12.345.678/0001-90', '11999999999', '987.654.321-00', '98.765.432-1', '5611-2', 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'teste@email.com', 'NovaSenhaSegura2', 0, 0),
-(2, 'Mercado Bom Preço Ltda.', 'Bom Preço', '23.456.789/0001-91', '(21) 99876-5432', '987.654.321-00', '98.765.432-1', '4711-3', 'Avenida Brasil', 456, 'Zona Sul', 'Rio de Janeiro', 'RJ', '20000-000', '07:00:00', '23:00:00', 'contato@bompreco.com', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', 1, 1),
-(3, 'Restaurante Delícias do Campo Ltda.', 'Delícias do Campo', '34.567.890/0001-92', '(31) 91234-5678', '654.321.987-00', '65.432.198-7', '5611-2', 'Rua Tranquila', 789, 'Bairro Novo', 'Belo Horizonte', 'MG', '30000-000', '11:00:00', '23:00:00', 'contato@deliciasdocampo.com', 'senhaSegura789', 0, 0),
-(4, 'Supermercado Sempre Fresco Ltda.', 'Sempre Fresco', '45.678.901/0001-93', '(41) 98765-6789', '321.987.654-00', '32.198.765-4', '4711-3', 'Rua Principal', 321, 'Zona Norte', 'Curitiba', 'PR', '80000-000', '08:00:00', '22:00:00', 'contato@semprefresco.com', 'senhaSuper123', 0, 1),
-(5, 'Restaurante Sabores do Mar Ltda.', 'Sabores do Mar', '56.789.012/0001-94', '(51) 97654-3210', '210.987.654-00', '21.098.765-4', '5611-2', 'Rua da Praia', 654, 'Centro', 'Porto Alegre', 'RS', '90000-000', '12:00:00', '23:00:00', 'contato@saboresdomar.com', 'senhaSabores123', 0, 1),
-(6, NULL, 'Novo Sabor Caseiro', '12.345.678/0001-90', '1199999999', NULL, NULL, NULL, 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'contato@saborcaseiro.com', '$2y$12$yNISLT2y2pcczjlwjFWIgecvHU2Lig6XuIqZHefoOW5MEtIHZPtuq', 1, 1),
-(12, NULL, 'teste', '15454655', '54656', NULL, NULL, NULL, 'teste', 123, 'teste', 'teste', 'sp', '13183271', '08:00:00', '14:00:00', 'rodrigooliveirafeitosa@gmail.com', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', 1, 1);
+INSERT INTO `estabelecimentos` (`id_estab`, `razao_social`, `nome_fantasia`, `cnpj`, `telefone`, `cpf_titular`, `rg_titular`, `cnae`, `logradouro`, `numero`, `bairro`, `cidade`, `estado`, `cep`, `inicio_expediente`, `termino_expediente`, `email`, `senha`, `email_verificado`, `perfil_ativo`, `imagem_perfil`) VALUES
+(1, 'Restaurante Sabor Caseiro Ltda.', 'Novo Sabor Caseiro', '12.345.678/0001-90', '11999999999', '987.654.321-00', '98.765.432-1', '5611-2', 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'teste@email.com', 'NovaSenhaSegura2', 0, 0, NULL),
+(2, 'Mercado Bom Preço Ltda.', 'Bom Preço', '23.456.789/0001-91', '(21) 99876-5432', '987.654.321-00', '98.765.432-1', '4711-3', 'Avenida Brasil', 456, 'Zona Sul', 'Rio de Janeiro', 'RJ', '20000-000', '07:00:00', '23:00:00', 'contato@bompreco.com', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', 1, 1, NULL),
+(3, 'Restaurante Delícias do Campo Ltda.', 'Delícias do Campo', '34.567.890/0001-92', '(31) 91234-5678', '654.321.987-00', '65.432.198-7', '5611-2', 'Rua Tranquila', 789, 'Bairro Novo', 'Belo Horizonte', 'MG', '30000-000', '11:00:00', '23:00:00', 'contato@deliciasdocampo.com', 'senhaSegura789', 0, 0, NULL),
+(4, 'Supermercado Sempre Fresco Ltda.', 'Sempre Fresco', '45.678.901/0001-93', '(41) 98765-6789', '321.987.654-00', '32.198.765-4', '4711-3', 'Rua Principal', 321, 'Zona Norte', 'Curitiba', 'PR', '80000-000', '08:00:00', '22:00:00', 'contato@semprefresco.com', 'senhaSuper123', 0, 1, NULL),
+(5, 'Restaurante Sabores do Mar Ltda.', 'Sabores do Mar', '56.789.012/0001-94', '(51) 97654-3210', '210.987.654-00', '21.098.765-4', '5611-2', 'Rua da Praia', 654, 'Centro', 'Porto Alegre', 'RS', '90000-000', '12:00:00', '23:00:00', 'contato@saboresdomar.com', 'senhaSabores123', 0, 1, NULL),
+(6, NULL, 'Novo Sabor Caseiro', '12.345.678/0001-90', '1199999999', NULL, NULL, NULL, 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'contato@saborcaseiro.com', '$2y$12$yNISLT2y2pcczjlwjFWIgecvHU2Lig6XuIqZHefoOW5MEtIHZPtuq', 1, 1, NULL),
+(12, NULL, 'teste', '15454655', '54656', NULL, NULL, NULL, 'teste', 123, 'teste', 'teste', 'sp', '13183271', '08:00:00', '14:00:00', 'rodrigooliveirafeitosa@gmail.com', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', 1, 1, '1743268372_image-removebg-preview.png');
 
 --
 -- Acionadores `estabelecimentos`
@@ -1201,26 +1202,30 @@ INSERT INTO `planos_estabelecimentos` (`id_estab`, `id_plano`, `ativo`) VALUES
 CREATE TABLE `produtos` (
   `id_produto` int(11) NOT NULL,
   `nome` varchar(60) NOT NULL,
+  `descricao` varchar(255) DEFAULT NULL,
   `valor` decimal(10,2) NOT NULL,
   `id_categoria` int(11) NOT NULL,
   `id_estab` int(11) NOT NULL,
-  `qtd_estoque` int(11) NOT NULL
+  `qtd_estoque` int(11) NOT NULL,
+  `imagem_produto` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `produtos`
 --
 
-INSERT INTO `produtos` (`id_produto`, `nome`, `valor`, `id_categoria`, `id_estab`, `qtd_estoque`) VALUES
-(1, 'Arroz Branco 5kg', 23.90, 1, 2, 24),
-(2, 'Feijão Carioca 1kg', 8.50, 1, 2, 92),
-(3, 'Pizza Calabresa', 29.90, 2, 6, 9),
-(4, 'Peixe Grelhado', 49.90, 2, 5, 12),
-(5, 'Sabonete Líquido 500ml', 12.90, 3, 4, 26),
-(6, 'Macarrão Instantâneo 80g', 3.99, 1, 3, 188),
-(7, 'BreadSticks', 15.90, 2, 6, 31),
-(8, 'Coca-Cola', 7.50, 4, 6, 200),
-(9, 'Pizza Morango com Chocolate', 40.90, 5, 6, 0);
+INSERT INTO `produtos` (`id_produto`, `nome`, `descricao`, `valor`, `id_categoria`, `id_estab`, `qtd_estoque`, `imagem_produto`) VALUES
+(1, 'Arroz Branco 5kg', NULL, 23.90, 1, 2, 24, NULL),
+(2, 'Feijão Carioca 1kg', NULL, 8.50, 1, 2, 92, NULL),
+(3, 'Pizza Calabresa', NULL, 29.90, 2, 6, 9, NULL),
+(4, 'Peixe Grelhado', NULL, 49.90, 2, 5, 12, NULL),
+(5, 'Sabonete Líquido 500ml', NULL, 12.90, 3, 4, 26, NULL),
+(6, 'Macarrão Instantâneo 80g', NULL, 3.99, 1, 3, 188, NULL),
+(7, 'BreadSticks', NULL, 15.90, 2, 6, 31, NULL),
+(8, 'Coca-Cola', NULL, 7.50, 4, 6, 200, NULL),
+(9, 'Pizza Morango com Chocolate', NULL, 40.90, 5, 6, 0, NULL),
+(10, 'X-burguer mega', 'Pão de hamburguer, 150g de patinho, 50g de queijo prato, alface, tomate e cebola.', 50.00, 1, 12, 55, '1743269496_x-burguer-73517.jpg'),
+(11, 'Coca lata 220ml', 'refrigerante de cola', 5.00, 4, 12, 150, 'sem_foto.png');
 
 -- --------------------------------------------------------
 
@@ -1533,7 +1538,7 @@ ALTER TABLE `planos`
 -- AUTO_INCREMENT de tabela `produtos`
 --
 ALTER TABLE `produtos`
-  MODIFY `id_produto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_produto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de tabela `status_pedidos`
