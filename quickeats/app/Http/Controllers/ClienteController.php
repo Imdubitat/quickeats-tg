@@ -107,8 +107,11 @@ class ClienteController extends Controller
 
     public function exibirPaginaInicial()
     {
+        $estabPopulares = DB::select("SELECT * FROM estabelecimentos_populares");
+        $prodPopulares = DB::select("SELECT * FROM produtos_populares");
+
         // Retorna a view 'home-cliente' com os dados dos estabelecimentos populares
-        return view('home_cliente');
+        return view('home_cliente', compact('estabPopulares', 'prodPopulares'));
     }
 
     public function exibirProdutosDisponiveis()

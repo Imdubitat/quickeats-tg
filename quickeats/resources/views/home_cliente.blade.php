@@ -55,6 +55,53 @@
             <span class="visually-hidden">Próximo</span>
         </button>
     </div>
+
+    <div class="container">
+    <h1 class="fw-bold text-start mb-3">Os restaurantes mais populares</h1>
+        <div class="row align-self-center align-items-center pb-5 mb-5">
+        @if($estabPopulares)
+            @foreach($estabPopulares as $estab)
+                <div class="col-md-4">
+                    <form action="" method="GET">
+                    @csrf
+                        <input type="hidden" name="estabelecimento" value="{{ $estab->id }}">
+                        <div class="card" onclick="this.closest('form').submit()" style="cursor: pointer;">
+                            <img class="card-img-top" src="{{ asset('imagem_perfil/' . ($estab->imagem ?? 'sem_foto.png')) }}" 
+                            alt="Imagem do Estabelecimento"
+                            style="width: 100%; height: 200px; object-fit: cover;"  >
+                            <div class="card-body text-center">
+                                <p class="card-text">{{ $estab->nome_fantasia }}</p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            @endforeach
+        @endif
+        </div>
+
+        <div class="b-example-divider"></div>
+        <h1 class="fw-bold text-start mb-3">Os produtos mais populares</h1>
+        <div class="row align-self-center align-items-center pb-5 mb-5">
+            @if($prodPopulares)
+                @foreach($prodPopulares as $prod)
+                    <div class="col-md-4">
+                        <form action="" method="GET">
+                        @csrf
+                        <input type="hidden" name="produto" value="{{ $prod->id }}">
+                        <input type="hidden" name="estabelecimento" value="{{ $prod->id_estab }}">
+                            <div class="card" onclick="this.closest('form').submit()" style="cursor: pointer;">
+                                <img class="card-img-top" src="{{ asset('imagem_produto/' . ($prod->imagem ?? 'sem_foto.png')) }}" 
+                                alt="Imagem do produto"
+                                style="width: 100%; height: 200px; object-fit: cover;">
+                                <div class="card-body text-center">
+                                    <p class="card-text">{{ $prod->nome_produto }}</p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                @endforeach
+            @endif
+        </div>
 </section>
 
 <section class="py-5 mt-5">

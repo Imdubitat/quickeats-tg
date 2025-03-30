@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 29/03/2025 às 18:53
+-- Tempo de geração: 31/03/2025 às 00:44
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -721,7 +721,7 @@ INSERT INTO `estabelecimentos` (`id_estab`, `razao_social`, `nome_fantasia`, `cn
 (3, 'Restaurante Delícias do Campo Ltda.', 'Delícias do Campo', '34.567.890/0001-92', '(31) 91234-5678', '654.321.987-00', '65.432.198-7', '5611-2', 'Rua Tranquila', 789, 'Bairro Novo', 'Belo Horizonte', 'MG', '30000-000', '11:00:00', '23:00:00', 'contato@deliciasdocampo.com', 'senhaSegura789', 0, 0, NULL),
 (4, 'Supermercado Sempre Fresco Ltda.', 'Sempre Fresco', '45.678.901/0001-93', '(41) 98765-6789', '321.987.654-00', '32.198.765-4', '4711-3', 'Rua Principal', 321, 'Zona Norte', 'Curitiba', 'PR', '80000-000', '08:00:00', '22:00:00', 'contato@semprefresco.com', 'senhaSuper123', 0, 1, NULL),
 (5, 'Restaurante Sabores do Mar Ltda.', 'Sabores do Mar', '56.789.012/0001-94', '(51) 97654-3210', '210.987.654-00', '21.098.765-4', '5611-2', 'Rua da Praia', 654, 'Centro', 'Porto Alegre', 'RS', '90000-000', '12:00:00', '23:00:00', 'contato@saboresdomar.com', 'senhaSabores123', 0, 1, NULL),
-(6, NULL, 'Novo Sabor Caseiro', '12.345.678/0001-90', '1199999999', NULL, NULL, NULL, 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'contato@saborcaseiro.com', '$2y$12$yNISLT2y2pcczjlwjFWIgecvHU2Lig6XuIqZHefoOW5MEtIHZPtuq', 1, 1, NULL),
+(6, NULL, 'Novo Sabor Caseiro', '12.345.678/0001-90', '1199999999', NULL, NULL, NULL, 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'contato@saborcaseiro.com', '$2y$12$yNISLT2y2pcczjlwjFWIgecvHU2Lig6XuIqZHefoOW5MEtIHZPtuq', 1, 1, '1743374485_images.jpeg'),
 (12, NULL, 'teste', '15454655', '54656', NULL, NULL, NULL, 'teste', 123, 'teste', 'teste', 'sp', '13183271', '08:00:00', '14:00:00', 'rodrigooliveirafeitosa@gmail.com', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', 1, 1, '1743268372_image-removebg-preview.png');
 
 --
@@ -815,6 +815,19 @@ CREATE TRIGGER `atualizacao_estabelecimento` AFTER UPDATE ON `estabelecimentos` 
 END
 $$
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura stand-in para view `estabelecimentos_populares`
+-- (Veja abaixo para a visão atual)
+--
+CREATE TABLE `estabelecimentos_populares` (
+`id` int(11)
+,`nome_fantasia` varchar(255)
+,`total_agendamentos` bigint(21)
+,`imagem` varchar(255)
+);
 
 -- --------------------------------------------------------
 
@@ -1217,11 +1230,11 @@ CREATE TABLE `produtos` (
 INSERT INTO `produtos` (`id_produto`, `nome`, `descricao`, `valor`, `id_categoria`, `id_estab`, `qtd_estoque`, `imagem_produto`) VALUES
 (1, 'Arroz Branco 5kg', NULL, 23.90, 1, 2, 24, NULL),
 (2, 'Feijão Carioca 1kg', NULL, 8.50, 1, 2, 92, NULL),
-(3, 'Pizza Calabresa', NULL, 29.90, 2, 6, 9, NULL),
+(3, 'Pizza Calabresa', 'prato típico da Itália, feito com linguiça calabresa, queijo mussarela, cebola, azeitonas e molho de tomate', 29.90, 2, 6, 9, '1743374133.png'),
 (4, 'Peixe Grelhado', NULL, 49.90, 2, 5, 12, NULL),
 (5, 'Sabonete Líquido 500ml', NULL, 12.90, 3, 4, 26, NULL),
 (6, 'Macarrão Instantâneo 80g', NULL, 3.99, 1, 3, 188, NULL),
-(7, 'BreadSticks', NULL, 15.90, 2, 6, 31, NULL),
+(7, 'BreadSticks', 'bastões de pão secos e crocantes, geralmente do tamanho de um lápis, que são assados no forno', 15.90, 2, 6, 31, '1743374383.jpg'),
 (8, 'Coca-Cola', NULL, 7.50, 4, 6, 200, NULL),
 (9, 'Pizza Morango com Chocolate', NULL, 40.90, 5, 6, 0, NULL),
 (10, 'X-burguer mega', 'Pão de hamburguer, 150g de patinho, 50g de queijo prato, alface, tomate e cebola.', 50.00, 1, 12, 55, '1743269496_x-burguer-73517.jpg'),
@@ -1239,6 +1252,20 @@ CREATE TABLE `produtos_disponiveis` (
 ,`valor` decimal(10,2)
 ,`id_estab` int(11)
 ,`estab` varchar(255)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura stand-in para view `produtos_populares`
+-- (Veja abaixo para a visão atual)
+--
+CREATE TABLE `produtos_populares` (
+`id` int(11)
+,`nome_produto` varchar(60)
+,`id_estab` int(11)
+,`total_pedidos` bigint(21)
+,`imagem` varchar(255)
 );
 
 -- --------------------------------------------------------
@@ -1283,6 +1310,15 @@ INSERT INTO `status_pedidos` (`id_status`, `descricao`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estrutura para view `estabelecimentos_populares`
+--
+DROP TABLE IF EXISTS `estabelecimentos_populares`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `estabelecimentos_populares`  AS SELECT `e`.`id_estab` AS `id`, `e`.`nome_fantasia` AS `nome_fantasia`, count(distinct `p`.`id_pedido`) AS `total_agendamentos`, `e`.`imagem_perfil` AS `imagem` FROM (((`estabelecimentos` `e` join `produtos` `pr` on(`pr`.`id_estab` = `e`.`id_estab`)) join `itens_pedidos` `ip` on(`ip`.`id_produto` = `pr`.`id_produto`)) join `pedidos` `p` on(`p`.`id_pedido` = `ip`.`id_pedido`)) GROUP BY `e`.`id_estab`, `e`.`nome_fantasia`, `e`.`imagem_perfil` ORDER BY count(`p`.`id_pedido`) DESC LIMIT 0, 3 ;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para view `pedidos_estabelecimento`
 --
 DROP TABLE IF EXISTS `pedidos_estabelecimento`;
@@ -1297,6 +1333,15 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 DROP TABLE IF EXISTS `produtos_disponiveis`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `produtos_disponiveis`  AS SELECT `p`.`id_produto` AS `id_produto`, `p`.`nome` AS `nome_produto`, `p`.`valor` AS `valor`, `e`.`id_estab` AS `id_estab`, `e`.`nome_fantasia` AS `estab` FROM (`produtos` `p` join `estabelecimentos` `e` on(`e`.`id_estab` = `p`.`id_estab`)) WHERE `p`.`qtd_estoque` > 0 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para view `produtos_populares`
+--
+DROP TABLE IF EXISTS `produtos_populares`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `produtos_populares`  AS SELECT `pr`.`id_produto` AS `id`, `pr`.`nome` AS `nome_produto`, `pr`.`id_estab` AS `id_estab`, count(distinct `p`.`id_pedido`) AS `total_pedidos`, `pr`.`imagem_produto` AS `imagem` FROM ((`produtos` `pr` join `itens_pedidos` `ip` on(`ip`.`id_produto` = `pr`.`id_produto`)) join `pedidos` `p` on(`p`.`id_pedido` = `ip`.`id_pedido`)) GROUP BY `pr`.`id_produto`, `pr`.`nome`, `pr`.`id_estab`, `pr`.`imagem_produto` ORDER BY count(`p`.`id_pedido`) DESC LIMIT 0, 3 ;
 
 --
 -- Índices para tabelas despejadas
