@@ -36,8 +36,12 @@
                             <input type="hidden" name="data_adicao" value="{{ now() }}">
                             <input type="hidden" name="id_estab" value="{{ $p->id_estab }}">
                             <div class="card shadow rounded-4">
+                            <img class="card-img-top" src="{{ asset('imagem_produto/' . ($p->imagem ?? 'sem_foto.png')) }}" 
+                                alt="Imagem do produto"
+                                style="width: 100%; height: 200px; object-fit: cover;">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ $p->nome_produto }}</h5>
+                                    <p class="card-text">{{ $p->descricao ?? 'sem descrição' }}<br>
                                     <p class="card-text">R$ {{ $p->valor }}<br>
                                     {{ $p->estab }}</p>
                                     <label for="qtd_produto_{{ $p->id_produto }}" class="form-label">Quantidade:</label>

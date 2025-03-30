@@ -25,7 +25,9 @@
                 <div class="card-body text-center">
                     <!-- Ícone de restaurante -->
                     <div class="mb-3">
-                        <i class="fas fa-utensils fa-3x"></i>
+                    <img class="card-img-top" src="{{ asset('imagem_perfil/' . ($restaurante->imagem_perfil ?? 'sem_foto.png')) }}" 
+                            alt="Imagem do Estabelecimento"
+                            style="width: 100%; height: 200px; object-fit: cover;">
                     </div>
                     <h2 class="card-title fw-bold">{{ $restaurante->nome_fantasia }}</h2>
                     
@@ -50,7 +52,11 @@
                             <input type="hidden" name="id_estab" value="{{ $p->id_estab }}">
                             <div class="card shadow rounded-4">
                                 <div class="card-body">
+                                    <img class="card-img-top" src="{{ asset('imagem_produto/' . ($p->imagem_produto ?? 'sem_foto.png')) }}" 
+                                    alt="Imagem do produto"
+                                    style="width: 100%; height: 200px; object-fit: cover;">
                                     <h5 class="card-title">{{ $p->nome_produto }}</h5>
+                                    <p class="card-text">{{ $p->descricao ?? 'sem descrição' }}<br>
                                     <p class="card-text">R$ {{ $p->valor }}<br>
                                     {{ $p->estab }}</p>
                                     <label for="qtd_produto_{{ $p->id_produto }}" class="form-label">Quantidade:</label>

@@ -68,7 +68,7 @@
                         <div class="card" onclick="this.closest('form').submit()" style="cursor: pointer;">
                             <img class="card-img-top" src="{{ asset('imagem_perfil/' . ($estab->imagem ?? 'sem_foto.png')) }}" 
                             alt="Imagem do Estabelecimento"
-                            style="width: 100%; height: 200px; object-fit: cover;"  >
+                            style="width: 100%; height: 200px; object-fit: cover;">
                             <div class="card-body text-center">
                                 <p class="card-text">{{ $estab->nome_fantasia }}</p>
                             </div>

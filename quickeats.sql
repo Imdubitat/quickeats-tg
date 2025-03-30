@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 31/03/2025 às 00:44
+-- Tempo de geração: 31/03/2025 às 01:10
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -310,13 +310,16 @@ END$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `exibir_produtos_estab` (IN `p_id_estab` INT)   BEGIN
     SELECT 
         p.id_produto, 
-        p.nome as nome_produto, 
+        p.nome as nome_produto,
+        p.descricao,
         p.valor, 
         p.id_categoria, 
         c.descricao AS categoria,
         p.id_estab, 
         p.qtd_estoque,
-        e.nome_fantasia as estab
+        e.nome_fantasia as estab,
+        p.imagem_produto,
+        e.imagem_perfil
     FROM produtos AS p
     INNER JOIN categorias_produtos AS c ON p.id_categoria = c.id_categoria
     INNER JOIN estabelecimentos AS e ON p.id_estab = e.id_estab
@@ -357,7 +360,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `faturamento_estabelecimento` (IN `p
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listar_estab` ()   SELECT e.id_estab, e.nome_fantasia, e.telefone, e.logradouro, e.email,
-           e.numero, e.bairro, e.cidade, e.estado, e.cep
+           e.numero, e.bairro, e.cidade, e.estado, e.cep, e.imagem_perfil AS imagem
     FROM estabelecimentos AS e 
     WHERE e.email_verificado = 1 AND e.perfil_ativo = 1
     ORDER BY e.nome_fantasia$$
@@ -366,12 +369,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `listar_produtos` ()   BEGIN
     SELECT 
         p.id_produto, 
         p.nome AS nome_produto, 
+        p.descricao,
         p.valor, 
         p.id_categoria, 
         c.descricao AS categoria,
         p.id_estab, 
         p.qtd_estoque,
-        e.nome_fantasia AS estab
+        e.nome_fantasia AS estab,
+        p.imagem_produto AS imagem
     FROM produtos AS p
     INNER JOIN categorias_produtos AS c ON p.id_categoria = c.id_categoria
     INNER JOIN estabelecimentos AS e ON p.id_estab = e.id_estab

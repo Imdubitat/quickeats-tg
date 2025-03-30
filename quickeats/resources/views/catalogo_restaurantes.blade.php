@@ -14,7 +14,9 @@
                 <input type="hidden" name="id_estab" value="{{ $r->id_estab }}">
                 <div class="card shadow rounded-4">
                     <div class="card-body">
-                        <!-- Imagem de perfil (a ser implementado) -->
+                    <img class="card-img-top" src="{{ asset('imagem_perfil/' . ($r->imagem ?? 'sem_foto.png')) }}" 
+                            alt="Imagem do Estabelecimento"
+                            style="width: 100%; height: 200px; object-fit: cover;">
                         <h5 class="card-title">{{ $r->nome_fantasia }}</h5>
                         <p class="card-text">{{ $r->logradouro }}, {{ $r->numero }}<br>{{ $r->bairro }}, {{ $r->cidade }} - {{ $r->estado }}</p>
                         <button type="button" class="btn btn-custom3" onclick="window.location.href='{{ route('cardapio_restaurante', $r->id_estab) }}'">
