@@ -42,4 +42,22 @@
         </div>
     </div>
 </section>
+
+<script src="https://unpkg.com/imask"></script>
+
+<script>
+    IMask(
+        document.getElementById('telefone'),
+        {
+            mask: [
+                {
+                    mask: '(00) 0000-0000',
+                },
+                {
+                    mask: '(00) 00000-0000',
+                }
+            ],
+        }
+    );
+</script>
 @endsection
