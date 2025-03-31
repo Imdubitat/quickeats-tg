@@ -26,6 +26,7 @@ class Cliente extends Authenticatable
         'email',
         'senha',
         'email_verificado',
+        'perfil_ativo'
     ];
 
     // Desativa os timestamps automáticos
@@ -53,6 +54,7 @@ class Cliente extends Authenticatable
             'email' => $data['emailSignup'],
             'senha' => Hash::make($data['senhaSignup']),
             'email_verificado' => 0,
+            'perfil_ativo' => 1,
         ]);
     }
 

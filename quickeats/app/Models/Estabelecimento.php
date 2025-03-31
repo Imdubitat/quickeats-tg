@@ -30,6 +30,7 @@ class Estabelecimento extends Authenticatable
         'email',
         'senha',
         'email_verificado',
+        'perfil_ativo',
         'imagem_perfil',
     ];
 
@@ -61,6 +62,7 @@ class Estabelecimento extends Authenticatable
             'email' => $data['emailSignup'],
             'senha' => Hash::make($data['senhaSignup']),
             'email_verificado' => 0,
+            'perfil_ativo' => 1
         ]);
     }
 
