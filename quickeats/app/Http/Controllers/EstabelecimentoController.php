@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB; // Para interagir com o banco de dados
 use App\Http\Controllers\Controller; // Para estender a classe base do Laravel
 use App\Rules\validaCelular;
+use App\Rules\validaCNPJ;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ResetSenhaEmail; 
@@ -28,8 +29,8 @@ class EstabelecimentoController extends Controller
             // Valida apenas os campos obrigatórios para o cadastro inicial
             $validatedData = $request->validate([
                 'nomeFantasiaSignup' => 'required|string|max:55',
-                'cnpjSignup' => 'required|string|max:18',
-                'telefoneSignup' => 'required|string|max:15',
+                'cnpjSignup' => ['required', new validaCNPJ],
+                'telefoneSignup' => ['required', new validaCelular],
                 'logradouroSignup' => 'required|string|max:100',
                 'numeroSignup' => 'required|numeric',
                 'bairroSignup' => 'required|string|max:100',

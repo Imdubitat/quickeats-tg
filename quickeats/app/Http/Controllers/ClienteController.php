@@ -20,6 +20,9 @@ use App\Models\LogsToken;
 use App\Models\Endereco;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use App\Rules\validaCPF;
+use App\Rules\validaCelular;
+use App\Rules\validaData;
 
 class ClienteController extends Controller
 {
@@ -29,9 +32,9 @@ class ClienteController extends Controller
             // Valida os dados enviados pelo modal
             $validatedData = $request->validate([
                 'nomeSignup' => 'required|string|max:50',
-                'cpfSignup' => 'required|string|max:11',
-                'dataNascSignup' => 'required|string|max:50',
-                'telefoneSignup' => 'required|string|max:11',
+                'cpfSignup' => ['required', new validaCPF],
+                'dataNascSignup' => ['required', new validaData],
+                'telefoneSignup' => ['required', new validaCelular],
                 'emailSignup' => 'required|string|email|max:100|unique:clientes,email',
                 'senhaSignup' => 'required|string|min:8',
             ]);
