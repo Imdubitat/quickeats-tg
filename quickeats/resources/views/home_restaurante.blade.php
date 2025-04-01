@@ -24,7 +24,7 @@
             <!-- Total de Pedidos -->
             <div class="col-md-4">
                 <a href="{{ route('pedidos_restaurante') }}" class="text-decoration-none">
-                    <div class="card bg-primary text-white">
+                    <div class="card text-white" style="background-color: #0000CD;">
                         <div class="card-body">
                             <h5 class="card-title">📦 Total de Pedidos</h5>
                             <h2>{{ $totalPedidos }}</h2>
@@ -35,7 +35,7 @@
 
             <!-- Pedidos Pendentes -->
             <div class="col-md-4">
-                <div class="card bg-warning text-dark">
+                <div class="card text-white" style="background-color: #ff6347;">
                     <div class="card-body">
                         <h5 class="card-title">⏳ Pedidos Aguardando Aprovação</h5>
                         <h2>{{ $pendentes }}</h2>
@@ -45,7 +45,7 @@
 
             <!-- Pedidos em Preparação -->
             <div class="col-md-4">
-                <div class="card bg-info text-white">
+                <div class="card text-white" style="background-color: #48D1CC;">
                     <div class="card-body">
                         <h5 class="card-title">🍳 Em Preparação</h5>
                         <h2>{{ $preparacao }}</h2>
@@ -57,7 +57,7 @@
         <div class="row mt-3">
             <!-- Pedidos em Rota -->
             <div class="col-md-4">
-                <div class="card bg-secondary text-white">
+                <div class="card text-white" style="background-color: #5F9EA0;">
                     <div class="card-body">
                         <h5 class="card-title">🚚 Em Rota</h5>
                         <h2>{{ $emRota }}</h2>
@@ -67,7 +67,7 @@
 
             <!-- Pedidos Finalizados -->
             <div class="col-md-4">
-                <div class="card bg-success text-white">
+                <div class="card text-white" style="background-color: #2E8B57;">
                     <div class="card-body">
                         <h5 class="card-title">✅ Finalizados</h5>
                         <h2>{{ $finalizados }}</h2>
@@ -78,7 +78,7 @@
             <!-- Estoque Baixo -->
             <div class="col-md-4">
                 <a href="{{ route('estoque_restaurante') }}" class="text-decoration-none">
-                    <div class="card bg-danger text-white">
+                    <div class="card text-white" style="background-color: #FF0000;">
                         <div class="card-body">
                             <h5 class="card-title">📉 Estoque Baixo</h5>
                             <h2>{{ $estoqueBaixo }}</h2>
