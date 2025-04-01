@@ -7,8 +7,14 @@
 @endsection
 
 @section('content')
-<section class="px-5" style="margin-top: 15rem;">
-<div class="row mx-auto">
+<section class="px-5" style="margin-top: 13rem;">
+    <div class="d-flex justify-content-start mb-4">
+        <button onclick="window.history.back()" class="btn btn-outline-primary d-flex align-items-center">
+            <i class="bi bi-arrow-left me-2"></i> Voltar
+        </button>
+    </div>
+
+    <div class="row mx-auto">
         @foreach($restaurantes as $r)
             <div class="col-md-4 mb-4">
                 <input type="hidden" name="id_estab" value="{{ $r->id_estab }}">

@@ -7,7 +7,12 @@
 @endsection
 
 @section('content')
-<section class="container mx-auto" style="margin-top: 15rem; max-width: 60%;">
+<section class="container mx-auto" style="margin-top: 13rem; max-width: 60%;">
+    <div class="d-flex justify-content-start mb-4">
+        <button onclick="window.history.back()" class="btn btn-outline-primary d-flex align-items-center">
+            <i class="bi bi-arrow-left me-2"></i> Voltar
+        </button>
+    </div>
 
     <div class="mb-2 ps-3 border-bottom border-start border-danger border-3 rounded-start" style="border-left-width: 5px !important; padding-left: 10px;">
         <h3 class="fw-bold">Meus Chamados</h3>

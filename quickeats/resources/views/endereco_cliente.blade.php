@@ -8,6 +8,12 @@
 
 @section('content')
 <div class="px-5" style="margin-top: 13rem;">
+    <div class="d-flex justify-content-start mb-4">
+        <button onclick="window.history.back()" class="btn btn-outline-primary d-flex align-items-center">
+            <i class="bi bi-arrow-left me-2"></i> Voltar
+        </button>
+    </div>
+
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}

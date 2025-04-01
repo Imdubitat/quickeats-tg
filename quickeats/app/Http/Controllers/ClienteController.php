@@ -295,7 +295,7 @@ class ClienteController extends Controller
 
         Pedido::realizarPedido($id_cliente, $id_endereco, $id_pagamento);
 
-        return redirect()->route('carrinho')->with('success', 'Pedido realizado!');
+        return redirect()->route('pedidos_cliente')->with('success', 'Pedido realizado!');
     }
 
     public function avaliarPedido(Request $request, $id)

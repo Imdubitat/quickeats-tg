@@ -7,7 +7,13 @@
 @endsection
 
 @section('content')
-<section class="px-5" style="margin-top: 15rem;">
+<section class="px-5" style="margin-top: 13rem;">
+    <div class="d-flex justify-content-start mb-4">
+        <button onclick="window.history.back()" class="btn btn-outline-primary d-flex align-items-center">
+            <i class="bi bi-arrow-left me-2"></i> Voltar
+        </button>
+    </div>
+
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -43,8 +49,11 @@
 
         <h2 class="mt-4 ">Cardápio</h2>
         <div class="row">
-            @foreach($produtos as $p)
-            <div class="col-md-4 mb-4">
+            @if(empty($produtos))
+                <p class="text-muted">Nenhum produto disponível no momento.</p>
+            @else
+                @foreach($produtos as $p)
+                    <div class="col-md-4 mb-4">
                         <form action="{{ route('adicionar_carrinho') }}" method="POST">
                             @csrf
                             <input type="hidden" name="produto" value="{{ $p->id_produto }}">
@@ -53,22 +62,23 @@
                             <div class="card shadow rounded-4">
                                 <div class="card-body">
                                     <img class="card-img-top" src="{{ asset('imagem_produto/' . ($p->imagem_produto ?? 'sem_foto.png')) }}" 
-                                    alt="Imagem do produto"
-                                    style="width: 100%; height: 200px; object-fit: cover;">
+                                        alt="Imagem do produto"
+                                        style="width: 100%; height: 200px; object-fit: cover;">
                                     <h5 class="card-title">{{ $p->nome_produto }}</h5>
                                     <p class="card-text">{{ $p->descricao ?? 'sem descrição' }}<br>
                                     <p class="card-text">R$ {{ $p->valor }}<br>
                                     {{ $p->estab }}</p>
                                     <label for="qtd_produto_{{ $p->id_produto }}" class="form-label">Quantidade:</label>
-                                    <input type="text" name="qtd_produto" id="qtd_produto_{{ $p->id_produto }}"
-                                    class="form-control-sm mb-2" value="1" min="1" style="width: 30px; height: 10px;" required><br>
+                                    <input type="number" name="qtd_produto" id="qtd_produto_{{ $p->id_produto }}"
+                                        class="form-control-sm mb-2" value="1" min="1" style="width: 50px;" required><br>
                                     
                                     <button type="submit" class="btn btn-custom3">Adicionar ao carrinho</button>
                                 </div>
                             </div>
                         </form>
                     </div>
-            @endforeach
+                @endforeach
+            @endif
         </div>
     </div>
 </section>
