@@ -71,6 +71,9 @@
                             style="width: 100%; height: 200px; object-fit: cover;">
                             <div class="card-body text-center">
                                 <p class="card-text">{{ $estab->nome_fantasia }}</p>
+                                <button type="button" class="btn btn-custom3" onclick="event.stopPropagation(); window.location.href='{{ route('cardapio_restaurante', $estab->id) }}'">
+                                    Ver cardápio
+                                </button>
                             </div>
                         </div>
                     </form>
