@@ -13,6 +13,7 @@ use App\Models\Estabelecimento;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class Controller extends BaseController
 {
@@ -20,7 +21,10 @@ class Controller extends BaseController
 
     public function exibirIndex() 
     {
-        return view('index');
+        $estabPopulares = DB::select("SELECT * FROM estabelecimentos_populares");
+        $prodPopulares = DB::select("SELECT * FROM produtos_populares");
+
+        return view('index', compact('estabPopulares', 'prodPopulares'));
     }
 
     public function exibirIndexCliente() 

@@ -27,37 +27,26 @@
 
     <section class="bg-white py-4">
         <div class="container">
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card shadow-lg rounded-3">
-                        <img src="https://plus.unsplash.com/premium_photo-1701090939615-1794bbac5c06?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Z3JheSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D" class="card-img-top" alt="">
-                        <div class="card-body">
-                            <div class="bg-light rounded mb-3"></div>
-                            <h3 class="text-primary">Restaurante 1</h3>
-                            <p class="text-secondary">Comidas deliciosas e entrega rápida.</p>
+            <h1 class="fw-bold text-start mb-3">Os restaurantes mais populares</h1>
+            <div class="row">
+                @if($estabPopulares)
+                    @foreach($estabPopulares as $estab)
+                        <div class="col-md-4">
+                            <form action="" method="">
+                            @csrf
+                                <input type="hidden" name="estabelecimento" value="{{ $estab->id }}">
+                                <div class="card" style="cursor: pointer;">
+                                    <img class="card-img-top" src="{{ asset('imagem_perfil/' . ($estab->imagem ?? 'sem_foto.png')) }}" 
+                                    alt="Imagem do Estabelecimento"
+                                    style="width: 100%; height: 200px; object-fit: cover;">
+                                    <div class="card-body text-center">
+                                        <p class="card-text">{{ $estab->nome_fantasia }}</p>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card shadow-lg rounded-3">
-                    <img src="https://plus.unsplash.com/premium_photo-1701090939615-1794bbac5c06?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Z3JheSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D" class="card-img-top" alt="">
-                        <div class="card-body">
-                            <div class="bg-light rounded mb-3"></div>
-                            <h3 class="text-primary">Restaurante 2</h3>
-                            <p class="text-secondary">Comidas deliciosas e entrega rápida.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card shadow-lg rounded-3">
-                    <img src="https://plus.unsplash.com/premium_photo-1701090939615-1794bbac5c06?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Z3JheSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D" class="card-img-top" alt="">
-                        <div class="card-body">
-                            <div class="bg-light rounded mb-3"></div>
-                            <h3 class="text-primary">Restaurante 3</h3>
-                            <p class="text-secondary">Comidas deliciosas e entrega rápida.</p>
-                        </div>
-                    </div>
-                </div>
+                    @endforeach
+                @endif
             </div>
         </div>
     </section>
