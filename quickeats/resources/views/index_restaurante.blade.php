@@ -3,7 +3,7 @@
 @section('title', 'Página inicial')
 
 @section('nav-buttons')
-    <ul class="nav d-flex flex-wrap justify-content-start">
+    <!-- <ul class="nav d-flex flex-wrap justify-content-start">
         <li class="nav-item">
             <a href="" id="login" class="btn btn-custom ms-4" data-bs-toggle="modal" data-bs-target="#signinModal">Tenho conta</a>
         </li>
@@ -11,7 +11,7 @@
         <li class="nav-item">
             <a href="" id="signup" class="btn btn-custom2 ms-4" data-bs-toggle="modal" data-bs-target="#signupModal">Cadastrar</a>
         </li>
-    </ul>
+    </ul> -->
 @endsection
 
 @section('content')
@@ -22,9 +22,36 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
-    </section>
-@endsection
 
+    <div class="container text-center mt-5">
+        <h1 class="fw-bold text-danger">Cadastre seu restaurante e aumente suas vendas!</h1>
+        <p class="lead">Alcance mais clientes e gerencie seus pedidos de forma eficiente.</p>
+
+        <div class="d-flex justify-content-center mt-4">
+            <a href="" class="btn btn-primary btn-lg mx-2" data-bs-toggle="modal" data-bs-target="#signinModal">
+                <i class="fas fa-sign-in-alt"></i> Entrar
+            </a>
+            <a href="" class="btn btn-warning btn-lg mx-2" data-bs-toggle="modal" data-bs-target="#signupModal">
+                <i class="fas fa-store"></i> Cadastrar meu Restaurante
+            </a>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <h3><i class="fas fa-users"></i> Alcance mais clientes</h3>
+                <p>Apareça para milhares de usuários.</p>
+            </div>
+            <div class="col-md-4">
+                <h3><i class="fas fa-chart-line"></i> Gerenciamento fácil</h3>
+                <p>Controle pedidos e cardápios sem complicações.</p>
+            </div>
+            <div class="col-md-4">
+                <h3><i class="fas fa-file-alt"></i> Relatórios de vendas</h3>
+                <p>Acompanhe seu crescimento com dados precisos.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- Modal de login-->
 <div class="modal fade" id="signinModal" tabindex="-1" aria-labelledby="signinModalLabel" aria-hidden="true">
@@ -232,6 +259,9 @@
         </div>
     </div>
 </div>
+@endsection
+
+
 
 <script src="https://unpkg.com/imask"></script>
 

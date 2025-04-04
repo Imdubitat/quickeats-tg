@@ -3,7 +3,7 @@
 @section('title', 'Página inicial')
 
 @section('nav-buttons')
-    <ul class="nav d-flex flex-wrap justify-content-start">
+    <!-- <ul class="nav d-flex flex-wrap justify-content-start">
         <li class="nav-item">
             <a href="" id="login" class="btn btn-custom ms-4" data-bs-toggle="modal" data-bs-target="#signinModal">Tenho conta</a>
         </li>
@@ -11,19 +11,47 @@
         <li class="nav-item">
             <a href="" id="signup" class="btn btn-custom2 ms-4" data-bs-toggle="modal" data-bs-target="#signupModal">Cadastrar</a>
         </li>
-    </ul>
+    </ul> -->
 @endsection
 
 @section('content')
 <section class="px-5" style="margin-top: 15rem;">
     @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     @endif
+
+    <div class="container text-center mt-5">
+        <h1 class="fw-bold" style="color: #1E3A8A">Peça sua comida favorita em poucos cliques!</h1>
+        <p class="lead">Descubra restaurantes incríveis perto de você e faça pedidos com facilidade.</p>
+
+        <div class="d-flex justify-content-center mt-4">
+            <a href="" class="btn btn-primary btn-lg mx-2" data-bs-toggle="modal" data-bs-target="#signinModal">
+                <i class="fas fa-sign-in-alt"></i> Entrar
+            </a>
+            <a href="" class="btn btn-success btn-lg mx-2" data-bs-toggle="modal" data-bs-target="#signupModal">
+                <i class="fas fa-user-plus"></i> Criar Conta
+            </a>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <h3><i class="fas fa-utensils"></i> Restaurantes variados</h3>
+                <p>Escolha entre diversas opções de comida.</p>
+            </div>
+            <div class="col-md-4">
+                <h3><i class="fas fa-tags"></i> Promoções e descontos</h3>
+                <p>Aproveite ofertas exclusivas.</p>
+            </div>
+            <div class="col-md-4">
+                <h3><i class="fas fa-bicycle"></i> Facilidade no pedido</h3>
+                <p>Faça pedidos de forma rápida e segura.</p>
+            </div>
+        </div>
+    </div>
 </section>
-@endsection
 
 <!-- Modal de login-->
 <div class="modal fade" id="signinModal" tabindex="-1" aria-labelledby="signinModalLabel" aria-hidden="true">
@@ -154,6 +182,8 @@
         </div>
     </div>
 </div>
+@endsection
+
 
 <script src="https://unpkg.com/imask"></script>
 
