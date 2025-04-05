@@ -20,7 +20,7 @@ class Endereco extends Model
     protected $fillable = [
         'id_endereco',
         'logradouro',
-        'numeri',
+        'numero',
         'bairro',
         'cidade',
         'estado',
