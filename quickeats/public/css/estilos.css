@@ -119,3 +119,12 @@ html, body {
     transform: scale(1.2);
     color: #dc3545;
 }
+
+.navbar-nav a,
+footer a{
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+footer a:hover, 
+.navbar-nav a:hover{
+    transform: scale(1.05);
+}
