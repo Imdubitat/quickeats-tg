@@ -23,6 +23,7 @@ use Carbon\Carbon;
 use App\Rules\validaCPF;
 use App\Rules\validaCelular;
 use App\Rules\validaData;
+use App\Models\ProdutoFavorito;
 
 class ClienteController extends Controller
 {
@@ -123,7 +124,9 @@ class ClienteController extends Controller
 
         $categorias = DB::select('SELECT * FROM `categorias_produtos`');
 
-        return view('catalogo_produtos', compact('produtos', 'categorias'));
+        $favoritos = ProdutoFavorito::where('id_cliente', auth()->id())->pluck('id_produto')->toArray();
+
+        return view('catalogo_produtos', compact('produtos', 'categorias', 'favoritos'));
     }
 
     public function exibirRestaurantesDisponiveis()
@@ -681,5 +684,39 @@ class ClienteController extends Controller
     
         // Redireciona ou retorna uma resposta para o usuário
         return redirect()->back()->with('success', 'Resposta enviada com sucesso!');
+    }
+
+    public function favoritarProduto($id_produto)
+    {
+        $id_cliente = Auth::guard('cliente')->id();
+
+        ProdutoFavorito::create([
+            'id_produto' => $id_produto,
+            'id_cliente' => $id_cliente,
+        ]);
+    
+        return back()->with('success', 'Produto adicionado aos favoritos!');
+    }
+
+    public function desfavoritarProduto($id_produto)
+    {
+        $id_cliente = Auth::guard('cliente')->id();
+
+        ProdutoFavorito::where('id_produto', $id_produto)
+            ->where('id_cliente', $id_cliente)
+            ->delete();
+
+        return back()->with('success', 'Produto removido dos favoritos.');
+    }
+
+    public function exibirFavoritos()
+    {
+        $id_cliente = Auth::guard('cliente')->id();
+
+        $favoritos = DB::select('CALL exibir_produtos_favoritos(?)', [$id_cliente]);
+
+        $produto_favorito = ProdutoFavorito::where('id_cliente', auth()->id())->pluck('id_produto')->toArray();
+
+        return view('favoritos', compact('favoritos', 'produto_favorito'));
     }
 }

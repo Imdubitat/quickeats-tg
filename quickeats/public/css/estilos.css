@@ -109,3 +109,13 @@ html, body {
     border: 3px solid #ddd; /* Adiciona uma borda suave */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adiciona uma sombra leve */
 }
+
+.heart-icon {
+    transition: transform 0.2s ease, color 0.2s ease;
+    cursor: pointer;
+}
+
+.heart-icon:hover {
+    transform: scale(1.2);
+    color: #dc3545;
+}

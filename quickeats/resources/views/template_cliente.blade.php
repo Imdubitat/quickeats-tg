@@ -48,6 +48,9 @@
                     </div>
 
                     <ul class="navbar-nav ms-auto">
+                        <a class="nav-link me-4" href="{{ route('exibir_favoritos') }}">
+                            <i id="favoritos" class='fas fa-heart' style="color: white;"></i>
+                        </a>
                         <a class="nav-link me-4" href="{{ route('carrinho') }}">
                             <i id="carrinho" class='fas fa-shopping-cart' style="color: white;"></i>
                         </a>
@@ -83,6 +86,7 @@
                             </button>
                         </form>
                     </li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="{{ route('exibir_favoritos') }}">Favoritos</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="{{ route('adm_cliente') }}">Minha conta</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="{{ route('pedidos_cliente') }}">Meus pedidos</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="{{ route('enderecos') }}">Meus Endereços</a></li>

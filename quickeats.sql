@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 05/04/2025 às 02:38
+-- Tempo de geração: 05/04/2025 às 23:48
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -324,6 +324,23 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `exibir_produtos_estab` (IN `p_id_es
     INNER JOIN categorias_produtos AS c ON p.id_categoria = c.id_categoria
     INNER JOIN estabelecimentos AS e ON p.id_estab = e.id_estab
     WHERE p.qtd_estoque > 0 AND p.id_estab = p_id_estab;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `exibir_produtos_favoritos` (IN `p_id_cliente` INT)   BEGIN
+    SELECT p.id_produto, 
+	p.nome, 
+    p.descricao, 
+    p.valor, 
+    p.id_estab,
+    p.imagem_produto,
+    e.nome_fantasia AS estab
+    FROM produtos p
+    INNER JOIN produtos_favoritos pf ON p.id_produto = pf.id_produto
+    INNER JOIN estabelecimentos AS e ON p.id_estab = e.id_estab
+    WHERE pf.id_cliente = p_id_cliente
+    AND p.qtd_estoque > 0
+    AND e.email_verificado = 1 
+    AND e.perfil_ativo = 1;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `exibir_produtos_mais_populares_por_estabelecimento` (IN `p_id_estab` INT)   BEGIN
@@ -1262,6 +1279,25 @@ CREATE TABLE `produtos_disponiveis` (
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `produtos_favoritos`
+--
+
+CREATE TABLE `produtos_favoritos` (
+  `id_produto` int(11) NOT NULL,
+  `id_cliente` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `produtos_favoritos`
+--
+
+INSERT INTO `produtos_favoritos` (`id_produto`, `id_cliente`) VALUES
+(11, 30),
+(7, 30);
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura stand-in para view `produtos_populares`
 -- (Veja abaixo para a visão atual)
 --
@@ -1480,6 +1516,13 @@ ALTER TABLE `produtos`
   ADD KEY `fk_produtos_estab` (`id_estab`);
 
 --
+-- Índices de tabela `produtos_favoritos`
+--
+ALTER TABLE `produtos_favoritos`
+  ADD KEY `fk_produto_favorito` (`id_produto`),
+  ADD KEY `fk_cliente_favorito` (`id_cliente`);
+
+--
 -- Índices de tabela `status_pedidos`
 --
 ALTER TABLE `status_pedidos`
@@ -1655,6 +1698,13 @@ ALTER TABLE `planos_estabelecimentos`
 ALTER TABLE `produtos`
   ADD CONSTRAINT `fk_produtos_categoria` FOREIGN KEY (`id_categoria`) REFERENCES `categorias_produtos` (`id_categoria`),
   ADD CONSTRAINT `fk_produtos_estab` FOREIGN KEY (`id_estab`) REFERENCES `estabelecimentos` (`id_estab`);
+
+--
+-- Restrições para tabelas `produtos_favoritos`
+--
+ALTER TABLE `produtos_favoritos`
+  ADD CONSTRAINT `fk_cliente_favorito` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`),
+  ADD CONSTRAINT `fk_produto_favorito` FOREIGN KEY (`id_produto`) REFERENCES `produtos` (`id_produto`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

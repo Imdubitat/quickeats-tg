@@ -99,6 +99,14 @@ Route::middleware('auth:cliente')->group(function () {
 
     // Responder chamados
     Route::post('/cliente/responder-chamado', [ClienteController::class, 'responderChamado'])->name('cliente_responder_chamado');
+
+    // Favoritar produto
+    Route::get('/favoritar/{id}', [ClienteController::class, 'favoritarProduto'])->name('favoritar_produto');
+
+    // Desfavoritar produto
+    Route::get('/desfavoritar/{id}', [ClienteController::class, 'desfavoritarProduto'])->name('desfavoritar_produto');
+
+    Route::get('/favoritos', [ClienteController::class, 'exibirFavoritos'])->name('exibir_favoritos');
 });
 
 //Rota para solicitação de link para redefinição de senha via email

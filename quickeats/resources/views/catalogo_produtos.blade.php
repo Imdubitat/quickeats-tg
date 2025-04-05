@@ -47,6 +47,10 @@
                         <div class="row mx-auto">
                             @if($produtosCategoria->isNotEmpty())
                                 @foreach($produtosCategoria as $p)
+                                @php
+                                    $favoritado = in_array($p->id_produto, $favoritos);
+                                @endphp
+
                                     <div class="col-md-4 mb-4">
                                         <form action="{{ route('adicionar_carrinho') }}" method="POST">
                                             @csrf
@@ -68,7 +72,20 @@
                                                     <input type="text" name="qtd_produto" id="qtd_produto_{{ $p->id_produto }}"
                                                     class="form-control-sm mb-2" value="1" min="1" style="width: 30px; height: 10px;" required><br>
                                                     
-                                                    <button type="submit" class="btn btn-custom3">Adicionar ao carrinho</button>
+                                                    <button type="submit" class="btn btn-custom3 me-5">Adicionar ao carrinho</button>
+                                                    <input type="hidden" name="id_produto" value="{{ $p->id_produto }}">
+                                                    @if ($favoritado)
+                                                        <button type="button" class="heart-icon favoritado btn btn-link p-0 m-0 align-center"
+                                                        onclick="window.location.href='{{ route('desfavoritar_produto', $p->id_produto) }}'">
+                                                            <i class="fas fa-heart" style="font-size: 1.5rem; color:red;"></i>
+                                                        </button>
+                                                    @else
+                                                        <button type="button" class="heart-icon btn btn-link p-0 m-0 align-center" 
+                                                        onclick="window.location.href='{{ route('favoritar_produto', $p->id_produto) }}'">
+                                                            <i class="far fa-heart" style="font-size: 1.5rem; color:red;"></i>
+                                                        </a>
+                                                    @endif
+
                                                 </div>
                                             </div>
                                         </form>
