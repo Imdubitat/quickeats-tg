@@ -62,21 +62,18 @@
         @if($estabPopulares)
             @foreach($estabPopulares as $estab)
                 <div class="col-md-4">
-                    <form action="" method="GET">
-                    @csrf
-                        <input type="hidden" name="estabelecimento" value="{{ $estab->id }}">
-                        <div class="card" onclick="this.closest('form').submit()" style="cursor: pointer;">
-                            <img class="card-img-top" src="{{ asset('imagem_perfil/' . ($estab->imagem ?? 'sem_foto.png')) }}" 
-                            alt="Imagem do Estabelecimento"
-                            style="width: 100%; height: 200px; object-fit: cover;">
-                            <div class="card-body text-center">
-                                <p class="card-text">{{ $estab->nome_fantasia }}</p>
-                                <button type="button" class="btn btn-custom3" onclick="event.stopPropagation(); window.location.href='{{ route('cardapio_restaurante', $estab->id) }}'">
-                                    Ver cardápio
-                                </button>
-                            </div>
+                    <input type="hidden" name="estabelecimento" value="{{ $estab->id }}">
+                    <div class="card shadow rounded-4">
+                        <img class="card-img-top" src="{{ asset('imagem_perfil/' . ($estab->imagem ?? 'sem_foto.png')) }}" 
+                        alt="Imagem do Estabelecimento"
+                        style="width: 100%; height: 200px; object-fit: cover;">
+                        <div class="card-body text-center">
+                            <p class="card-text">{{ $estab->nome_fantasia }}</p>
+                            <button type="button" class="btn btn-custom3" onclick="window.location.href='{{ route('cardapio_restaurante', $estab->id) }}'">
+                                Ver cardápio
+                            </button>
                         </div>
-                    </form>
+                    </div>
                 </div>
             @endforeach
         @endif
@@ -88,19 +85,22 @@
             @if($prodPopulares)
                 @foreach($prodPopulares as $prod)
                     <div class="col-md-4">
-                        <form action="" method="GET">
-                        @csrf
                         <input type="hidden" name="produto" value="{{ $prod->id }}">
-                        <input type="hidden" name="estabelecimento" value="{{ $prod->id_estab }}">
-                            <div class="card" onclick="this.closest('form').submit()" style="cursor: pointer;">
-                                <img class="card-img-top" src="{{ asset('imagem_produto/' . ($prod->imagem ?? 'sem_foto.png')) }}" 
-                                alt="Imagem do produto"
-                                style="width: 100%; height: 200px; object-fit: cover;">
-                                <div class="card-body text-center">
-                                    <p class="card-text">{{ $prod->nome_produto }}</p>
-                                </div>
+                        <input type="hidden" name="categoria" value="{{ $prod->categoria }}">
+                        <div class="card" style="cursor: pointer;">
+                            <img class="card-img-top" src="{{ asset('imagem_produto/' . ($prod->imagem ?? 'sem_foto.png')) }}" 
+                            alt="Imagem do produto"
+                            style="width: 100%; height: 200px; object-fit: cover;">
+                            <div class="card-body text-center">
+                                <p class="card-text">{{ $prod->nome_produto }}</p>
                             </div>
-                        </form>
+                            <div class="card-body text-center">
+                                <button type="button" class="btn btn-custom3" 
+                                    onclick="window.location.href='{{ route('catalogo_produtos') }}#categoria-{{ $prod->categoria }}'">
+                                    Ver categoria
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 @endforeach
             @endif

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 31/03/2025 às 01:10
+-- Tempo de geração: 05/04/2025 às 02:38
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -1269,6 +1269,7 @@ CREATE TABLE `produtos_populares` (
 `id` int(11)
 ,`nome_produto` varchar(60)
 ,`id_estab` int(11)
+,`categoria` int(11)
 ,`total_pedidos` bigint(21)
 ,`imagem` varchar(255)
 );
@@ -1346,7 +1347,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `produtos_populares`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `produtos_populares`  AS SELECT `pr`.`id_produto` AS `id`, `pr`.`nome` AS `nome_produto`, `pr`.`id_estab` AS `id_estab`, count(distinct `p`.`id_pedido`) AS `total_pedidos`, `pr`.`imagem_produto` AS `imagem` FROM ((`produtos` `pr` join `itens_pedidos` `ip` on(`ip`.`id_produto` = `pr`.`id_produto`)) join `pedidos` `p` on(`p`.`id_pedido` = `ip`.`id_pedido`)) GROUP BY `pr`.`id_produto`, `pr`.`nome`, `pr`.`id_estab`, `pr`.`imagem_produto` ORDER BY count(`p`.`id_pedido`) DESC LIMIT 0, 3 ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `produtos_populares`  AS SELECT `pr`.`id_produto` AS `id`, `pr`.`nome` AS `nome_produto`, `pr`.`id_estab` AS `id_estab`, `pr`.`id_categoria` AS `categoria`, count(distinct `p`.`id_pedido`) AS `total_pedidos`, `pr`.`imagem_produto` AS `imagem` FROM ((`produtos` `pr` join `itens_pedidos` `ip` on(`ip`.`id_produto` = `pr`.`id_produto`)) join `pedidos` `p` on(`p`.`id_pedido` = `ip`.`id_pedido`)) GROUP BY `pr`.`id_produto`, `pr`.`nome`, `pr`.`id_estab`, `pr`.`imagem_produto`, `pr`.`id_categoria` ORDER BY count(`p`.`id_pedido`) DESC LIMIT 0, 3 ;
 
 --
 -- Índices para tabelas despejadas
