@@ -56,6 +56,8 @@
         </button>
     </div>
 
+    <div class="py-3"></div>
+
     <div class="container">
     <h1 class="fw-bold text-start mb-3">Os restaurantes mais populares</h1>
         <div class="row align-self-center align-items-center pb-5 mb-5">
@@ -78,8 +80,7 @@
             @endforeach
         @endif
         </div>
-
-        <div class="b-example-divider"></div>
+        
         <h1 class="fw-bold text-start mb-3">Os produtos mais populares</h1>
         <div class="row align-self-center align-items-center pb-5 mb-5">
             @if($prodPopulares)
@@ -108,32 +109,16 @@
 </section>
 
 <section class="py-5 mt-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 mb-5">
-                <h3>ENTRE EM CONTATO</h3>
-                <form action="" method="post">
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" placeholder="Seu email">
-                    </div>
-                    <div class="mb-3">
-                        <label for="message" class="form-label">Mensagem</label>
-                        <textarea class="form-control" id="message" rows="5" placeholder="Sua mensagem"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-custom">Enviar</button>
+    <div class="container newsletter pt-5 pb-5 rounded-4 text-white">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h3 class="mb-4">Receba novidades e promoções</h3>
+                <p class="mb-4">Inscreva-se na nossa newsletter e fique por dentro das melhores ofertas, novos restaurantes e dicas exclusivas!</p>
+                <form action="" method="post" class="d-flex flex-column flex-md-row justify-content-center gap-2">
+                    @csrf
+                    <input type="email" name="email" class="form-control form-control-lg" placeholder="Digite seu email" required>
+                    <button type="submit" class="btn btn-custom btn-lg">Inscrever</button>
                 </form>
-            </div>
-            <div class="col-md-6">
-                <h3 style="color: #1E3A8A">INFORMAÇÕES</h3>
-                <p>Email: contato@quickeats.com</p>
-                <p>Telefone: (11) 1234-5678</p>
-                <p>Redes Sociais:</p>
-                <ul class="list-unstyled">
-                    <li><a href="#">Instagram</a></li>
-                    <li><a href="#">Facebook</a></li>
-                    <li><a href="#">LinkedIn</a></li>
-                </ul>
             </div>
         </div>
     </div>
