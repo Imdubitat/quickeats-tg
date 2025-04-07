@@ -120,11 +120,40 @@ html, body {
     color: #dc3545;
 }
 
-.navbar-nav a,
+.nav-link,
 footer a{
     transition: transform 0.2s ease, color 0.2s ease;
 }
+
 footer a:hover, 
-.navbar-nav a:hover{
+.nav-link:hover{
     transform: scale(1.05);
+}
+
+.newsletter {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: linear-gradient(
+        135deg,
+        #1E3A8A,
+        #dc3545
+    );
+}
+
+.card-sobre {
+    width: 320px;
+    padding: 30px;
+    background: #fff;
+    border: 8px solid #dc3545;
+    box-shadow: 15px 15px 0 #1E3A8A;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-sobre:hover {
+    transform: rotate(0deg) scale(1.02);
+    box-shadow: 20px 20px 0 #1E3A8A;
 }

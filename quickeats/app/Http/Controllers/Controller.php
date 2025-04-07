@@ -142,4 +142,19 @@ class Controller extends BaseController
 
         return redirect()->route('index')->with('error', 'Token inválido ou expirado.');
     }
+
+    public function exibirFaqs()
+    {
+        return view('faqs');
+    }
+
+    public function exibirSobre()
+    {
+        return view('sobre');
+    }
+
+    public function exibirContato()
+    {
+        return view('contato');
+    }
 }

@@ -15,6 +15,10 @@ Route::get('/clientes', [Controller::class, 'exibirIndexCliente'])->name('index_
 Route::get('/restaurantes', [Controller::class, 'exibirIndexRestaurante'])->name('index_restaurante');
 Route::get('/logout', [Controller::class, 'logout'])->name('logout');
 Route::get('/confirma-email', [Controller::class, 'confirmaEmail'])->name('confirma_email');
+// Exibir página de perguntas frequentes
+Route::get('/faqs', [Controller::class, 'exibirFaqs'])->name('faqs');
+Route::get('/sobre', [Controller::class, 'exibirSobre'])->name('sobre');
+Route::get('/contato', [Controller::class, 'exibirContato'])->name('contato');
 
 // -------------------------------------------- Rotas do cliente ---------------------------------------------------------
 Route::post('cliente/login', [ClienteController::class, 'realizarLogin'])->name('login_cliente');
@@ -106,6 +110,7 @@ Route::middleware('auth:cliente')->group(function () {
     // Desfavoritar produto
     Route::get('/desfavoritar/{id}', [ClienteController::class, 'desfavoritarProduto'])->name('desfavoritar_produto');
 
+    // Exibir página de favoritos
     Route::get('/favoritos', [ClienteController::class, 'exibirFavoritos'])->name('exibir_favoritos');
 });
 

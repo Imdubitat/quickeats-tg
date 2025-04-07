@@ -9,6 +9,7 @@
     <link href='https://fonts.googleapis.com/css?family=Afacad' rel='stylesheet'>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <link href="{{ asset('css/estilos.css') }}" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </head>
 <body class="d-flex flex-column min-vh-100">
     <header>
@@ -36,11 +37,9 @@
             <div class="d-flex flex-wrap justify-content-between align-items-center">
                 <p class="col-md-4 mb-0">&copy; 2025 QuickEats, Inc</p>
                 <ul class="nav col-md-4 justify-content-end">
-                    <li class="nav-item"><a href="#" class="nav-link px-2">Home</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link px-2">Features</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link px-2">Pricing</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link px-2">FAQs</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link px-2">About</a></li>
+                    <li class="nav-item"><a href="{{ route('faqs') }}" class="nav-link px-2">Ajuda</a></li>
+                    <li class="nav-item"><a href="{{ route('sobre') }}" class="nav-link px-2">Sobre</a></li>
+                    <li class="nav-item"><a href="{{ route('contato') }}" class="nav-link px-2">Contato</a></li>
                 </ul>
             </div>
         </div>

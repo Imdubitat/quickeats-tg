@@ -113,11 +113,9 @@
             <div class="d-flex flex-wrap justify-content-between align-items-center">
                 <p class="col-md-4 mb-0">&copy; 2025 QuickEats, Inc</p>
                 <ul class="nav col-md-4 justify-content-end">
-                    <li class="nav-item"><a href="#" class="nav-link px-2">Home</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link px-2">Features</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link px-2">Pricing</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link px-2">FAQs</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link px-2">About</a></li>
+                    <li class="nav-item"><a href="{{ route('listar_chamados_cliente') }}" class="nav-link px-2">Ajuda</a></li>
+                    <li class="nav-item"><a href="{{ route('sobre') }}" class="nav-link px-2">Sobre</a></li>
+                    <li class="nav-item"><a href="{{ route('contato') }}" class="nav-link px-2">Contato</a></li>
                 </ul>
             </div>
         </div>
