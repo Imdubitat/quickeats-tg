@@ -164,9 +164,12 @@
                 }
             },
             plugins: {
+                legend: {
+                    display: false  // Oculta o label da legenda
+                },
                 datalabels: {
                     anchor: 'end',
-                    align: 'top',
+                    align: 'right',
                     color: '#000',
                     formatter: (value) => value
                 }
@@ -310,9 +313,12 @@
                 }
             },
             plugins: {
+                legend: {
+                    display: false  // Oculta o label da legenda
+                },
                 datalabels: {
                     anchor: 'end',
-                    align: 'top',
+                    align: 'right',
                     color: '#000',
                     formatter: (value) => value
                 }
@@ -357,9 +363,12 @@
                 }
             },
             plugins: {
+                legend: {
+                    display: false  // Oculta o label da legenda
+                },
                 datalabels: {
                     anchor: 'end',
-                    align: 'bottom',
+                    align: 'right',
                     color: '#000',
                     formatter: function(value) {
                         return 'R$ ' + value.toLocaleString('pt-BR', { minimumFractionDigits: 0 });
