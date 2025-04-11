@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Cliente;
 use App\Models\Avaliacao;
 use App\Models\Pedido;
+use App\Models\Produto;
+use App\Models\Estabelecimento;
 use App\Models\ConfirmacaoEmail;
 use App\Models\MensagensCliente;
 use App\Mail\ConfirmaEmail;
@@ -201,7 +203,7 @@ class ClienteController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Produto adicionado ao carrinho!');
+        return redirect()->route('carrinho')->with('success', 'Produto adicionado ao carrinho!');
     }
 
     public function removerProdutoCarrinho(Request $request)
@@ -719,4 +721,34 @@ class ClienteController extends Controller
 
         return view('favoritos', compact('favoritos', 'produto_favorito'));
     }
+
+    public function pesquisar(Request $request)
+    {
+        $termo = $request->input('termoPesquisa');
+
+        // Busca por nome (ajuste os campos conforme seu banco)
+        $produtos = Produto::where('nome', 'like', "%{$termo}%")->get();
+        $estabelecimentos = Estabelecimento::where('nome_fantasia', 'like', "%{$termo}%")->get();
+        $favoritos = ProdutoFavorito::where('id_cliente', auth()->id())->pluck('id_produto')->toArray();
+
+        return view('resultados_pesquisa', compact('termo', 'produtos', 'estabelecimentos', 'favoritos'));
+    }
+
+    public function autocomplete(Request $request)
+{
+    $termo = $request->input('termoPesquisa');
+
+    // Busca por nome (ajuste os campos conforme seu banco)
+    $produtos = Produto::where('nome', 'like', "%{$termo}%")
+                       ->limit(5) // Limita o número de resultados
+                       ->get(['nome']); // Apenas o campo necessário
+    $estabelecimentos = Estabelecimento::where('nome_fantasia', 'like', "%{$termo}%")
+                               ->limit(5) // Limita o número de resultados
+                               ->get(['nome_fantasia']); // Apenas o campo necessário
+
+    return response()->json([
+        'produtos' => $produtos,
+        'estabelecimentos' => $estabelecimentos
+    ]);
+}
 }

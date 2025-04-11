@@ -112,6 +112,9 @@ Route::middleware('auth:cliente')->group(function () {
 
     // Exibir página de favoritos
     Route::get('/favoritos', [ClienteController::class, 'exibirFavoritos'])->name('exibir_favoritos');
+
+    Route::post('/pesquisa', [ClienteController::class, 'pesquisar'])->name('pesquisa');
+    Route::post('/autocomplete', [ClienteController::class, 'autocomplete'])->name('autocomplete');
 });
 
 //Rota para solicitação de link para redefinição de senha via email

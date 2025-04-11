@@ -38,13 +38,15 @@
 
                     <!-- Barra de Pesquisa -->
                     <div class="container mx-5">
-                        <form method="post" action="" class="d-flex">
+                        <form method="post" action="{{ route('pesquisa') }}" class="d-flex">
                             @csrf
-                            <input class="form-control" type="text" id="termo_pesquisa" name="termoPesquisa" placeholder="Estou procurando por...">
+                            <input class="form-control" type="text" id="termo_pesquisa" name="termoPesquisa" placeholder="Estou procurando por..." autocomplete="off">
                             <button class="btn btn-danger" type="submit">
                                 <i class='fas fa-search'></i>
                             </button>
                         </form>
+                        <!-- Container para os resultados do autocomplete -->
+                        <div id="sugestoes" class="list-group" style="position: absolute;"></div>
                     </div>
 
                     <ul class="navbar-nav ms-auto">
@@ -123,5 +125,67 @@
 
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
 
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let timeout; // Variável para armazenar o timeout do debounce
+
+            $('#termo_pesquisa').on('input', function() {
+                let termo = $(this).val();
+                clearTimeout(timeout); // Limpa o timeout anterior
+
+                if (termo.length >= 1) { // Só busca se tiver 2 ou mais caracteres
+                    timeout = setTimeout(function() { // Adiciona debounce de 300ms
+                        $.ajax({
+                            url: '{{ route("autocomplete") }}', // Rota para o autocomplete
+                            method: 'POST',
+                            data: {
+                                _token: '{{ csrf_token() }}', // Token CSRF para segurança
+                                termoPesquisa: termo
+                            },
+                            success: function(response) {
+                                let sugestoes = '';
+                                if (response.produtos.length > 0 || response.estabelecimentos.length > 0) {
+                                    // Produtos
+                                    response.produtos.forEach(function(produto) {
+                                        sugestoes += `<a href="#" class="list-group-item list-group-item-action" data-tipo="produto" data-valor="${produto.nome}">${produto.nome}<br><small class="text-muted">produto</small></a>`;
+                                    });
+                                    // Estabelecimentos
+                                    response.estabelecimentos.forEach(function(estabelecimento) {
+                                        sugestoes += `<a href="#" class="list-group-item list-group-item-action" data-tipo="estabelecimento" data-valor="${estabelecimento.nome_fantasia}">${estabelecimento.nome_fantasia}<br><small class="text-muted">estabelecimento</small></a>`;
+                                    });
+                                } else {
+                                    sugestoes = '<div class="list-group-item">Nenhum resultado encontrado</div>';
+                                }
+                                $('#sugestoes').html(sugestoes).show();
+                                $('#sugestoes').width($('#termo_pesquisa').outerWidth());
+                            },
+                            error: function() {
+                                $('#sugestoes').html('<div class="list-group-item">Erro ao buscar</div>').show();
+                            }
+                        });
+                    }, 300); // Aguarda 300ms após o último caractere digitado
+                } else {
+                    $('#sugestoes').hide(); // Esconde se o termo for muito curto
+                }
+            });
+
+            // Evento de clique nas sugestões
+            $('#sugestoes').on('click', '.list-group-item-action', function(e) {
+                e.preventDefault(); // Evita comportamento padrão do link
+                let valor = $(this).data('valor'); // Pega o valor do item clicado
+                $('#termo_pesquisa').val(valor); // Preenche o campo de busca
+                $('#sugestoes').hide(); // Esconde as sugestões
+            });
+
+            // Esconder sugestões ao clicar fora
+            $(document).click(function(e) {
+                if (!$(e.target).closest('#termo_pesquisa, #sugestoes').length) {
+                    $('#sugestoes').hide();
+                }
+            });
+        });
+    </script>
 </body>
 </html>

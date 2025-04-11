@@ -157,3 +157,24 @@ footer a:hover,
     transform: rotate(0deg) scale(1.02);
     box-shadow: 20px 20px 0 #1E3A8A;
 }
+
+#sugestoes {
+    display: none;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    position: absolute;
+    z-index: 1000;
+}
+
+#sugestoes .list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+#sugestoes .text-muted {
+    font-size: 0.8em; /* Tamanho menor */
+    color: #6c757d; /* Cinza padrão do Bootstrap */
+    display: block; /* Garante que fique em uma nova linha */
+}
