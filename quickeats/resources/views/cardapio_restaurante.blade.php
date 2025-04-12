@@ -72,7 +72,13 @@
                                     <input type="number" name="qtd_produto" id="qtd_produto_{{ $p->id_produto }}"
                                         class="form-control-sm mb-2" value="1" min="1" style="width: 50px;" required><br>
                                     
-                                    <button type="submit" class="btn btn-custom3">Adicionar ao carrinho</button>
+                                        @if($p->estab_fechado)
+                                            <button type="button" class="btn btn-secondary" disabled>
+                                                Estabelecimento fechado
+                                            </button>
+                                        @else
+                                            <button type="submit" class="btn btn-custom3 me-5">Adicionar ao carrinho</button>
+                                        @endif
                                 </div>
                             </div>
                         </form>

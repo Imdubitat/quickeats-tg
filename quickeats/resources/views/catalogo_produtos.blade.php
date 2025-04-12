@@ -71,8 +71,13 @@
                                                     <label for="qtd_produto_{{ $p->id_produto }}" class="form-label">Quantidade:</label>
                                                     <input type="text" name="qtd_produto" id="qtd_produto_{{ $p->id_produto }}"
                                                     class="form-control-sm mb-2" value="1" min="1" style="width: 30px; height: 10px;" required><br>
-                                                    
-                                                    <button type="submit" class="btn btn-custom3 me-5">Adicionar ao carrinho</button>
+                                                    @if($p->estab_fechado)
+                                                        <button type="button" class="btn btn-secondary" disabled>
+                                                            Estabelecimento fechado
+                                                        </button>
+                                                    @else
+                                                        <button type="submit" class="btn btn-custom3 me-5">Adicionar ao carrinho</button>
+                                                    @endif
                                                     <input type="hidden" name="id_produto" value="{{ $p->id_produto }}">
                                                     @if ($favoritado)
                                                         <button type="button" class="heart-icon favoritado btn btn-link p-0 m-0 align-center"

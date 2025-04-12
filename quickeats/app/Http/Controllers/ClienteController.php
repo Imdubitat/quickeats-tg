@@ -123,12 +123,32 @@ class ClienteController extends Controller
     public function exibirProdutosDisponiveis()
     {
         $produtos = DB::select('CALL listar_produtos()');
-
         $categorias = DB::select('SELECT * FROM `categorias_produtos`');
-
         $favoritos = ProdutoFavorito::where('id_cliente', auth()->id())->pluck('id_produto')->toArray();
 
-        return view('catalogo_produtos', compact('produtos', 'categorias', 'favoritos'));
+        $horaAtual = now()->format('H:i:s');
+
+        // Filtrar produtos com base no horário atual
+        foreach ($produtos as &$produto) {
+            $horario = DB::table('estabelecimentos')
+                ->where('id_estab', $produto->id_estab)
+                ->first();
+
+            $produto->estab_fechado = true;
+
+            if ($horario && $horario->inicio_expediente && $horario->termino_expediente) {
+                if($horaAtual >= $horario->inicio_expediente && $horaAtual <= $horario->termino_expediente)
+                {
+                    $produto->estab_fechado = false;
+                } 
+            }
+        }
+
+        return view('catalogo_produtos', [
+            'produtos' => $produtos,
+            'categorias' => $categorias,
+            'favoritos' => $favoritos,
+        ]);
     }
 
     public function exibirRestaurantesDisponiveis()
@@ -143,10 +163,30 @@ class ClienteController extends Controller
         $restaurante = DB::table('estabelecimentos')
                     ->where('id_estab', $id)
                     ->first();
-
         $produtos = DB::select('CALL exibir_produtos_estab(?)', [$id]);
+
+        $horaAtual = now()->format('H:i:s');
+
+        // Filtrar produtos com base no horário atual
+        foreach ($produtos as &$produto) {
+            $horario = DB::table('estabelecimentos')
+                ->where('id_estab', $produto->id_estab)
+                ->first();
+
+            $produto->estab_fechado = true;
+
+            if ($horario && $horario->inicio_expediente && $horario->termino_expediente) {
+                if($horaAtual >= $horario->inicio_expediente && $horaAtual <= $horario->termino_expediente)
+                {
+                    $produto->estab_fechado = false;
+                } 
+            }
+        }
         
-        return view('cardapio_restaurante', compact('restaurante', 'produtos'));
+        return view('cardapio_restaurante', [
+            'produtos' => $produtos,
+            'restaurante' => $restaurante,
+        ]);
     }
 
     public function exibirCarrinho()
