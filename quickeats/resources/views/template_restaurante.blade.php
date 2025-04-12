@@ -35,17 +35,6 @@
                         </li>
                     </ul>
 
-                    <!-- Barra de Pesquisa -->
-                    <div class="container mx-5">
-                        <form method="post" action="" class="d-flex">
-                            @csrf
-                            <input class="form-control" type="text" id="termo_pesquisa" name="termoPesquisa" placeholder="Estou procurando por...">
-                            <button class="btn btn-danger" type="submit">
-                                <i class='fas fa-search'></i>
-                            </button>
-                        </form>
-                    </div>
-
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
@@ -72,14 +61,6 @@
             </div>
             <div class="offcanvas-body">
                 <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <form method="post" action="" class="d-flex">
-                            <input class="form-control" type="text" id="pesquisa" name="pesquisa" placeholder="Estou procurando por...">
-                            <button class="btn btn-danger" type="submit">
-                                <i class='fas fa-search'></i>
-                            </button>
-                        </form>
-                    </li>
                     <li>
                         <a class="dropdown-item" href="{{ route('pedidos_restaurante') }}">Pedidos</a>
                     </li>
