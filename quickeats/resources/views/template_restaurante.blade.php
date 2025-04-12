@@ -33,6 +33,9 @@
                         <li>
                             <a class="nav-link text-white text-nowrap" href="{{ route('estoque_restaurante') }}">Estoque</a>
                         </li>
+                        <li>
+                            <a class="nav-link text-white text-nowrap" href="{{ route('grade_horario') }}">Grade de horários</a>
+                        </li>
                     </ul>
 
                     <ul class="navbar-nav ms-auto">
@@ -69,6 +72,9 @@
                     </li>
                     <li>
                         <a class="dropdown-item" href="{{ route('estoque_restaurante') }}">Estoque</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{{ route('grade_horario') }}">Grades de horários</a>
                     </li>
                     <li><a class="dropdown-item" href="{{ route('dashboard_restaurante') }}">Dashboard </a></li>
                     <li><a class="dropdown-item" href="{{ route('adm_restaurante') }}">Minha conta</a></li>

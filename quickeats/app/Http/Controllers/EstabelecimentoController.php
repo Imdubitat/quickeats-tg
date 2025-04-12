@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Estabelecimento;
 use App\Models\ConfirmacaoEmail;
 use App\Models\MensagensEstab;
+use App\Models\GradeHorario;
 use App\Mail\ConfirmaEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -679,5 +680,58 @@ class EstabelecimentoController extends Controller
         }
 
         return back()->with('error', 'Erro ao fazer upload da foto de perfil.');
+    }
+
+    public function exibirGradeHorario() 
+    {
+        $idEstab = auth()->guard('estabelecimento')->id();
+
+        $horarios = DB::select('CALL consulta_grade_horaria(?)', [$idEstab]);
+
+        return view('grade_horario', compact('horarios'));
+    }
+
+    // Método para deletar horário
+    public function deletarHorario($id)
+    {
+        // Lógica para encontrar e deletar o horário pelo ID
+        $horario = DB::table('grades_horario')->where('id_grade', $id)->first();
+
+        if ($horario) {
+            DB::table('grades_horario')->where('id_grade', $id)->delete();
+            return redirect()->back()->with('success', 'Horário deletado com sucesso.');
+        }
+
+        return redirect()->back()->with('error', 'Horário não encontrado.');
+    }
+
+    public function salvarGrade(Request $request) 
+    {
+        // Valida os dados enviados pelo modal
+        $validatedData = $request->validate([
+            'dia_semana' => 'required|string|max:10',
+            'inicio_expediente' => 'required|string|max:255', //verificar a possibilidade, necessidade de mudar o tipo de dados
+            'termino_expediente' => 'required|string|max:255', //verificar a possibilidade, necessidade de mudar o tipo de dados
+        ]);
+        
+        $idEstab = Auth::guard('estabelecimento')->id();
+
+        // Verifica se já existe uma grade cadastrada para o mesmo dia da semana
+        $gradeExistente = GradeHorario::where('id_estab', $idEstab)
+        ->where('dia_semana', $validatedData['dia_semana'])->first();
+
+        if ($gradeExistente) {
+            return redirect()->back()->with('error', 'Já existe um horário cadastrado para este dia da semana.');
+        }
+        
+        // Cria a grade
+        GradeHorario::create([
+            'id_estab' => $idEstab,
+            'dia_semana' => $validatedData['dia_semana'],
+            'inicio_expediente' => $validatedData['inicio_expediente'],
+            'termino_expediente' => $validatedData['termino_expediente']
+        ]);
+
+        return redirect()->back()->with('success', 'Grade cadastrada com sucesso!');
     }
 }

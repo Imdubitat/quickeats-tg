@@ -192,6 +192,14 @@ Route::middleware('auth:estabelecimento')->group(function () {
 
     // Rota para upload de imagem
     Route::post('/perfil/upload', [EstabelecimentoController::class, 'uploadImagemPerfil'])->name('imagem_upload');
+
+    Route::get('/grade-horario', [EstabelecimentoController::class, 'exibirGradeHorario'])->name('grade_horario');
+
+    // Rota para deletar um horário com o método 'deletarHorario'
+    Route::post('deleta-grade/{id}', [EstabelecimentoController::class, 'deletarHorario'])->name('deletarHorario');
+
+    // Rota para salvar um horário com o método 'salvarGrade'
+    Route::post('salvar-grade', [EstabelecimentoController::class, 'salvarGrade'])->name('salvarGrade');
 });
 
 // Rota para solicitação de link para redefinição de senha via email
