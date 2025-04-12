@@ -16,7 +16,7 @@
     <div class="container">
         <form action="{{ route('realizar_pedido') }}" method="POST">
             @csrf
-            @foreach($formas_pagamento as $fp)
+            @foreach($formasPagamento as $fp)
             <div class="row border p-4 rounded-4 align-items-center mb-3">
                 <div class="col-md-1 d-flex align-items-center">
                     <input class="form-check-input" type="radio" name="pagamento" id="pagamento{{ $fp->id_formapag }}" value="{{ $fp->id_formapag }}" required>

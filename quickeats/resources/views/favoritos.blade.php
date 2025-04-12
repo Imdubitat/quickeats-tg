@@ -35,7 +35,7 @@
             <div class="row">
                 @foreach($favoritos as $produto)
                 @php
-                    $favoritado = in_array($produto->id_produto, $produto_favorito);
+                    $favoritado = in_array($produto->id_produto, $produtoFavorito);
                 @endphp
                     <div class="col-md-4 mb-4">
                         <form action="{{ route('adicionar_carrinho') }}" method="POST">

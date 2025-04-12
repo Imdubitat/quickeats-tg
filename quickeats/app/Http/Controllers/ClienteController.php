@@ -81,7 +81,6 @@ class ClienteController extends Controller
         }
     }
 
-
     public function realizarLogin(Request $request)
     {
         // Validação dos campos de entrada
@@ -90,13 +89,13 @@ class ClienteController extends Controller
             'senhaLogin' => 'required|string|min:8',
         ]);
 
-        $email_verificado = Cliente::where('email', $validatedData['emailLogin'])->where('email_verificado', 1)->first();
-        $perfil_ativo = Cliente::where('email', $validatedData['emailLogin'])->where('perfil_ativo', 1)->first();
+        $emailVerificado = Cliente::where('email', $validatedData['emailLogin'])->where('email_verificado', 1)->first();
+        $perfilAtivo = Cliente::where('email', $validatedData['emailLogin'])->where('perfil_ativo', 1)->first();
 
         // Tentar autenticar o cliente usando o guard 'cliente'
         if (Auth::guard('cliente')->attempt(['email' => $request->input('emailLogin'), 'password' => $request->input('senhaLogin')])) {
-            if($perfil_ativo){
-                if($email_verificado){
+            if($perfilAtivo){
+                if($emailVerificado){
                     // Login bem-sucedido, redirecionar para a página inicial do profissional
                     return redirect()->route('home_cliente')->with('success', 'Login realizado com sucesso!');
                 } else {
@@ -193,9 +192,9 @@ class ClienteController extends Controller
 
     public function exibirCarrinho()
     {
-        $id_cliente = auth()->guard('cliente')->id();
+        $idCliente = auth()->guard('cliente')->id();
 
-        $produtos = DB::select('CALL produtos_carrinho(?)', [$id_cliente]);
+        $produtos = DB::select('CALL produtos_carrinho(?)', [$idCliente]);
 
         // Retorna a view 'carrinho' com os dados dos estabelecimentos populares
         return view('carrinho', compact('produtos'));
@@ -203,17 +202,17 @@ class ClienteController extends Controller
 
     public function adicionarProdutoCarrinho(Request $request)
     {
-        $id_cliente = auth()->guard('cliente')->id();
-        $id_produto = $request->input('produto');
-        $qtd_produto = $request->input('qtd_produto');
-        $data_adicao = now(); // Sempre define a data atual
-        $id_res = $request->input('id_estab');
+        $idCliente = auth()->guard('cliente')->id();
+        $idProduto = $request->input('produto');
+        $qtdProduto = $request->input('qtd_produto');
+        $dataAdicao = now(); // Sempre define a data atual
+        $idRes = $request->input('id_estab');
 
         // Verifica se já existe um produto no carrinho de outro estabelecimento
         $produtoOutroEstab = DB::table('carrinho')
             ->join('produtos', 'carrinho.id_produto', '=', 'produtos.id_produto')
-            ->where('carrinho.id_cliente', $id_cliente)
-            ->where('produtos.id_estab', '!=', $id_res)
+            ->where('carrinho.id_cliente', $idCliente)
+            ->where('produtos.id_estab', '!=', $idRes)
             ->exists();
 
         if ($produtoOutroEstab) {
@@ -222,26 +221,26 @@ class ClienteController extends Controller
 
         // Verifica se o produto já está no carrinho do cliente
         $produtoExistente = DB::table('carrinho')
-            ->where('id_cliente', $id_cliente)
-            ->where('id_produto', $id_produto)
+            ->where('id_cliente', $idCliente)
+            ->where('id_produto', $idProduto)
             ->first();
 
         if ($produtoExistente) {
             // Se o produto já existe, apenas atualiza a quantidade
             DB::table('carrinho')
-                ->where('id_cliente', $id_cliente)
-                ->where('id_produto', $id_produto)
+                ->where('id_cliente', $idCliente)
+                ->where('id_produto', $idProduto)
                 ->update([
-                    'qtd_produto' => $produtoExistente->qtd_produto + $qtd_produto,
-                    'data_adicao' => $data_adicao
+                    'qtd_produto' => $produtoExistente->qtd_produto + $qtdProduto,
+                    'data_adicao' => $dataAdicao
                 ]);
         } else {
             // Se não existir, insere um novo registro
             DB::table('carrinho')->insert([
-                'id_cliente' => $id_cliente,
-                'id_produto' => $id_produto,
-                'qtd_produto' => $qtd_produto,
-                'data_adicao' => $data_adicao,
+                'id_cliente' => $idCliente,
+                'id_produto' => $idProduto,
+                'qtd_produto' => $qtdProduto,
+                'data_adicao' => $dataAdicao,
             ]);
         }
 
@@ -250,12 +249,12 @@ class ClienteController extends Controller
 
     public function removerProdutoCarrinho(Request $request)
     {
-        $id_cliente = auth()->guard('cliente')->id();
-        $id_produto = $request->input('produto');
+        $idCliente = auth()->guard('cliente')->id();
+        $idProduto = $request->input('produto');
 
         DB::table('carrinho')
-        ->where('id_cliente', $id_cliente)
-        ->where('id_produto', $id_produto)
+        ->where('id_cliente', $idCliente)
+        ->where('id_produto', $idProduto)
         ->delete();
             
         return redirect()->back()->with('success', 'Produto removido do carrinho!');
@@ -263,20 +262,20 @@ class ClienteController extends Controller
 
     public function diminuirQuantidadeCarrinho(Request $request)
     {
-        $id_cliente = auth()->guard('cliente')->id();
-        $id_produto = $request->input('produto');
+        $idCliente = auth()->guard('cliente')->id();
+        $idProduto = $request->input('produto');
 
         // Buscar o produto no carrinho
         $produto = DB::table('carrinho')
-        ->where('id_cliente', $id_cliente)
-        ->where('id_produto', $id_produto)
+        ->where('id_cliente', $idCliente)
+        ->where('id_produto', $idProduto)
         ->first();
 
         if ($produto) {
             // Atualizar a quantidade no carrinho
             $produto = DB::table('carrinho')
-            ->where('id_cliente', $id_cliente)
-            ->where('id_produto', $id_produto)
+            ->where('id_cliente', $idCliente)
+            ->where('id_produto', $idProduto)
             ->update([
                 'qtd_produto'=> $produto->qtd_produto - 1,
                 'data_adicao' => now()
@@ -288,20 +287,20 @@ class ClienteController extends Controller
 
     public function aumentarQuantidadeCarrinho(Request $request)
     {
-        $id_cliente = auth()->guard('cliente')->id();
-        $id_produto = $request->input('produto');
+        $idCliente = auth()->guard('cliente')->id();
+        $idProduto = $request->input('produto');
 
         // Buscar o produto no carrinho
         $produto = DB::table('carrinho')
-        ->where('id_cliente', $id_cliente)
-        ->where('id_produto', $id_produto)
+        ->where('id_cliente', $idCliente)
+        ->where('id_produto', $idProduto)
         ->first();
 
         if ($produto) {
             // Atualizar a quantidade no carrinho
             DB::table('carrinho')
-                ->where('id_cliente', $id_cliente)
-                ->where('id_produto', $id_produto)
+                ->where('id_cliente', $idCliente)
+                ->where('id_produto', $idProduto)
                 ->update([
                     'qtd_produto' => $produto->qtd_produto + 1,
                     'data_adicao' => now()
@@ -313,58 +312,58 @@ class ClienteController extends Controller
 
     public function exibirEnderecos()
     {
-        $id_cliente = auth()->guard('cliente')->id();
+        $idCliente = auth()->guard('cliente')->id();
 
-        $enderecos = DB::select('CALL exibir_enderecos_cliente(?)', [$id_cliente]);
+        $enderecos = DB::select('CALL exibir_enderecos_cliente(?)', [$idCliente]);
     
         return view('checkout_endereco', compact('enderecos'));
     }
 
     public function exibirFormasPagamento(Request $request)
     {
-        $id_cliente = auth()->guard('cliente')->id();
-        $formas_pagamento = DB::table('formas_pagamentos')->get();
+        $idCliente = auth()->guard('cliente')->id();
+        $formasPagamento = DB::table('formas_pagamentos')->get();
 
         session(['id_endereco' => $request->endereco]);
 
-        return view('checkout_pagamento', compact('formas_pagamento'));
+        return view('checkout_pagamento', compact('formasPagamento'));
     }
 
     public function realizarPedido(Request $request)
     {
-        $id_cliente = auth()->guard('cliente')->id();
-        $id_pagamento = $request->input('pagamento');
-        $id_endereco = session('id_endereco');
+        $idCliente = auth()->guard('cliente')->id();
+        $idPagamento = $request->input('pagamento');
+        $idEndereco = session('id_endereco');
 
-        if (!$id_endereco) {
+        if (!$idEndereco) {
             return redirect()->back()->with('error', 'Endereço não selecionado.');
         }
 
-        Pedido::realizarPedido($id_cliente, $id_endereco, $id_pagamento);
+        Pedido::realizarPedido($idCliente, $idEndereco, $idPagamento);
 
         return redirect()->route('pedidos_cliente')->with('success', 'Pedido realizado!');
     }
 
     public function avaliarPedido(Request $request, $id)
     {
-        $id_cliente = Auth::guard('cliente')->id();
+        $idCliente = Auth::guard('cliente')->id();
         $pedido = DB::select("SELECT * FROM pedidos WHERE id_pedido = ?", [$id]);
 
         if (empty($pedido)) { // Como DB::select() retorna um array, verificamos se está vazio
             return redirect()->back()->with('error', 'Pedido não encontrado.');
         }
 
-        Avaliacao::avaliarPedido($id_cliente, $id, $request->nota);
+        Avaliacao::avaliarPedido($idCliente, $id, $request->nota);
 
         return redirect()->back()->with('success', 'Avaliação realizada com sucesso!');
     }
 
     public function exibirPaginaPedidos()
     {
-        $id_cliente = Auth::guard('cliente')->id();
+        $idCliente = Auth::guard('cliente')->id();
 
         // Executando a procedure e obtendo os pedidos
-        $pedidos = DB::select("CALL exibir_pedidos_cliente(?)", [$id_cliente]);
+        $pedidos = DB::select("CALL exibir_pedidos_cliente(?)", [$idCliente]);
 
         // Verificar quais pedidos já foram avaliados e obter a nota
         foreach ($pedidos as $pedido) {
@@ -419,10 +418,10 @@ class ClienteController extends Controller
 
     public function exibirInfoCliente() 
     {
-        $id_cliente = Auth::guard('cliente')->id();
+        $idCliente = Auth::guard('cliente')->id();
 
         $cadastro = DB::table('clientes')
-        ->where('id_cliente', $id_cliente)->get();
+        ->where('id_cliente', $idCliente)->get();
 
         return view('info_cliente', compact('cadastro'));
     }
@@ -431,12 +430,12 @@ class ClienteController extends Controller
     public function alterarCadastro(Request $request) 
     {
         // Captura o id do cliente da sessão
-        $id_cliente = Auth::guard('cliente')->id();
+        $idCliente = Auth::guard('cliente')->id();
 
         // Validação dos dados
         $request->validate([
-            'telefone' => ['required', 'string', 'max:11'],
-            'email' => ['required', 'email', 'max:100', 'unique:clientes,email,' . $id_cliente . ',id_cliente',],
+            'telefone' => ['required', new validaCelular],
+            'email' => ['required', 'email', 'max:100', 'unique:clientes,email,' . $idCliente . ',id_cliente',],
         ]);
 
         // Capturando os dados validados
@@ -444,7 +443,7 @@ class ClienteController extends Controller
         $email = $request->input('email');
 
         // Atualizando os dados no modelo
-        Cliente::atualizarCliente($id_cliente, $telefone, $email);
+        Cliente::atualizarCliente($idCliente, $telefone, $email);
 
         return redirect()->back()->with('success', 'Usuário atualizado com sucesso!');
     }
@@ -526,7 +525,7 @@ class ClienteController extends Controller
             'new_password' => 'required|min:8', // Adicione outras regras de validação conforme necessário
         ]);
 
-        /// Obtém o email da sessão
+        // Obtém o email da sessão
         $email = session('email');
 
         // Verifique se o token é válido e se o email existe na tabela resets_senha_clientes
@@ -562,9 +561,9 @@ class ClienteController extends Controller
     public function controleEnderecos() 
     {
         // Captura o id do cliente da sessão
-        $id_cliente = Auth::guard('cliente')->id();
+        $idCliente = Auth::guard('cliente')->id();
 
-        $enderecos =  DB::select('CALL exibir_enderecos_cliente(?)', [$id_cliente]);
+        $enderecos =  DB::select('CALL exibir_enderecos_cliente(?)', [$idCliente]);
 
         return view('endereco_cliente', compact('enderecos'));
     }
@@ -582,12 +581,12 @@ class ClienteController extends Controller
         ]);
 
         // Captura o id do cliente da sessão
-        $id_cliente = Auth::guard('cliente')->id();
+        $idCliente = Auth::guard('cliente')->id();
 
         try {
             // Chamada do método no Model
             Endereco::cadastrar(
-                $id_cliente, 
+                $idCliente, 
                 $request->logradouro, 
                 $request->numero, 
                 $request->bairro, 
@@ -628,11 +627,11 @@ class ClienteController extends Controller
     public function excluirEndereco(Request $request, $id)
     {
         // Captura o id do cliente da sessão
-        $id_cliente = Auth::guard('cliente')->id();
+        $idCliente = Auth::guard('cliente')->id();
 
         DB::table('enderecos_clientes')
         ->where('id_endereco', $id)
-        ->where('id_cliente', $id_cliente)
+        ->where('id_cliente', $idCliente)
         ->delete();
     
         return redirect()->back()->with('success', 'Endereço excluído com sucesso!');
@@ -640,12 +639,12 @@ class ClienteController extends Controller
 
     public function exibirChamados()
     {
-        $id_cliente = Auth::guard('cliente')->id();
+        $idCliente = Auth::guard('cliente')->id();
 
         // Seleciona as últimas mensagens de cada chat, agrupando pelo id_chat
         $mensagens = DB::table('mensagens_cliente')
-        ->where('id_remetente', $id_cliente)
-        ->orWhere('id_destinatario', $id_cliente)
+        ->where('id_remetente', $idCliente)
+        ->orWhere('id_destinatario', $idCliente)
         ->orderBy('data_envio', 'desc')  // Ordena por data de envio para pegar a última mensagem
         ->get()
         ->groupBy('id_chat')  // Agrupa as mensagens pelo id_chat
@@ -656,32 +655,31 @@ class ClienteController extends Controller
         $categorias = DB::table('categorias_chamado')
         ->get();
 
-        return view('chamados_cliente', compact('mensagens', 'categorias', 'id_cliente'));
+        return view('chamados_cliente', compact('mensagens', 'categorias', 'idCliente'));
     }
 
-    public function buscarMensagens($id_chat)
+    public function buscarMensagens($idChat)
     {
-        $id_cliente = Auth::guard('cliente')->id();
+        $idCliente = Auth::guard('cliente')->id();
 
         // Busca todas as mensagens do chat específico
         $mensagens = DB::table('mensagens_cliente')
-            ->where('id_chat', $id_chat)
+            ->where('id_chat', $idChat)
             ->orderBy('data_envio', 'asc')
             ->get();
 
         return response()->json($mensagens);
     }
 
-
     public function abrirChamado(Request $request)
     {
-        $id_cliente = auth()->guard('cliente')->id();
-        $id_chat = (string) Str::uuid();
+        $idCliente = auth()->guard('cliente')->id();
+        $idChat = (string) Str::uuid();
 
         // Criando a mensagem
         $mensagens = MensagensCliente::create([
-            'id_chat' => $id_chat,
-            'id_remetente' => $id_cliente,
+            'id_chat' => $idChat,
+            'id_remetente' => $idCliente,
             'id_destinatario' => 1,
             'categoria' => $request->categoria,
             'mensagem' => $request->mensagem,
@@ -694,7 +692,7 @@ class ClienteController extends Controller
 
     public function responderChamado(Request $request)
     {
-        $id_cliente = auth()->guard('cliente')->id();
+        $idCliente = auth()->guard('cliente')->id();
         $chatId = $request->input('id_chat');
         $resposta = $request->input('resposta');
     
@@ -705,21 +703,21 @@ class ClienteController extends Controller
     
         // Se não houver mensagens no chat, atribui o próprio admin como destinatário
         if (!$ultimaMensagem) {
-            $id_destinatario = 1;  // Caso não exista histórico, o destinatário pode ser o admin ou qualquer outra lógica
+            $idDestinatario = 1;  // Caso não exista histórico, o destinatário pode ser o admin ou qualquer outra lógica
         } else {
             // Verifica quem é o destinatário da última mensagem
-            $id_destinatario = ($ultimaMensagem->id_remetente == Auth::id()) 
+            $idDestinatario = ($ultimaMensagem->id_remetente == Auth::id()) 
                 ? $ultimaMensagem->id_destinatario 
                 : $ultimaMensagem->id_remetente;
 
-                $categoria = $ultimaMensagem->categoria;
+            $categoria = $ultimaMensagem->categoria;
         }
     
         // Cria uma nova mensagem no banco de dados
         $novaMensagem = new MensagensCliente();
         $novaMensagem->id_chat = $chatId;
-        $novaMensagem->id_remetente = $id_cliente;  // O remetente é o usuário logado
-        $novaMensagem->id_destinatario = $id_destinatario;  // O destinatário é o oposto da última mensagem
+        $novaMensagem->id_remetente = $idCliente;  // O remetente é o usuário logado
+        $novaMensagem->id_destinatario = $idDestinatario;  // O destinatário é o oposto da última mensagem
         $novaMensagem->categoria = $categoria;
         $novaMensagem->mensagem = $resposta;
         $novaMensagem->data_envio = now();  // A data de envio é a hora atual
@@ -730,24 +728,24 @@ class ClienteController extends Controller
         return redirect()->back()->with('success', 'Resposta enviada com sucesso!');
     }
 
-    public function favoritarProduto($id_produto)
+    public function favoritarProduto($idProduto)
     {
-        $id_cliente = Auth::guard('cliente')->id();
+        $idCliente = Auth::guard('cliente')->id();
 
         ProdutoFavorito::create([
-            'id_produto' => $id_produto,
-            'id_cliente' => $id_cliente,
+            'id_produto' => $idProduto,
+            'id_cliente' => $idCliente,
         ]);
     
         return back()->with('success', 'Produto adicionado aos favoritos!');
     }
 
-    public function desfavoritarProduto($id_produto)
+    public function desfavoritarProduto($idProduto)
     {
-        $id_cliente = Auth::guard('cliente')->id();
+        $idCliente = Auth::guard('cliente')->id();
 
-        ProdutoFavorito::where('id_produto', $id_produto)
-            ->where('id_cliente', $id_cliente)
+        ProdutoFavorito::where('id_produto', $idProduto)
+            ->where('id_cliente', $idCliente)
             ->delete();
 
         return back()->with('success', 'Produto removido dos favoritos.');
@@ -755,13 +753,13 @@ class ClienteController extends Controller
 
     public function exibirFavoritos()
     {
-        $id_cliente = Auth::guard('cliente')->id();
+        $idCliente = Auth::guard('cliente')->id();
 
-        $favoritos = DB::select('CALL exibir_produtos_favoritos(?)', [$id_cliente]);
+        $favoritos = DB::select('CALL exibir_produtos_favoritos(?)', [$idCliente]);
 
-        $produto_favorito = ProdutoFavorito::where('id_cliente', auth()->id())->pluck('id_produto')->toArray();
+        $produtoFavorito = ProdutoFavorito::where('id_cliente', auth()->id())->pluck('id_produto')->toArray();
 
-        return view('favoritos', compact('favoritos', 'produto_favorito'));
+        return view('favoritos', compact('favoritos', 'produtoFavorito'));
     }
 
     public function pesquisar(Request $request)
@@ -777,20 +775,20 @@ class ClienteController extends Controller
     }
 
     public function autocomplete(Request $request)
-{
-    $termo = $request->input('termoPesquisa');
+    {
+        $termo = $request->input('termoPesquisa');
 
-    // Busca por nome (ajuste os campos conforme seu banco)
-    $produtos = Produto::where('nome', 'like', "%{$termo}%")
-                       ->limit(5) // Limita o número de resultados
-                       ->get(['nome']); // Apenas o campo necessário
-    $estabelecimentos = Estabelecimento::where('nome_fantasia', 'like', "%{$termo}%")
-                               ->limit(5) // Limita o número de resultados
-                               ->get(['nome_fantasia']); // Apenas o campo necessário
+        // Busca por nome (ajuste os campos conforme seu banco)
+        $produtos = Produto::where('nome', 'like', "%{$termo}%")
+                        ->limit(5) // Limita o número de resultados
+                        ->get(['nome']); // Apenas o campo necessário
+        $estabelecimentos = Estabelecimento::where('nome_fantasia', 'like', "%{$termo}%")
+                                ->limit(5) // Limita o número de resultados
+                                ->get(['nome_fantasia']); // Apenas o campo necessário
 
-    return response()->json([
-        'produtos' => $produtos,
-        'estabelecimentos' => $estabelecimentos
-    ]);
-}
+        return response()->json([
+            'produtos' => $produtos,
+            'estabelecimentos' => $estabelecimentos
+        ]);
+    }
 }
