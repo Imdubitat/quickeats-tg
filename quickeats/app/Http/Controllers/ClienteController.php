@@ -727,7 +727,7 @@ class ClienteController extends Controller
         $termo = $request->input('termoPesquisa');
 
         // Busca por nome (ajuste os campos conforme seu banco)
-        $produtos = Produto::where('nome', 'like', "%{$termo}%")->get();
+        $produtos = Produto::with('estabelecimento')->where('nome', 'like', "%{$termo}%")->get();
         $estabelecimentos = Estabelecimento::where('nome_fantasia', 'like', "%{$termo}%")->get();
         $favoritos = ProdutoFavorito::where('id_cliente', auth()->id())->pluck('id_produto')->toArray();
 

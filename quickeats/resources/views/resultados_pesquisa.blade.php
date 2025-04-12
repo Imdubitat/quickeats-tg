@@ -53,7 +53,7 @@
                                 <h5 class="card-title">{{ $produto->nome }}</h5>
                                 <p class="card-text">{{ $produto->descricao ?? 'sem descrição' }}<br>
                                 <p class="card-text">R$ {{ $produto->valor }}<br>
-                                {{ $produto->id_estab }}</p>
+                                {{ $produto->estabelecimento->nome_fantasia ?? 'N/A' }}</p>
                                 
                                 <label for="qtd_produto_{{ $produto->id_produto }}" class="form-label">Quantidade:</label>
                                 <input type="text" name="qtd_produto" id="qtd_produto_{{ $produto->id_produto }}"
