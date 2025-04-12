@@ -21,7 +21,7 @@
                 <div class="col-12 mb-4">
                     <div class="card pb-2">
                         <div class="card-header">
-                            <strong>{{ $mensagem->id_remetente == $id_estab ? 'Você' : 'Suporte' }}</strong> - 
+                            <strong>{{ $mensagem->id_remetente == $idEstab ? 'Você' : 'Suporte' }}</strong> - 
                             <small>{{ \Carbon\Carbon::parse($mensagem->data_envio)->format('d/m/Y H:i') }}</small>
                         </div>
                         <div class="card-body">
@@ -213,7 +213,7 @@
                             const mensagemDiv = document.createElement("div");
                             mensagemDiv.classList.add("mb-3", "p-2", "border", "rounded");
                             mensagemDiv.innerHTML = `
-                                <strong>${mensagem.id_remetente == {{ $id_estab }} ? 'Você' : 'Suporte'}</strong> -
+                                <strong>${mensagem.id_remetente == {{ $idEstab }} ? 'Você' : 'Suporte'}</strong> -
                                 <small>${new Date(mensagem.data_envio).toLocaleString("pt-BR")}</small>
                                 <p class="mt-1">${mensagem.mensagem}</p>
                             `;

@@ -81,7 +81,6 @@ class EstabelecimentoController extends Controller
         }
     }
 
-
     public function realizarLogin(Request $request)
     {
         // Validação dos campos de entrada
@@ -90,13 +89,13 @@ class EstabelecimentoController extends Controller
             'senhaLogin' => 'required|string|min:8',
         ]);
 
-        $email_verificado = Estabelecimento::where('email', $validatedData['emailLogin'])->where('email_verificado', 1)->first();
-        $perfil_ativo = Estabelecimento::where('email', $validatedData['emailLogin'])->where('perfil_ativo', 1)->first();
+        $emailVerificado = Estabelecimento::where('email', $validatedData['emailLogin'])->where('email_verificado', 1)->first();
+        $perfilAtivo = Estabelecimento::where('email', $validatedData['emailLogin'])->where('perfil_ativo', 1)->first();
 
         // Tentar autenticar o cliente usando o guard 'cliente'
         if (Auth::guard('estabelecimento')->attempt(['email' => $request->input('emailLogin'), 'password' => $request->input('senhaLogin')])) {
-            if($perfil_ativo) {
-                if($email_verificado){
+            if($perfilAtivo) {
+                if($emailVerificado){
                     // Login bem-sucedido, redirecionar para a página inicial do profissional
                     return redirect()->route('home_restaurante')->with('success', 'Login realizado com sucesso!');
                 } else {
@@ -117,10 +116,10 @@ class EstabelecimentoController extends Controller
         $estabelecimento = Auth::guard('estabelecimento')->user();
 
         // Pegando o ID do estabelecimento logado
-        $id_estabelecimento = $estabelecimento->id_estab; 
+        $idEstabelecimento = $estabelecimento->id_estab; 
 
         // Executando o procedure e obtendo os pedidos
-        $pedidos = DB::select("CALL exibir_pedidos_estabelecimento(?)", [$id_estabelecimento]);
+        $pedidos = DB::select("CALL exibir_pedidos_estabelecimento(?)", [$idEstabelecimento]);
 
         // Contadores para os diferentes status
         $totalPedidos = count($pedidos);
@@ -128,10 +127,10 @@ class EstabelecimentoController extends Controller
         $preparacao = collect($pedidos)->where('status_entrega', 3)->count();
         $emRota = collect($pedidos)->where('status_entrega', 4)->count();
         $finalizados = collect($pedidos)->where('status_entrega', 5)->count();
-        $avaliacao = DB::select('CALL calcular_media_avaliacoes(?)', [$id_estabelecimento]);
+        $avaliacao = DB::select('CALL calcular_media_avaliacoes(?)', [$idEstabelecimento]);
 
         $estoqueBaixo = DB::table('produtos')
-                            ->where('id_estab', $id_estabelecimento)
+                            ->where('id_estab', $idEstabelecimento)
                             ->where('qtd_estoque', '<', 10)
                             ->count();
 
@@ -141,10 +140,10 @@ class EstabelecimentoController extends Controller
     public function exibirPaginaPedidos()
     {
         // Obtendo o estabelecimento autenticado
-        $id_estabelecimento = Auth::guard('estabelecimento')->id();
+        $idEstabelecimento = Auth::guard('estabelecimento')->id();
 
         // Executando o procedure e obtendo os pedidos
-        $pedidos = DB::select("CALL exibir_pedidos_estabelecimento(?)", [$id_estabelecimento]);
+        $pedidos = DB::select("CALL exibir_pedidos_estabelecimento(?)", [$idEstabelecimento]);
 
         // Verificar quais pedidos já foram avaliados e obter a nota
         foreach ($pedidos as $pedido) {
@@ -184,22 +183,22 @@ class EstabelecimentoController extends Controller
 
     public function exibirInfoRestaurante() 
     {
-        $id_res = Auth::guard('estabelecimento')->id();
+        $idRes = Auth::guard('estabelecimento')->id();
 
         $cadastro = DB::table('estabelecimentos')
-        ->where('id_estab', $id_res)->get();
+        ->where('id_estab', $idRes)->get();
 
         return view('info_restaurante', compact('cadastro'));
     }
 
     public function alteraCadastro(Request $request) 
     {
-        $id_res = Auth::guard('estabelecimento')->id();
+        $idRes = Auth::guard('estabelecimento')->id();
 
         // Validação dos dados
         $request->validate([
-            'telefone' => ['required', 'string', 'max:11'],
-            'email' => ['required', 'email', 'max:100', 'unique:estabelecimentos,email,' . $id_res . ',id_estab',],
+            'telefone' => ['required', new validaCelular],
+            'email' => ['required', 'email', 'max:100', 'unique:estabelecimentos,email,' . $idRes . ',id_estab',],
         ]);
 
         // Capturando os dados validados
@@ -207,18 +206,18 @@ class EstabelecimentoController extends Controller
         $email = $request->input('email');
 
         // Atualizando os dados no modelo
-        Estabelecimento::atualizarEstabelecimento($id_res, $telefone, $email);
+        Estabelecimento::atualizarEstabelecimento($idRes, $telefone, $email);
 
         return redirect()->back()->with('success', 'Usuário atualizado com sucesso!');
     }
 
     public function exibirProdutosRestaurante() 
     {
-        $id_res = Auth::guard('estabelecimento')->id();
+        $idRes = Auth::guard('estabelecimento')->id();
 
         $produtos = DB::table('produtos')
         ->join('categorias_produtos', 'produtos.id_categoria', '=', 'categorias_produtos.id_categoria')
-        ->where('produtos.id_estab', $id_res)
+        ->where('produtos.id_estab', $idRes)
         ->select('produtos.*', 'categorias_produtos.descricao as categoria_descricao') 
         ->get();
 
@@ -297,10 +296,10 @@ class EstabelecimentoController extends Controller
 
     public function exibirEstoqueRestaurante()
     {
-        $id_res = Auth::guard('estabelecimento')->id();
+        $idRes = Auth::guard('estabelecimento')->id();
 
         $produtos = DB::table('produtos')
-        ->where('id_estab', $id_res)
+        ->where('id_estab', $idRes)
         ->get();
 
         return view('estoque_restaurante', compact('produtos'));
@@ -483,7 +482,7 @@ class EstabelecimentoController extends Controller
             'new_password' => 'required|min:8', // Adicione outras regras de validação conforme necessário
         ]);
 
-        /// Obtém o email da sessão
+        // Obtém o email da sessão
         $email = session('email');
 
         // Verifique se o token é válido e se o email existe na tabela resets_senha_clientes
@@ -560,12 +559,12 @@ class EstabelecimentoController extends Controller
 
     public function exibirChamados()
     {
-        $id_estab = Auth::guard('estabelecimento')->id();
+        $idEstab = Auth::guard('estabelecimento')->id();
 
         // Seleciona as últimas mensagens de cada chat, agrupando pelo id_chat
         $mensagens = DB::table('mensagens_estab')
-        ->where('id_remetente', $id_estab)
-        ->orWhere('id_destinatario', $id_estab)
+        ->where('id_remetente', $idEstab)
+        ->orWhere('id_destinatario', $idEstab)
         ->orderBy('data_envio', 'desc')  // Ordena por data de envio para pegar a última mensagem
         ->get()
         ->groupBy('id_chat')  // Agrupa as mensagens pelo id_chat
@@ -576,16 +575,16 @@ class EstabelecimentoController extends Controller
         $categorias = DB::table('categorias_chamado')
         ->get();
 
-        return view('chamados_estab', compact('mensagens', 'categorias', 'id_estab'));
+        return view('chamados_estab', compact('mensagens', 'categorias', 'idEstab'));
     }
 
-    public function buscarMensagens($id_chat)
+    public function buscarMensagens($idChat)
     {
-        $id_estab = Auth::guard('estabelecimento')->id();
+        $idEstab = Auth::guard('estabelecimento')->id();
 
         // Busca todas as mensagens do chat específico
         $mensagens = DB::table('mensagens_estab')
-            ->where('id_chat', $id_chat)
+            ->where('id_chat', $idChat)
             ->orderBy('data_envio', 'asc')
             ->get();
 
@@ -594,13 +593,13 @@ class EstabelecimentoController extends Controller
 
     public function abrirChamado(Request $request)
     {
-        $id_estab = auth()->guard('estabelecimento')->id();
-        $id_chat = (string) Str::uuid();
+        $idEstab = auth()->guard('estabelecimento')->id();
+        $idChat = (string) Str::uuid();
 
         // Criando a mensagem
         $mensagens = MensagensEstab::create([
-            'id_chat' => $id_chat,
-            'id_remetente' => $id_estab,
+            'id_chat' => $idChat,
+            'id_remetente' => $idEstab,
             'id_destinatario' => 1,
             'categoria' => $request->categoria,
             'mensagem' => $request->mensagem,
@@ -613,7 +612,7 @@ class EstabelecimentoController extends Controller
 
     public function responderChamado(Request $request)
     {
-        $id_estab = auth()->guard('estabelecimento')->id();
+        $idEstab = auth()->guard('estabelecimento')->id();
         $chatId = $request->input('id_chat');
         $resposta = $request->input('resposta');
     
@@ -624,21 +623,21 @@ class EstabelecimentoController extends Controller
     
         // Se não houver mensagens no chat, atribui o próprio admin como destinatário
         if (!$ultimaMensagem) {
-            $id_destinatario = 1;  // Caso não exista histórico, o destinatário pode ser o admin ou qualquer outra lógica
+            $idDestinatario = 1;  // Caso não exista histórico, o destinatário pode ser o admin ou qualquer outra lógica
         } else {
             // Verifica quem é o destinatário da última mensagem
-            $id_destinatario = ($ultimaMensagem->id_remetente == Auth::id()) 
+            $idDestinatario = ($ultimaMensagem->id_remetente == Auth::id()) 
                 ? $ultimaMensagem->id_destinatario 
                 : $ultimaMensagem->id_remetente;
 
-                $categoria = $ultimaMensagem->categoria;
+            $categoria = $ultimaMensagem->categoria;
         }
     
         // Cria uma nova mensagem no banco de dados
         $novaMensagem = new MensagensEstab();
         $novaMensagem->id_chat = $chatId;
-        $novaMensagem->id_remetente = $id_estab;  // O remetente é o usuário logado
-        $novaMensagem->id_destinatario = $id_destinatario;  // O destinatário é o oposto da última mensagem
+        $novaMensagem->id_remetente = $idEstab;  // O remetente é o usuário logado
+        $novaMensagem->id_destinatario = $idDestinatario;  // O destinatário é o oposto da última mensagem
         $novaMensagem->categoria = $categoria;
         $novaMensagem->mensagem = $resposta;
         $novaMensagem->data_envio = now();  // A data de envio é a hora atual
