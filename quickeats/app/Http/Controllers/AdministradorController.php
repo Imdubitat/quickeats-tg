@@ -90,12 +90,12 @@ class AdministradorController extends Controller
 
     public function exibirChamados()
     {
-        $id_admin = Auth::guard('administrador')->id();
+        $idAdmin = Auth::guard('administrador')->id();
 
         // Seleciona as últimas mensagens de cada chat, agrupando pelo id_chat (mensagens_cliente)
-        $mensagens_cliente = DB::table('mensagens_cliente')
-            ->where('id_remetente', $id_admin)
-            ->orWhere('id_destinatario', $id_admin)
+        $mensagensCliente = DB::table('mensagens_cliente')
+            ->where('id_remetente', $idAdmin)
+            ->orWhere('id_destinatario', $idAdmin)
             ->orderBy('data_envio', 'desc')
             ->get()
             ->groupBy('id_chat')
@@ -104,9 +104,9 @@ class AdministradorController extends Controller
             });
 
         // Seleciona as últimas mensagens de cada chat, agrupando pelo id_chat (mensagens_estab)
-        $mensagens_estab = DB::table('mensagens_estab')
-            ->where('id_remetente', $id_admin)
-            ->orWhere('id_destinatario', $id_admin)
+        $mensagensEstab = DB::table('mensagens_estab')
+            ->where('id_remetente', $idAdmin)
+            ->orWhere('id_destinatario', $idAdmin)
             ->orderBy('data_envio', 'desc')
             ->get()
             ->groupBy('id_chat')
@@ -118,34 +118,34 @@ class AdministradorController extends Controller
             ->get();
 
         // Passar ambas as coleções separadamente para a view
-        return view('chamados_admin', compact('mensagens_cliente', 'mensagens_estab', 'categorias', 'id_admin'));
+        return view('chamados_admin', compact('mensagensCliente', 'mensagensEstab', 'categorias', 'idAdmin'));
     }
 
-    public function buscarMensagens($id_chat)
+    public function buscarMensagens($idChat)
     {
-        $id_admin = Auth::guard('administrador')->id();
+        $idAdmin = Auth::guard('administrador')->id();
 
         // Busca todas as mensagens do chat específico (mensagens_cliente)
-        $mensagens_cliente = DB::table('mensagens_cliente')
-            ->where('id_chat', $id_chat)
+        $mensagensCliente = DB::table('mensagens_cliente')
+            ->where('id_chat', $idChat)
             ->orderBy('data_envio', 'asc')
             ->get();
 
         // Busca todas as mensagens do chat específico (mensagens_estab)
-        $mensagens_estab = DB::table('mensagens_estab')
-            ->where('id_chat', $id_chat)
+        $mensagensEstab = DB::table('mensagens_estab')
+            ->where('id_chat', $idChat)
             ->orderBy('data_envio', 'asc')
             ->get();
 
         // Combinar as coleções de mensagens
-        $mensagens = $mensagens_cliente->merge($mensagens_estab);
+        $mensagens = $mensagensCliente->merge($mensagensEstab);
 
         return response()->json($mensagens);
     }
 
     public function responderChamadoCliente(Request $request)
     {
-        $id_admin = auth()->guard('administrador')->id();
+        $idAdmin = auth()->guard('administrador')->id();
         $chatId = $request->input('id_chat');
         $resposta = $request->input('resposta_cliente');
     
@@ -156,21 +156,21 @@ class AdministradorController extends Controller
     
         // Se não houver mensagens no chat, atribui o próprio admin como destinatário
         if (!$ultimaMensagem) {
-            $id_destinatario = $id_admin;  // Caso não exista histórico, o destinatário pode ser o admin ou qualquer outra lógica
+            $idDestinatario = $idAdmin;  // Caso não exista histórico, o destinatário pode ser o admin ou qualquer outra lógica
         } else {
             // Verifica quem é o destinatário da última mensagem
-            $id_destinatario = ($ultimaMensagem->id_remetente == Auth::id()) 
+            $idDestinatario = ($ultimaMensagem->id_remetente == Auth::id()) 
                 ? $ultimaMensagem->id_destinatario 
                 : $ultimaMensagem->id_remetente;
 
-                $categoria = $ultimaMensagem->categoria;
+            $categoria = $ultimaMensagem->categoria;
         }
     
         // Cria uma nova mensagem no banco de dados
         $novaMensagem = new MensagensCliente();
         $novaMensagem->id_chat = $chatId;
-        $novaMensagem->id_remetente = $id_admin;  // O remetente é o usuário logado
-        $novaMensagem->id_destinatario = $id_destinatario;  // O destinatário é o oposto da última mensagem
+        $novaMensagem->id_remetente = $idAdmin;  // O remetente é o usuário logado
+        $novaMensagem->id_destinatario = $idDestinatario;  // O destinatário é o oposto da última mensagem
         $novaMensagem->categoria = $categoria;
         $novaMensagem->mensagem = $resposta;
         $novaMensagem->data_envio = now();  // A data de envio é a hora atual
@@ -181,10 +181,9 @@ class AdministradorController extends Controller
         return redirect()->back()->with('success', 'Resposta enviada com sucesso!');
     }
 
-
     public function responderChamadoEstab(Request $request)
     {
-        $id_admin = auth()->guard('administrador')->id();
+        $idAdmin = auth()->guard('administrador')->id();
         $chatId = $request->input('id_chat');
         $resposta = $request->input('resposta_estab');
     
@@ -195,21 +194,21 @@ class AdministradorController extends Controller
     
         // Se não houver mensagens no chat, atribui o próprio admin como destinatário
         if (!$ultimaMensagem) {
-            $id_destinatario = $id_admin;  // Caso não exista histórico, o destinatário pode ser o admin ou qualquer outra lógica
+            $idDestinatario = $idAdmin;  // Caso não exista histórico, o destinatário pode ser o admin ou qualquer outra lógica
         } else {
             // Verifica quem é o destinatário da última mensagem
-            $id_destinatario = ($ultimaMensagem->id_remetente == Auth::id()) 
+            $idDestinatario = ($ultimaMensagem->id_remetente == Auth::id()) 
                 ? $ultimaMensagem->id_destinatario 
                 : $ultimaMensagem->id_remetente;
 
-                $categoria = $ultimaMensagem->categoria;
+            $categoria = $ultimaMensagem->categoria;
         }
     
         // Cria uma nova mensagem no banco de dados
         $novaMensagem = new MensagensEstab();
         $novaMensagem->id_chat = $chatId;
-        $novaMensagem->id_remetente = $id_admin;  // O remetente é o usuário logado
-        $novaMensagem->id_destinatario = $id_destinatario;  // O destinatário é o oposto da última mensagem
+        $novaMensagem->id_remetente = $idAdmin;  // O remetente é o usuário logado
+        $novaMensagem->id_destinatario = $idDestinatario;  // O destinatário é o oposto da última mensagem
         $novaMensagem->categoria = $categoria;
         $novaMensagem->mensagem = $resposta;
         $novaMensagem->data_envio = now();  // A data de envio é a hora atual

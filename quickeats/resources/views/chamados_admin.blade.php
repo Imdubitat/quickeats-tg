@@ -7,12 +7,12 @@
 
 @section('content')
 <section class="container mx-auto" style="margin-top: 15rem; max-width: 60%;">
-    @if($mensagens_cliente->isEmpty() && $mensagens_estab->isEmpty())
+    @if($mensagensCliente->isEmpty() && $mensagensEstab->isEmpty())
         <p>Você não tem mensagens</p>
     @else
         <div class="accordion" id="accordionMessages">
             <!-- Accordion para mensagens de clientes -->
-            @if(!$mensagens_cliente->isEmpty())
+            @if(!$mensagensCliente->isEmpty())
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingMessagesCliente">
                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMessagesCliente" aria-expanded="true" aria-controls="collapseMessagesCliente">
@@ -22,11 +22,11 @@
                 <div id="collapseMessagesCliente" class="accordion-collapse collapse show" aria-labelledby="headingMessagesCliente" data-bs-parent="#accordionMessages">
                     <div class="accordion-body">
                         <div class="row">
-                            @foreach($mensagens_cliente as $id_chat => $mc)
+                            @foreach($mensagensCliente as $idChat => $mc)
                                 <div class="col-12 mb-4">
                                     <div class="card pb-2">
                                         <div class="card-header">
-                                            <strong>{{ $mc->id_remetente == $id_admin ? 'Você' : 'Usuário ' . $mc->id_remetente }}</strong> - 
+                                            <strong>{{ $mc->id_remetente == $idAdmin ? 'Você' : 'Usuário ' . $mc->id_remetente }}</strong> - 
                                             <small>{{ \Carbon\Carbon::parse($mc->data_envio)->format('d/m/Y H:i') }}</small>
                                         </div>
                                         <div class="card-body">
@@ -77,7 +77,7 @@
             @endif
 
             <!-- Accordion para mensagens de estabelecimentos -->
-            @if(!$mensagens_estab->isEmpty())
+            @if(!$mensagensEstab->isEmpty())
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingMessagesEstab">
                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMessagesEstab" aria-expanded="false" aria-controls="collapseMessagesEstab">
@@ -87,11 +87,11 @@
                 <div id="collapseMessagesEstab" class="accordion-collapse collapse" aria-labelledby="headingMessagesEstab" data-bs-parent="#accordionMessages">
                     <div class="accordion-body">
                         <div class="row">
-                            @foreach($mensagens_estab as $id_chat => $me)
+                            @foreach($mensagensEstab as $idChat => $me)
                                 <div class="col-12 mb-4">
                                     <div class="card pb-2">
                                         <div class="card-header">
-                                            <strong>{{ $me->id_remetente == $id_admin ? 'Você' : 'Estabelecimento ' . $me->id_remetente }}</strong> - 
+                                            <strong>{{ $me->id_remetente == $idAdmin ? 'Você' : 'Estabelecimento ' . $me->id_remetente }}</strong> - 
                                             <small>{{ \Carbon\Carbon::parse($me->data_envio)->format('d/m/Y H:i') }}</small>
                                         </div>
                                         <div class="card-body">
@@ -182,7 +182,7 @@
                             const mensagemDiv = document.createElement("div");
                             mensagemDiv.classList.add("mb-3", "p-2", "border", "rounded");
                             mensagemDiv.innerHTML = `
-                                <strong>${mensagem.id_remetente == {{ $id_admin }} ? 'Você' : `Usuário ${mensagem.id_remetente}`}</strong> -
+                                <strong>${mensagem.id_remetente == {{ $idAdmin }} ? 'Você' : `Usuário ${mensagem.id_remetente}`}</strong> -
                                 <small>${new Date(mensagem.data_envio).toLocaleString("pt-BR")}</small>
                                 <p class="mt-1">${mensagem.mensagem}</p>
                             `;
