@@ -126,20 +126,20 @@ class ClienteController extends Controller
         $favoritos = ProdutoFavorito::where('id_cliente', auth()->id())->pluck('id_produto')->toArray();
 
         $horaAtual = now()->format('H:i:s');
+        $diaSemana = now()->dayOfWeekIso; // 1 (segunda) a 7 (domingo)
 
-        // Filtrar produtos com base no horário atual
         foreach ($produtos as &$produto) {
-            $horario = DB::table('estabelecimentos')
+            $horario = DB::table('grades_horario')
                 ->where('id_estab', $produto->id_estab)
+                ->where('dia_semana', $diaSemana)
                 ->first();
 
             $produto->estab_fechado = true;
 
             if ($horario && $horario->inicio_expediente && $horario->termino_expediente) {
-                if($horaAtual >= $horario->inicio_expediente && $horaAtual <= $horario->termino_expediente)
-                {
+                if ($horaAtual >= $horario->inicio_expediente && $horaAtual <= $horario->termino_expediente) {
                     $produto->estab_fechado = false;
-                } 
+                }
             }
         }
 
@@ -150,45 +150,67 @@ class ClienteController extends Controller
         ]);
     }
 
+
     public function exibirRestaurantesDisponiveis()
     {
         $restaurantes = DB::select('CALL listar_estab()');
+        $agora = Carbon::now();
+        $diaSemana = $agora->dayOfWeekIso; // 1 (segunda) a 7 (domingo)
+        $horaAtual = $agora->format('H:i:s');
+
+        foreach ($restaurantes as $r) {
+            $grade = DB::table('grades_horario')
+                ->where('id_estab', $r->id_estab)
+                ->where('dia_semana', $diaSemana)
+                ->whereTime('inicio_expediente', '<=', $horaAtual)
+                ->whereTime('termino_expediente', '>=', $horaAtual)
+                ->first();
+
+            $r->aberto = $grade !== null;
+        }
 
         return view('catalogo_restaurantes', compact('restaurantes'));
     }
 
+
     public function exibirCardapio($id)
     {
         $restaurante = DB::table('estabelecimentos')
-                    ->where('id_estab', $id)
-                    ->first();
+            ->where('id_estab', $id)
+            ->first();
+
         $produtos = DB::select('CALL exibir_produtos_estab(?)', [$id]);
         $favoritos = ProdutoFavorito::where('id_cliente', auth()->id())->pluck('id_produto')->toArray();
 
         $horaAtual = now()->format('H:i:s');
+        $diaSemana = now()->dayOfWeekIso; // 1 (segunda) até 7 (domingo)
 
-        // Filtrar produtos com base no horário atual
-        foreach ($produtos as &$produto) {
-            $horario = DB::table('estabelecimentos')
-                ->where('id_estab', $produto->id_estab)
-                ->first();
+        // Buscar grade de horário do dia atual
+        $horario = DB::table('grades_horario')
+            ->where('id_estab', $id)
+            ->where('dia_semana', $diaSemana)
+            ->first();
 
-            $produto->estab_fechado = true;
+        $estabFechado = true;
 
-            if ($horario && $horario->inicio_expediente && $horario->termino_expediente) {
-                if($horaAtual >= $horario->inicio_expediente && $horaAtual <= $horario->termino_expediente)
-                {
-                    $produto->estab_fechado = false;
-                } 
+        if ($horario && $horario->inicio_expediente && $horario->termino_expediente) {
+            if ($horaAtual >= $horario->inicio_expediente && $horaAtual <= $horario->termino_expediente) {
+                $estabFechado = false;
             }
         }
-        
+
+        // Marcar cada produto conforme o status do estabelecimento
+        foreach ($produtos as &$produto) {
+            $produto->estab_fechado = $estabFechado;
+        }
+
         return view('cardapio_restaurante', [
             'produtos' => $produtos,
             'restaurante' => $restaurante,
             'favoritos' => $favoritos,
         ]);
     }
+
 
     public function exibirCarrinho()
     {

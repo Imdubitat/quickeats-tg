@@ -22,12 +22,8 @@
 <div class="row mx-auto">
     @foreach($restaurantes as $r)
         @php
-            $inicio = Carbon::createFromFormat('H:i:s', $r->inicio_expediente);
-            $fim = Carbon::createFromFormat('H:i:s', $r->termino_expediente);
-
-            $aberto = $agora->between($inicio, $fim);
+            $aberto = $r->aberto ?? false;
         @endphp
-
         <div class="col-md-4 mb-4">
             <input type="hidden" name="id_estab" value="{{ $r->id_estab }}">
             <div class="card shadow rounded-4 {{ !$aberto ? 'border-secondary' : '' }}">
@@ -45,10 +41,10 @@
                     <p class="card-text mt-2">{{ $r->logradouro }}, {{ $r->numero }}<br>{{ $r->bairro }}, {{ $r->cidade }} - {{ $r->estado }}</p>
                     
                     <button type="button" class="btn btn-custom3 mt-2"
-                            onclick="{{ $aberto ? "window.location.href='" . route('cardapio_restaurante', $r->id_estab) . "'" : 'return false;' }}"
-                            {{ !$aberto ? 'disabled' : '' }}>
+                            onclick="window.location.href='{{ route('cardapio_restaurante', $r->id_estab) }}'">
                         Ver cardápio
                     </button>
+
                 </div>
             </div>
         </div>
