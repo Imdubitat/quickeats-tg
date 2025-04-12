@@ -31,4 +31,9 @@ class Produto extends Model
 
     // Desativa os timestamps automáticos
     public $timestamps = false;
+
+    public function estabelecimento()
+{
+    return $this->belongsTo(Estabelecimento::class, 'id_estab');
+}
 }
