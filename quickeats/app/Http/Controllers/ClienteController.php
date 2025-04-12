@@ -164,6 +164,7 @@ class ClienteController extends Controller
                     ->where('id_estab', $id)
                     ->first();
         $produtos = DB::select('CALL exibir_produtos_estab(?)', [$id]);
+        $favoritos = ProdutoFavorito::where('id_cliente', auth()->id())->pluck('id_produto')->toArray();
 
         $horaAtual = now()->format('H:i:s');
 
@@ -186,6 +187,7 @@ class ClienteController extends Controller
         return view('cardapio_restaurante', [
             'produtos' => $produtos,
             'restaurante' => $restaurante,
+            'favoritos' => $favoritos,
         ]);
     }
 
