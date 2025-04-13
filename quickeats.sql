@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 05/04/2025 às 23:48
+-- Tempo de geração: 13/04/2025 às 01:58
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -123,6 +123,19 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `clientes_por_estabelecimento` (IN `
         WHERE pr.id_estab = p_id_estab
     )
     ORDER BY c.nome;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `consulta_grade_horaria` (IN `p_id_estab` INT)   BEGIN
+    SELECT 
+    	id_grade,
+        dia_semana,
+        inicio_expediente,
+        termino_expediente
+    FROM 
+        grades_horario
+    WHERE 
+        id_estab = p_id_estab
+    ORDER BY dia_semana ASC;  
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `contagem_pedidos_c_mes` (IN `p_id_estab` INT)   BEGIN
@@ -376,10 +389,26 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `faturamento_estabelecimento` (IN `p
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `listar_estab` ()   SELECT e.id_estab, e.nome_fantasia, e.telefone, e.logradouro, e.email,
-           e.numero, e.bairro, e.cidade, e.estado, e.cep, e.imagem_perfil AS imagem
-    FROM estabelecimentos AS e 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `listar_estab` ()   SELECT 
+        e.id_estab, 
+        e.nome_fantasia, 
+        e.telefone, 
+        e.logradouro, 
+        e.numero, 
+        e.bairro, 
+        e.cidade, 
+        e.estado, 
+        e.cep, 
+        e.email,
+        e.imagem_perfil AS imagem,
+        GROUP_CONCAT(
+            CONCAT('Dia ', g.dia_semana, ': ', TIME_FORMAT(g.inicio_expediente, '%H:%i'), ' - ', TIME_FORMAT(g.termino_expediente, '%H:%i'))
+            ORDER BY g.dia_semana SEPARATOR ' | '
+        ) AS horarios
+    FROM estabelecimentos AS e
+    LEFT JOIN grades_horario AS g ON g.id_estab = e.id_estab
     WHERE e.email_verificado = 1 AND e.perfil_ativo = 1
+    GROUP BY e.id_estab
     ORDER BY e.nome_fantasia$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listar_produtos` ()   BEGIN
@@ -494,7 +523,8 @@ INSERT INTO `avaliacoes` (`id_avaliacao`, `id_pedido`, `nota`) VALUES
 (10, 22, 3),
 (11, 21, 4),
 (12, 20, 2),
-(13, 23, 5);
+(13, 23, 5),
+(14, 27, 1);
 
 -- --------------------------------------------------------
 
@@ -606,7 +636,7 @@ INSERT INTO `clientes` (`id_cliente`, `nome`, `cpf`, `data_nasc`, `telefone`, `e
 (5, 'Pedro Henrique Souza', '345.768.902-65', '2001-09-10', '(41) 96543-2109', 'pedro.souza@teste.com', 'senhaPedro123', 1, 1),
 (6, 'Ronaldo Silveira', '1234567891', '2002-02-22', '195226512', 'ronaldo@teste.com.br', '$2y$12$RjB8fKNNrPDTEW4xbMNoIuDnasjQ7vbn9.okm/lUpbm07jdbHJbCK', 1, 1),
 (7, 'teste', '49333379851', '2001-03-02', '19971794122', 'teste@exemplo.com', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', 0, 1),
-(30, 'teste2', '12957597802', '2001-03-02', '19994298868', 'rodrigooliveirafeitosa@gmail.com', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', 1, 1);
+(30, 'teste2', '12957597802', '2001-03-02', '(19) 98908-5358', 'rodrigooliveirafeitosa@gmail.com', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', 1, 1);
 
 --
 -- Acionadores `clientes`
@@ -668,13 +698,14 @@ CREATE TABLE `enderecos` (
 
 INSERT INTO `enderecos` (`id_endereco`, `logradouro`, `numero`, `bairro`, `cidade`, `estado`, `cep`) VALUES
 (1, 'Rua das Palmeiras', 123, 'Centro', 'São Paulo', 'SP', '01010-010'),
-(2, 'Avenida Brasil', 100, 'Zona Norte', 'Volta Redonda', 'RJ', '20020-020'),
+(2, 'Avenida Brasil', 110, 'Zona Norte', 'Volta Redonda', 'RJ', '20020-020'),
 (3, 'Rua do Sol', 789, 'Jardins', 'Curitiba', 'PR', '80030-030'),
 (4, 'Rua das Flores', 101, 'Centro', 'Porto Alegre', 'RS', '90040-040'),
 (5, 'Rua das Margaridas', 202, 'Bairro Alto', 'Fortaleza', 'CE', '60050-050'),
-(6, 'Odete vieira santos', 456, 'Jd. Nova Hortolandia', 'Hortolândia', 'SP', '13183271'),
+(6, 'Odete vieira santos', 450, 'Jd. Nova Hortolandia', 'Hortolândia', 'SP', '13183271'),
 (7, 'hgjjkjhkj', 123, 'hjgj', 'hjgjhg', 'RJ', '64654'),
-(9, 'teste', 156, 'teste', 'Teste', 'MG', '111111');
+(9, 'teste', 156, 'teste', 'Teste', 'MG', '111111'),
+(10, 'Rua 01', 56, 'Jd. blume', 'Blumenau', 'RJ', '12345236');
 
 -- --------------------------------------------------------
 
@@ -701,7 +732,8 @@ INSERT INTO `enderecos_clientes` (`id_endereco`, `id_cliente`) VALUES
 (3, 7),
 (5, 7),
 (2, 30),
-(6, 30);
+(6, 30),
+(10, 30);
 
 -- --------------------------------------------------------
 
@@ -724,8 +756,6 @@ CREATE TABLE `estabelecimentos` (
   `cidade` varchar(100) NOT NULL,
   `estado` varchar(2) NOT NULL,
   `cep` varchar(9) NOT NULL,
-  `inicio_expediente` time NOT NULL,
-  `termino_expediente` time NOT NULL,
   `email` varchar(255) NOT NULL,
   `senha` varchar(255) NOT NULL,
   `email_verificado` tinyint(4) NOT NULL,
@@ -737,14 +767,14 @@ CREATE TABLE `estabelecimentos` (
 -- Despejando dados para a tabela `estabelecimentos`
 --
 
-INSERT INTO `estabelecimentos` (`id_estab`, `razao_social`, `nome_fantasia`, `cnpj`, `telefone`, `cpf_titular`, `rg_titular`, `cnae`, `logradouro`, `numero`, `bairro`, `cidade`, `estado`, `cep`, `inicio_expediente`, `termino_expediente`, `email`, `senha`, `email_verificado`, `perfil_ativo`, `imagem_perfil`) VALUES
-(1, 'Restaurante Sabor Caseiro Ltda.', 'Novo Sabor Caseiro', '12.345.678/0001-90', '11999999999', '987.654.321-00', '98.765.432-1', '5611-2', 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'teste@email.com', 'NovaSenhaSegura2', 0, 0, NULL),
-(2, 'Mercado Bom Preço Ltda.', 'Bom Preço', '23.456.789/0001-91', '(21) 99876-5432', '987.654.321-00', '98.765.432-1', '4711-3', 'Avenida Brasil', 456, 'Zona Sul', 'Rio de Janeiro', 'RJ', '20000-000', '07:00:00', '23:00:00', 'contato@bompreco.com', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', 1, 1, NULL),
-(3, 'Restaurante Delícias do Campo Ltda.', 'Delícias do Campo', '34.567.890/0001-92', '(31) 91234-5678', '654.321.987-00', '65.432.198-7', '5611-2', 'Rua Tranquila', 789, 'Bairro Novo', 'Belo Horizonte', 'MG', '30000-000', '11:00:00', '23:00:00', 'contato@deliciasdocampo.com', 'senhaSegura789', 0, 0, NULL),
-(4, 'Supermercado Sempre Fresco Ltda.', 'Sempre Fresco', '45.678.901/0001-93', '(41) 98765-6789', '321.987.654-00', '32.198.765-4', '4711-3', 'Rua Principal', 321, 'Zona Norte', 'Curitiba', 'PR', '80000-000', '08:00:00', '22:00:00', 'contato@semprefresco.com', 'senhaSuper123', 0, 1, NULL),
-(5, 'Restaurante Sabores do Mar Ltda.', 'Sabores do Mar', '56.789.012/0001-94', '(51) 97654-3210', '210.987.654-00', '21.098.765-4', '5611-2', 'Rua da Praia', 654, 'Centro', 'Porto Alegre', 'RS', '90000-000', '12:00:00', '23:00:00', 'contato@saboresdomar.com', 'senhaSabores123', 0, 1, NULL),
-(6, NULL, 'Novo Sabor Caseiro', '12.345.678/0001-90', '1199999999', NULL, NULL, NULL, 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', '08:00:00', '21:00:00', 'contato@saborcaseiro.com', '$2y$12$yNISLT2y2pcczjlwjFWIgecvHU2Lig6XuIqZHefoOW5MEtIHZPtuq', 1, 1, '1743374485_images.jpeg'),
-(12, NULL, 'teste', '15454655', '54656', NULL, NULL, NULL, 'teste', 123, 'teste', 'teste', 'sp', '13183271', '08:00:00', '14:00:00', 'rodrigooliveirafeitosa@gmail.com', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', 1, 1, '1743268372_image-removebg-preview.png');
+INSERT INTO `estabelecimentos` (`id_estab`, `razao_social`, `nome_fantasia`, `cnpj`, `telefone`, `cpf_titular`, `rg_titular`, `cnae`, `logradouro`, `numero`, `bairro`, `cidade`, `estado`, `cep`, `email`, `senha`, `email_verificado`, `perfil_ativo`, `imagem_perfil`) VALUES
+(1, 'Restaurante Sabor Caseiro Ltda.', 'Novo Sabor Caseiro', '12.345.678/0001-90', '11999999999', '987.654.321-00', '98.765.432-1', '5611-2', 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', 'teste@email.com', 'NovaSenhaSegura2', 0, 0, NULL),
+(2, 'Mercado Bom Preço Ltda.', 'Bom Preço', '23.456.789/0001-91', '(21) 99876-5432', '987.654.321-00', '98.765.432-1', '4711-3', 'Avenida Brasil', 456, 'Zona Sul', 'Rio de Janeiro', 'RJ', '20000-000', 'contato@bompreco.com', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', 1, 1, NULL),
+(3, 'Restaurante Delícias do Campo Ltda.', 'Delícias do Campo', '34.567.890/0001-92', '(31) 91234-5678', '654.321.987-00', '65.432.198-7', '5611-2', 'Rua Tranquila', 789, 'Bairro Novo', 'Belo Horizonte', 'MG', '30000-000', 'contato@deliciasdocampo.com', 'senhaSegura789', 0, 0, NULL),
+(4, 'Supermercado Sempre Fresco Ltda.', 'Sempre Fresco', '45.678.901/0001-93', '(41) 98765-6789', '321.987.654-00', '32.198.765-4', '4711-3', 'Rua Principal', 321, 'Zona Norte', 'Curitiba', 'PR', '80000-000', 'contato@semprefresco.com', 'senhaSuper123', 0, 1, NULL),
+(5, 'Restaurante Sabores do Mar Ltda.', 'Sabores do Mar', '56.789.012/0001-94', '(51) 97654-3210', '210.987.654-00', '21.098.765-4', '5611-2', 'Rua da Praia', 654, 'Centro', 'Porto Alegre', 'RS', '90000-000', 'contato@saboresdomar.com', 'senhaSabores123', 0, 1, NULL),
+(6, NULL, 'Novo Sabor Caseiro', '12.345.678/0001-90', '1199999999', NULL, NULL, NULL, 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', 'contato@saborcaseiro.com', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', 1, 1, '1743374485_images.jpeg'),
+(12, NULL, 'teste', '15454655', '(19) 12345-6789', NULL, NULL, NULL, 'teste', 123, 'teste', 'teste', 'sp', '13183271', 'rodrigooliveirafeitosa@gmail.com', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', 1, 1, '1744472517_Restaurant-Logo-by-Koko-Store-580x386.jpg');
 
 --
 -- Acionadores `estabelecimentos`
@@ -874,6 +904,69 @@ INSERT INTO `formas_pagamentos` (`id_formapag`, `descricao`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `grades_horario`
+--
+
+CREATE TABLE `grades_horario` (
+  `id_grade` int(11) NOT NULL,
+  `id_estab` int(11) NOT NULL,
+  `dia_semana` enum('1','2','3','4','5','6','7') NOT NULL,
+  `inicio_expediente` time NOT NULL,
+  `termino_expediente` time NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `grades_horario`
+--
+
+INSERT INTO `grades_horario` (`id_grade`, `id_estab`, `dia_semana`, `inicio_expediente`, `termino_expediente`) VALUES
+(1, 1, '1', '08:00:00', '21:00:00'),
+(2, 1, '2', '08:00:00', '21:00:00'),
+(3, 1, '3', '08:00:00', '21:00:00'),
+(4, 1, '4', '08:00:00', '21:00:00'),
+(5, 1, '5', '08:00:00', '21:00:00'),
+(6, 1, '6', '08:00:00', '21:00:00'),
+(7, 1, '7', '08:00:00', '21:00:00'),
+(8, 2, '1', '07:00:00', '23:00:00'),
+(9, 2, '2', '07:00:00', '23:00:00'),
+(10, 2, '3', '07:00:00', '23:00:00'),
+(11, 2, '4', '07:00:00', '23:00:00'),
+(12, 2, '5', '07:00:00', '23:00:00'),
+(13, 2, '6', '07:00:00', '23:00:00'),
+(14, 2, '7', '07:00:00', '23:00:00'),
+(15, 3, '1', '11:00:00', '23:00:00'),
+(16, 3, '2', '11:00:00', '23:00:00'),
+(17, 3, '3', '11:00:00', '23:00:00'),
+(18, 3, '4', '11:00:00', '23:00:00'),
+(19, 3, '5', '11:00:00', '23:00:00'),
+(20, 3, '6', '11:00:00', '23:00:00'),
+(21, 3, '7', '11:00:00', '23:00:00'),
+(22, 4, '1', '08:00:00', '22:00:00'),
+(23, 4, '2', '08:00:00', '22:00:00'),
+(24, 4, '3', '08:00:00', '22:00:00'),
+(25, 4, '4', '08:00:00', '22:00:00'),
+(26, 4, '5', '08:00:00', '22:00:00'),
+(27, 4, '6', '08:00:00', '22:00:00'),
+(28, 4, '7', '08:00:00', '22:00:00'),
+(29, 5, '1', '12:00:00', '23:00:00'),
+(30, 5, '2', '12:00:00', '23:00:00'),
+(31, 5, '3', '12:00:00', '23:00:00'),
+(32, 5, '4', '12:00:00', '23:00:00'),
+(33, 5, '5', '12:00:00', '23:00:00'),
+(34, 5, '6', '12:00:00', '23:00:00'),
+(35, 5, '7', '12:00:00', '23:00:00'),
+(36, 6, '1', '08:00:00', '21:00:00'),
+(37, 6, '2', '08:00:00', '21:00:00'),
+(38, 6, '3', '08:00:00', '21:00:00'),
+(39, 6, '4', '08:00:00', '21:00:00'),
+(40, 6, '5', '08:00:00', '21:00:00'),
+(41, 6, '6', '08:00:00', '21:00:00'),
+(42, 6, '7', '08:00:00', '21:00:00'),
+(55, 12, '6', '19:00:00', '23:00:00');
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `historico_clientes`
 --
 
@@ -902,7 +995,10 @@ INSERT INTO `historico_clientes` (`id_alteracao`, `id_cliente`, `campo_alterado`
 (9, 7, 'email', 'teste01@exemplo.com', 'teste@exemplo.com', '2025-02-22 11:41:39'),
 (10, 6, 'email', 'ronaldo@teste.com', 'ronaldo@teste.com.br', '2025-02-22 14:22:01'),
 (13, 30, 'senha', '$2y$12$4DDh53GH4/fzdUfLYjLM2eHJtw75hjjpfay5l4wGubSbqZze1b2R6', '$2y$12$E8DfUp0E2M7tTpwq9AcOoeH/2I6tNwv7ZNt9ZFydBBBbiJ0M5widC', '2025-03-10 17:14:04'),
-(14, 30, 'senha', '$2y$12$E8DfUp0E2M7tTpwq9AcOoeH/2I6tNwv7ZNt9ZFydBBBbiJ0M5widC', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', '2025-03-10 17:17:38');
+(14, 30, 'senha', '$2y$12$E8DfUp0E2M7tTpwq9AcOoeH/2I6tNwv7ZNt9ZFydBBBbiJ0M5widC', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', '2025-03-10 17:17:38'),
+(15, 30, 'telefone', '19994298868', '(19) 99429-8868', '2025-04-12 11:58:45'),
+(16, 30, 'telefone', '(19) 99429-8868', '(19) 97179-4122', '2025-04-12 11:58:52'),
+(17, 30, 'telefone', '(19) 97179-4122', '(19) 98908-5358', '2025-04-12 11:59:15');
 
 -- --------------------------------------------------------
 
@@ -953,7 +1049,17 @@ INSERT INTO `historico_estabelecimentos` (`id_alteracao`, `id_estab`, `campo_alt
 (27, 12, 'senha', '$2y$12$1kcaVuigyXvlNRlTEjjFLuZ0EveQWHU6phkrQtwA1Opz/rmP5y9b2', '$2y$12$4bMJUaZjqN4GRi/T7s6lj.jK4OFpHxPdKJ1PZRT9IUqB6SJvKehrK', '2025-03-10 17:09:52'),
 (28, 6, 'senha', '$2y$12$yNISLT2y2pcczjlwjFWIgecvHU2Lig6XuIqZHefoOW5MEtIHZPtuq', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', '2025-03-20 20:22:45'),
 (29, 12, 'senha', '$2y$12$4bMJUaZjqN4GRi/T7s6lj.jK4OFpHxPdKJ1PZRT9IUqB6SJvKehrK', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', '2025-03-20 20:23:25'),
-(30, 12, 'senha', '$2y$12$4bMJUaZjqN4GRi/T7s6lj.jK4OFpHxPdKJ1PZRT9IUqB6SJvKehrK', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', '2025-03-23 15:41:11');
+(30, 12, 'senha', '$2y$12$4bMJUaZjqN4GRi/T7s6lj.jK4OFpHxPdKJ1PZRT9IUqB6SJvKehrK', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', '2025-03-23 15:41:11'),
+(31, 6, 'senha', '$2y$12$yNISLT2y2pcczjlwjFWIgecvHU2Lig6XuIqZHefoOW5MEtIHZPtuq', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', '2025-04-03 21:38:33'),
+(32, 12, 'inicio_expediente', '08:00:00', '09:00:00', '2025-04-11 08:22:21'),
+(33, 12, 'inicio_expediente', '09:00:00', '12:00:00', '2025-04-11 08:25:08'),
+(34, 12, 'final_expediente', '14:00:00', '17:00:00', '2025-04-11 14:03:41'),
+(35, 6, 'final_expediente', '21:00:00', '14:00:00', '2025-04-11 14:08:45'),
+(36, 2, 'inicio_expediente', '07:00:00', '10:00:00', '2025-04-12 09:26:42'),
+(37, 5, 'inicio_expediente', '12:00:00', '13:00:00', '2025-04-12 12:02:58'),
+(38, 2, 'inicio_expediente', '10:00:00', '13:00:00', '2025-04-12 12:03:26'),
+(39, 12, 'telefone', '54656', '(54) 656', '2025-04-12 12:40:07'),
+(40, 12, 'telefone', '(54) 656', '(19) 12345-6789', '2025-04-12 12:41:10');
 
 -- --------------------------------------------------------
 
@@ -1007,7 +1113,8 @@ INSERT INTO `itens_pedidos` (`id_pedido`, `id_produto`, `qtd_produto`) VALUES
 (25, 5, 1),
 (26, 8, 1),
 (27, 7, 1),
-(28, 9, 1);
+(28, 9, 1),
+(29, 8, 2);
 
 -- --------------------------------------------------------
 
@@ -1073,7 +1180,10 @@ INSERT INTO `mensagens_cliente` (`id_mensagem`, `id_chat`, `id_remetente`, `id_d
 (6, '1e7793c5-937f-4a93-8358-457f81a53c3f', 30, 1, 'Sugestão de melhoria', 'Isso não se faz, parceiro. Vou te pegar nas ideia', '2025-03-23 17:42:13', 1),
 (7, '1e7793c5-937f-4a93-8358-457f81a53c3f', 30, 1, 'Sugestão de melhoria', 'gggdgerte', '2025-03-23 17:54:09', 1),
 (8, '1e7793c5-937f-4a93-8358-457f81a53c3f', 30, 1, 'Sugestão de melhoria', 'chapei', '2025-03-23 18:39:54', 1),
-(9, '1e7793c5-937f-4a93-8358-457f81a53c3f', 1, 30, 'Sugestão de melhoria', 'Opa meu nobre. Tá na paz', '2025-03-23 18:42:12', 1);
+(9, '1e7793c5-937f-4a93-8358-457f81a53c3f', 1, 30, 'Sugestão de melhoria', 'Opa meu nobre. Tá na paz', '2025-03-23 18:42:12', 1),
+(10, '1e7793c5-937f-4a93-8358-457f81a53c3f', 30, 1, 'Sugestão de melhoria', 'Aí tu tá de sacanagem', '2025-04-12 12:00:15', 1),
+(11, '152b5749-f319-454a-9f7a-94f7cc4fb92e', 30, 1, 'Esqueci minha senha', 'Teste', '2025-04-12 12:00:32', 1),
+(12, '152b5749-f319-454a-9f7a-94f7cc4fb92e', 1, 30, 'Esqueci minha senha', 'testado', '2025-04-12 12:01:39', 1);
 
 -- --------------------------------------------------------
 
@@ -1101,7 +1211,10 @@ INSERT INTO `mensagens_estab` (`id_mensagem`, `id_chat`, `id_remetente`, `id_des
 (2, '49f89de6-dc76-45f0-a491-717f48af85ad', 1, 12, 'Pedido não foi entregue', 'Essa é a caminhada, pa pum', '2025-03-23 17:32:13', 1),
 (3, '49f89de6-dc76-45f0-a491-717f48af85ad', 12, 1, 'Pedido não foi entregue', 'se você da pum, eu tô pumba', '2025-03-23 17:56:07', 1),
 (4, '49f89de6-dc76-45f0-a491-717f48af85ad', 1, 12, 'Pedido não foi entregue', 'hakuna matata', '2025-03-23 18:42:40', 1),
-(5, '49f89de6-dc76-45f0-a491-717f48af85ad', 12, 1, 'Pedido não foi entregue', 'iiiiiiiiiiiih', '2025-03-23 18:43:00', 1);
+(5, '49f89de6-dc76-45f0-a491-717f48af85ad', 12, 1, 'Pedido não foi entregue', 'iiiiiiiiiiiih', '2025-03-23 18:43:00', 1),
+(6, '49f89de6-dc76-45f0-a491-717f48af85ad', 12, 1, 'Pedido não foi entregue', 'uhhhuuuu', '2025-04-12 12:42:29', 1),
+(7, '3e54ff2b-3999-4db9-8133-009815cdb645', 12, 1, 'Pedido cancelado sem motivo', 'teste', '2025-04-12 12:42:43', 1),
+(8, '3e54ff2b-3999-4db9-8133-009815cdb645', 1, 12, 'Pedido cancelado sem motivo', 'testado', '2025-04-12 12:43:25', 1);
 
 -- --------------------------------------------------------
 
@@ -1149,8 +1262,9 @@ INSERT INTO `pedidos` (`id_pedido`, `id_cliente`, `valor_total`, `forma_pagament
 (23, 30, 49.90, 2, '2025-03-12 23:05:24', 5, 2),
 (25, 30, 12.90, 1, '2025-03-15 17:57:23', 2, 6),
 (26, 30, 7.50, 1, '2025-03-15 18:13:43', 2, 7),
-(27, 30, 15.90, 3, '2025-03-15 18:14:35', 2, 7),
-(28, 30, 40.90, 3, '2025-03-15 18:15:24', 2, 9);
+(27, 30, 15.90, 3, '2025-03-15 18:14:35', 5, 7),
+(28, 30, 40.90, 3, '2025-03-15 18:15:24', 6, 9),
+(29, 30, 15.00, 1, '2025-04-12 11:49:21', 2, 6);
 
 --
 -- Acionadores `pedidos`
@@ -1226,7 +1340,9 @@ INSERT INTO `planos_estabelecimentos` (`id_estab`, `id_plano`, `ativo`) VALUES
 (6, 1, 0),
 (6, 2, 1),
 (1, 1, 1),
-(4, 2, 1);
+(4, 2, 1),
+(12, 2, 0),
+(12, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -1256,11 +1372,12 @@ INSERT INTO `produtos` (`id_produto`, `nome`, `descricao`, `valor`, `id_categori
 (4, 'Peixe Grelhado', NULL, 49.90, 2, 5, 12, NULL),
 (5, 'Sabonete Líquido 500ml', NULL, 12.90, 3, 4, 26, NULL),
 (6, 'Macarrão Instantâneo 80g', NULL, 3.99, 1, 3, 188, NULL),
-(7, 'BreadSticks', 'bastões de pão secos e crocantes, geralmente do tamanho de um lápis, que são assados no forno', 15.90, 2, 6, 31, '1743374383.jpg'),
+(7, 'BreadSticks', 'bastões de pão secos e crocantes, geralmente do tamanho de um lápis, que são assados no forno', 15.90, 2, 6, 30, '1743374383.jpg'),
 (8, 'Coca-Cola', NULL, 7.50, 4, 6, 200, NULL),
 (9, 'Pizza Morango com Chocolate', NULL, 40.90, 5, 6, 0, NULL),
 (10, 'X-burguer mega', 'Pão de hamburguer, 150g de patinho, 50g de queijo prato, alface, tomate e cebola.', 50.00, 1, 12, 55, '1743269496_x-burguer-73517.jpg'),
-(11, 'Coca lata 220ml', 'refrigerante de cola', 5.00, 4, 12, 150, 'sem_foto.png');
+(11, 'Coca-cola lata 220ml', 'refrigerante de cola', 6.00, 4, 12, 150, '1744472036.jpg'),
+(12, 'Bala', 'Sabor pessego', 10.00, 5, 12, 15, '1744472241_9405729837Bala-de-Pessego-Momo-3Sabores-85g-01.jpg');
 
 -- --------------------------------------------------------
 
@@ -1446,6 +1563,13 @@ ALTER TABLE `formas_pagamentos`
   ADD PRIMARY KEY (`id_formapag`);
 
 --
+-- Índices de tabela `grades_horario`
+--
+ALTER TABLE `grades_horario`
+  ADD PRIMARY KEY (`id_grade`),
+  ADD KEY `fk_horario_estab` (`id_estab`);
+
+--
 -- Índices de tabela `historico_clientes`
 --
 ALTER TABLE `historico_clientes`
@@ -1542,7 +1666,7 @@ ALTER TABLE `administradores`
 -- AUTO_INCREMENT de tabela `avaliacoes`
 --
 ALTER TABLE `avaliacoes`
-  MODIFY `id_avaliacao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id_avaliacao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de tabela `categorias_chamado`
@@ -1566,7 +1690,7 @@ ALTER TABLE `clientes`
 -- AUTO_INCREMENT de tabela `enderecos`
 --
 ALTER TABLE `enderecos`
-  MODIFY `id_endereco` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_endereco` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de tabela `estabelecimentos`
@@ -1581,22 +1705,28 @@ ALTER TABLE `formas_pagamentos`
   MODIFY `id_formapag` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT de tabela `grades_horario`
+--
+ALTER TABLE `grades_horario`
+  MODIFY `id_grade` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+
+--
 -- AUTO_INCREMENT de tabela `historico_clientes`
 --
 ALTER TABLE `historico_clientes`
-  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de tabela `historico_estabelecimentos`
 --
 ALTER TABLE `historico_estabelecimentos`
-  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT de tabela `itens_pedidos`
 --
 ALTER TABLE `itens_pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT de tabela `logs_tokens`
@@ -1608,19 +1738,19 @@ ALTER TABLE `logs_tokens`
 -- AUTO_INCREMENT de tabela `mensagens_cliente`
 --
 ALTER TABLE `mensagens_cliente`
-  MODIFY `id_mensagem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_mensagem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de tabela `mensagens_estab`
 --
 ALTER TABLE `mensagens_estab`
-  MODIFY `id_mensagem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_mensagem` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de tabela `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT de tabela `planos`
@@ -1632,7 +1762,7 @@ ALTER TABLE `planos`
 -- AUTO_INCREMENT de tabela `produtos`
 --
 ALTER TABLE `produtos`
-  MODIFY `id_produto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_produto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de tabela `status_pedidos`
@@ -1656,6 +1786,12 @@ ALTER TABLE `avaliacoes`
 ALTER TABLE `enderecos_clientes`
   ADD CONSTRAINT `fk_endereco_cliente` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`),
   ADD CONSTRAINT `fk_enderecos` FOREIGN KEY (`id_endereco`) REFERENCES `enderecos` (`id_endereco`);
+
+--
+-- Restrições para tabelas `grades_horario`
+--
+ALTER TABLE `grades_horario`
+  ADD CONSTRAINT `fk_horario_estab` FOREIGN KEY (`id_estab`) REFERENCES `estabelecimentos` (`id_estab`);
 
 --
 -- Restrições para tabelas `historico_clientes`
