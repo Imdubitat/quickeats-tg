@@ -48,14 +48,21 @@ class AdministradorController extends Controller
 
     public function exibirRestaurantes()
     {
-        $restaurantes = DB::table('estabelecimentos')->get();
+        $restaurantes = DB::table('estabelecimentos')->paginate(10);
 
-        return view('admin_restaurantes', compact('restaurantes'));
+        // Consulta para obter os horários de expediente de cada estabelecimento
+        $horarios = DB::table('grades_horario')
+                        ->whereIn('id_estab', $restaurantes->pluck('id_estab'))
+                        ->get()
+                        ->groupBy('id_estab'); // Agrupar por id_estab
+
+        return view('admin_restaurantes', compact('restaurantes', 'horarios'));
     }
+
 
     public function exibirClientes()
     {
-        $clientes = DB::table('clientes')->get();
+        $clientes = DB::table('clientes')->paginate(10);
         
         foreach ($clientes as $cliente) {
             $cliente->enderecos = DB::select("CALL exibir_enderecos_cliente(?)", [$cliente->id_cliente]);

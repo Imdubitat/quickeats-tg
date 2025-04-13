@@ -41,7 +41,33 @@
             </tr>
         @endforeach
     </table>
+    
+    <div class="d-flex justify-content-center mt-4">
+        <nav aria-label="Pagination">
+            <ul class="pagination pagination-sm">
+                {{-- Página Anterior --}}
+                <li class="page-item {{ $clientes->onFirstPage() ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $clientes->previousPageUrl() }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo; Anterior</span>
+                    </a>
+                </li>
 
+                {{-- Links de Páginas --}}
+                @foreach ($clientes->getUrlRange(1, $clientes->lastPage()) as $page => $url)
+                    <li class="page-item {{ $clientes->currentPage() == $page ? 'active' : '' }}">
+                        <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                    </li>
+                @endforeach
+
+                {{-- Página Seguinte --}}
+                <li class="page-item {{ $clientes->hasMorePages() ? '' : 'disabled' }}">
+                    <a class="page-link" href="{{ $clientes->nextPageUrl() }}" aria-label="Next">
+                        <span aria-hidden="true">Próxima &raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 @endsection
 
 <!-- Modal de Detalhes -->

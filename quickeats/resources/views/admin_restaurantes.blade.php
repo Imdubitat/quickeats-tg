@@ -42,6 +42,32 @@
         @endforeach
     </table>
 
+    <div class="d-flex justify-content-center mt-4">
+        <nav aria-label="Pagination">
+            <ul class="pagination pagination-sm">
+                {{-- Página Anterior --}}
+                <li class="page-item {{ $restaurantes->onFirstPage() ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $restaurantes->previousPageUrl() }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo; Anterior</span>
+                    </a>
+                </li>
+
+                {{-- Links de Páginas --}}
+                @foreach ($restaurantes->getUrlRange(1, $restaurantes->lastPage()) as $page => $url)
+                    <li class="page-item {{ $restaurantes->currentPage() == $page ? 'active' : '' }}">
+                        <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                    </li>
+                @endforeach
+
+                {{-- Página Seguinte --}}
+                <li class="page-item {{ $restaurantes->hasMorePages() ? '' : 'disabled' }}">
+                    <a class="page-link" href="{{ $restaurantes->nextPageUrl() }}" aria-label="Next">
+                        <span aria-hidden="true">Próxima &raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 @endsection
 
 <!-- Modal de Detalhes -->
@@ -110,13 +136,49 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label class="form-label">Email</label>
                             <input type="text" class="form-control" value="{{ $r->email }}" readonly>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Horário de Expediente</label>
-                            <input type="text" class="form-control" value="{{ $r->inicio_expediente }} - {{ $r->termino_expediente }}" readonly>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Grade Horária</label>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Dia da Semana</th>
+                                        <th>Início Expediente</th>
+                                        <th>Fim Expediente</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if(isset($horarios[$r->id_estab]))
+                                        @foreach($horarios[$r->id_estab] as $horario)
+                                            <tr>
+                                                <td>
+                                                    @switch($horario->dia_semana)
+                                                    @case(1) Segunda-feira @break
+                                                    @case(2) Terça-feira @break
+                                                    @case(3) Quarta-feira @break
+                                                    @case(4) Quinta-feira @break
+                                                    @case(5) Sexta-feira @break
+                                                    @case(6) Sábado @break
+                                                    @case(7) Domingo @break
+                                                    @default Desconhecido
+                                                    @endswitch
+                                                </td>
+                                                <td>{{ $horario->inicio_expediente }}</td>
+                                                <td>{{ $horario->termino_expediente }}</td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="3">Não há horário de expediente disponível</td>
+                                        </tr>
+                                    @endif
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </form>
