@@ -841,18 +841,6 @@ CREATE TRIGGER `atualizacao_estabelecimento` AFTER UPDATE ON `estabelecimentos` 
         VALUES (NEW.id_estab, 'cep', OLD.cep, NEW.cep, NOW()); 
     END IF; 
 
-    -- Verifica se o campo inicio_expediente foi alterado 
-    IF OLD.inicio_expediente != NEW.inicio_expediente THEN 
-        INSERT INTO historico_estabelecimentos (id_estab, campo_alterado, valor_antigo, valor_novo, data_alteracao) 
-        VALUES (NEW.id_estab, 'inicio_expediente', OLD.inicio_expediente, NEW.inicio_expediente, NOW()); 
-    END IF;
-
-    -- Verifica se o campo final_expediente foi alterado 
-    IF OLD.termino_expediente != NEW.termino_expediente THEN 
-        INSERT INTO historico_estabelecimentos (id_estab, campo_alterado, valor_antigo, valor_novo, data_alteracao) 
-        VALUES (NEW.id_estab, 'final_expediente', OLD.termino_expediente, NEW.termino_expediente, NOW()); 
-    END IF; 
-
     -- Verifica se o campo email foi alterado 
     IF OLD.email != NEW.email THEN 
         INSERT INTO historico_estabelecimentos (id_estab, campo_alterado, valor_antigo, valor_novo, data_alteracao) 
