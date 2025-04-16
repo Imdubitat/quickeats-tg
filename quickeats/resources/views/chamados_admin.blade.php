@@ -140,6 +140,45 @@
                 </div>
             </div>
             @endif
+            
+            <!-- Accordion para mensagens de usuários não cadastrados -->
+            @if(!$mensagensNaoCad->isEmpty())
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingMessagesNaoCad">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMessagesNaoCad" aria-expanded="false" aria-controls="collapseMessagesNaoCad">
+                        Chamados de Usuários Não Cadastrados
+                    </button>
+                </h2>
+                <div id="collapseMessagesNaoCad" class="accordion-collapse collapse" aria-labelledby="headingMessagesNaoCad" data-bs-parent="#accordionMessages">
+                    <div class="accordion-body">
+                        <div class="row">
+                            @foreach($mensagensNaoCad as $mnc)
+                                <div class="col-12 mb-4">
+                                    <div class="card pb-2">
+                                        <div class="card-header d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <strong>{{ $mnc->nome }}</strong> - 
+                                                <small>{{ \Carbon\Carbon::parse($mnc->data_envio)->format('d/m/Y H:i') }}</small><br>
+                                                <span class="text-muted" id="email-{{ $mnc->id_mensagem }}">{{ $mnc->email }}</span>
+                                            </div>
+                                            <button class="btn btn-sm btn-outline-primary" onclick="copiarEmail('{{ $mnc->id_mensagem }}')">Copiar E-mail</button>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="card-text">{{ $mnc->mensagem }}</p>
+                                        </div>
+                                        <form action="{{ route('mensagem_resolver') }}" method="POST" class="text-center mt-2">
+                                            @csrf
+                                            <input type="hidden" name="id_mensagem" value="{{ $mnc->id_mensagem }}">
+                                            <button type="submit" class="btn btn-success">Marcar como Respondido</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
         </div>
     @endif
 </section>
@@ -192,4 +231,15 @@
             });
         });
     });
+
+    function copiarEmail(id) {
+        const emailElement = document.getElementById('email-' + id);
+        const email = emailElement.textContent || emailElement.innerText;
+
+        navigator.clipboard.writeText(email).then(() => {
+            alert('E-mail copiado: ' + email);
+        }).catch(err => {
+            console.error('Erro ao copiar e-mail: ', err);
+        });
+    }
 </script>

@@ -20,6 +20,9 @@ Route::get('/faqs', [Controller::class, 'exibirFaqs'])->name('faqs');
 Route::get('/sobre', [Controller::class, 'exibirSobre'])->name('sobre');
 Route::get('/contato', [Controller::class, 'exibirContato'])->name('contato');
 
+// Enviar mensagem para o suporte
+Route::post('/abrir-chamado', [Controller::class, 'abrirChamado'])->name('abrir_chamado');
+
 // -------------------------------------------- Rotas do cliente ---------------------------------------------------------
 Route::post('cliente/login', [ClienteController::class, 'realizarLogin'])->name('login_cliente');
 Route::post('cliente/cadastro', [ClienteController::class, 'cadastrarCliente'])->name('cadastro_cliente');
@@ -265,6 +268,7 @@ Route::middleware('auth:administrador')->group(function () {
     // Responder chamados
     Route::post('/admin/responder-chamado/cliente', [AdministradorController::class, 'responderChamadoCliente'])->name('responder_chamado_cliente');
     Route::post('/admin/responder-chamado/estab', [AdministradorController::class, 'responderChamadoEstab'])->name('responder_chamado_estab');
+    Route::post('/mensagens/nao-cadastrado/resolver', [AdministradorController::class, 'marcarComoRespondido'])->name('mensagem_resolver');
 
     Route::get('/chamados/{id_chat}/mensagens', [AdministradorController::class, 'buscarMensagens']);
 

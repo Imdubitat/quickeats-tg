@@ -121,11 +121,17 @@ class AdministradorController extends Controller
                 return $mensagensChat->first();
             });
 
+        // Seleciona mensagens ativas de usuários não cadastrados
+        $mensagensNaoCad = DB::table('mensagens_nao_cad')
+            ->where('ativo', 1) 
+            ->orderBy('data_envio', 'desc')
+            ->get();
+
         $categorias = DB::table('categorias_chamado')
             ->get();
 
         // Passar ambas as coleções separadamente para a view
-        return view('chamados_admin', compact('mensagensCliente', 'mensagensEstab', 'categorias', 'idAdmin'));
+        return view('chamados_admin', compact('mensagensCliente', 'mensagensEstab', 'mensagensNaoCad', 'categorias', 'idAdmin'));
     }
 
     public function buscarMensagens($idChat)
@@ -224,6 +230,15 @@ class AdministradorController extends Controller
     
         // Redireciona ou retorna uma resposta para o usuário
         return redirect()->back()->with('success', 'Resposta enviada com sucesso!');
+    }
+
+    public function marcarComoRespondido(Request $request)
+    {
+        DB::table('mensagens_nao_cad')
+            ->where('id_mensagem', $request->id_mensagem)
+            ->update(['ativo' => 0]);
+
+        return back()->with('success', 'Mensagem marcada como resolvida!');
     }
 
     public function planosAtivos() 

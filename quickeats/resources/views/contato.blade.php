@@ -3,14 +3,20 @@
 @section('title', 'Contato')
 
 @section('content')
-<section style="margin-top: 13rem;">
+<section class="px-5" style="margin-top: 13rem;">
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
     <div class="container">
         <h1 class="text-center fw-bold mb-4 text-primary">Fale com a gente</h1>
         <p class="text-center mb-5 fs-5">Tem alguma dúvida, sugestão ou precisa de ajuda? Preencha o formulário ou entre em contato pelos nossos canais.</p>
 
         <div class="row">
             <div class="col-md-6 mb-4">
-                <form action="" method="POST" class="p-4 rounded-4 shadow bg-white">
+                <form action="{{ route('abrir_chamado') }}" method="POST" class="p-4 rounded-4 shadow bg-white">
                     @csrf
                     <div class="mb-3">
                         <label for="nome" class="form-label">Nome</label>

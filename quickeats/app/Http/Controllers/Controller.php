@@ -14,6 +14,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Models\MensagensNaoCad;
 
 class Controller extends BaseController
 {
@@ -156,5 +157,19 @@ class Controller extends BaseController
     public function exibirContato()
     {
         return view('contato');
+    }
+
+    public function abrirChamado(Request $request)
+    {
+        // Criando a mensagem
+        $mensagens = MensagensNaoCad::create([
+            'nome' => $request->nome,
+            'email' => $request->email,
+            'mensagem' => $request->mensagem,
+            'data_envio' => now(),
+            'ativo' => 1,
+        ]);
+
+        return redirect()->back()->with('success', 'Mensagem enviada com sucesso!');
     }
 }
