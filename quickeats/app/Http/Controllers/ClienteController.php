@@ -813,4 +813,40 @@ class ClienteController extends Controller
             'estabelecimentos' => $estabelecimentos
         ]);
     }
+
+    public function alterarSenha(){
+        $idCliente = Auth::guard('cliente')->id();
+
+        $cadastro = DB::table('clientes')
+        ->where('id_cliente', $idCliente)->get();
+
+        return view('alterar_senhaCliente', compact('cadastro'));
+    }
+
+    public function confirmarSenha(Request $request)
+    {
+        $request->validate([
+            'senhaAntiga' => 'required',
+            'novaSenha' => 'required|min:8',
+            'confirmarSenha' => 'required|same:novaSenha',
+        ]);
+
+        $idCliente = Auth::guard('cliente')->id();
+
+        $cliente = DB::table('clientes')->where('id_cliente', $idCliente)->first();
+
+        if (!$cliente) {
+            return back()->with('error', 'Usuário não encontrado.');
+        }
+
+        if (!Hash::check($request->senhaAntiga, $cliente->senha)) {
+            return back()->with('error', 'Senha atual incorreta.');
+        }
+
+        DB::table('clientes')->where('id_cliente', $idCliente)->update([
+            'senha' => Hash::make($request->novaSenha)
+        ]);
+
+        return back()->with('success', 'Senha alterada com sucesso!');
+    }
 }

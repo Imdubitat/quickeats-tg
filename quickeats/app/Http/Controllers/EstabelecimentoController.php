@@ -734,4 +734,41 @@ class EstabelecimentoController extends Controller
 
         return redirect()->back()->with('success', 'Grade cadastrada com sucesso!');
     }
+
+    public function alterarSenha() 
+    {
+        $idRes = Auth::guard('estabelecimento')->id();
+
+        $cadastro = DB::table('estabelecimentos')
+        ->where('id_estab', $idRes)->get();
+
+        return view('alterar_senhaEstab', compact('cadastro'));
+    }
+
+    public function confirmarSenha(Request $request)
+    {
+        $request->validate([
+            'senhaAntiga' => 'required',
+            'novaSenha' => 'required|min:8',
+            'confirmarSenha' => 'required|same:novaSenha',
+        ]);
+
+        $idRes = Auth::guard('estabelecimento')->id();
+
+        $restaurante = DB::table('estabelecimentos')->where('id_estab', $idRes)->first();
+
+        if (!$restaurante) {
+            return back()->with('error', 'Usuário não encontrado.');
+        }
+
+        if (!Hash::check($request->senhaAntiga, $restaurante->senha)) {
+            return back()->with('error', 'Senha atual incorreta.');
+        }
+
+        DB::table('estabelecimentos')->where('id_estab', $idRes)->update([
+            'senha' => Hash::make($request->novaSenha)
+        ]);
+
+        return back()->with('success', 'Senha alterada com sucesso!');
+    }
 }

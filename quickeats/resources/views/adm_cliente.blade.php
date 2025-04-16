@@ -34,8 +34,8 @@
         <div class="col-md-4 col-sm-6">
             <div class="card text-center p-4 shadow-sm hover-effect">
                 <p class="fw-bold fs-4">Segurança e privacidade</p>
-                <p class="text-muted">Ajuste suas configurações de segurança.</p>
-                <a href="" class="btn btn-custom4">Acessar</a>
+                <p class="text-muted">Altere sua senha.</p>
+                <a href="{{ route('alterar_senha') }}" class="btn btn-custom4">Acessar</a>
             </div>
         </div>
         <div class="col-md-4 col-sm-6">

@@ -115,6 +115,12 @@ Route::middleware('auth:cliente')->group(function () {
 
     Route::post('/pesquisa', [ClienteController::class, 'pesquisar'])->name('pesquisa');
     Route::post('/autocomplete', [ClienteController::class, 'autocomplete'])->name('autocomplete');
+
+    // Página de alteração de senha
+    Route::get('/alt-senha', [ClienteController::class, 'alterarSenha'])->name('alterar_senha');
+
+    // Confirmar alteração de senha
+    Route::post('/confirmarSenha', [ClienteController::class, 'confirmarSenha'])->name('confirmar_senha');
 });
 
 //Rota para solicitação de link para redefinição de senha via email
@@ -200,6 +206,12 @@ Route::middleware('auth:estabelecimento')->group(function () {
 
     // Rota para salvar um horário com o método 'salvarGrade'
     Route::post('salvar-grade', [EstabelecimentoController::class, 'salvarGrade'])->name('salvarGrade');
+
+    // Página de alteração de senha
+    Route::get('/alt-senhaEstab', [EstabelecimentoController::class, 'alterarSenha'])->name('alterar_senhaEstab');
+
+    // Confirmar alteração de senha
+    Route::post('/confirmarSenhaEstab', [EstabelecimentoController::class, 'confirmarSenha'])->name('confirmar_senhaEstab');
 });
 
 // Rota para solicitação de link para redefinição de senha via email
