@@ -335,6 +335,26 @@ class ClienteController extends Controller
     public function exibirEnderecos()
     {
         $idCliente = auth()->guard('cliente')->id();
+        $produtos = DB::select('CALL produtos_carrinho(?)', [$idCliente]);
+        $produto = $produtos[0];
+        
+        $agora = Carbon::now();
+        $diaSemana = $agora->dayOfWeekIso;
+        $horaAtual = $agora->format('H:i:s');
+        $horarios = DB::select("SELECT * FROM grades_horario WHERE id_estab = ? AND dia_semana = ?", [$produto->id_estab, $diaSemana]);
+
+        $estabAberto = false;
+
+        foreach ($horarios as $horario) {
+            if ($horaAtual >= $horario->inicio_expediente && $horaAtual <= $horario->termino_expediente) {
+                $estabAberto = true;
+                break;
+            }
+        }
+    
+        if (!$estabAberto) {
+            return redirect()->back()->with('error', 'O estabelecimento está fora do horário de atendimento.');
+        }
 
         $enderecos = DB::select('CALL exibir_enderecos_cliente(?)', [$idCliente]);
     
@@ -348,6 +368,27 @@ class ClienteController extends Controller
 
         session(['id_endereco' => $request->endereco]);
 
+        $produtos = DB::select('CALL produtos_carrinho(?)', [$idCliente]);
+        $produto = $produtos[0];
+        
+        $agora = Carbon::now();
+        $diaSemana = $agora->dayOfWeekIso;
+        $horaAtual = $agora->format('H:i:s');
+        $horarios = DB::select("SELECT * FROM grades_horario WHERE id_estab = ? AND dia_semana = ?", [$produto->id_estab, $diaSemana]);
+
+        $estabAberto = false;
+
+        foreach ($horarios as $horario) {
+            if ($horaAtual >= $horario->inicio_expediente && $horaAtual <= $horario->termino_expediente) {
+                $estabAberto = true;
+                break;
+            }
+        }
+    
+        if (!$estabAberto) {
+            return redirect()->route('carrinho')->with('error', 'O estabelecimento está fora do horário de atendimento.');
+        }
+
         return view('checkout_pagamento', compact('formasPagamento'));
     }
 
@@ -356,6 +397,27 @@ class ClienteController extends Controller
         $idCliente = auth()->guard('cliente')->id();
         $idPagamento = $request->input('pagamento');
         $idEndereco = session('id_endereco');
+
+        $produtos = DB::select('CALL produtos_carrinho(?)', [$idCliente]);
+        $produto = $produtos[0];
+        
+        $agora = Carbon::now();
+        $diaSemana = $agora->dayOfWeekIso;
+        $horaAtual = $agora->format('H:i:s');
+        $horarios = DB::select("SELECT * FROM grades_horario WHERE id_estab = ? AND dia_semana = ?", [$produto->id_estab, $diaSemana]);
+
+        $estabAberto = false;
+
+        foreach ($horarios as $horario) {
+            if ($horaAtual >= $horario->inicio_expediente && $horaAtual <= $horario->termino_expediente) {
+                $estabAberto = true;
+                break;
+            }
+        }
+    
+        if (!$estabAberto) {
+            return redirect()->route('carrinho')->with('error', 'O estabelecimento está fora do horário de atendimento.');
+        }
 
         if (!$idEndereco) {
             return redirect()->back()->with('error', 'Endereço não selecionado.');

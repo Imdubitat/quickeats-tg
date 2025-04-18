@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 13/04/2025 às 01:58
+-- Tempo de geração: 18/04/2025 às 01:26
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -436,7 +436,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `produtos_carrinho` (IN `p_id_client
            ca.id_produto AS id_produto,
            p.nome AS nome_produto, 
            ca.qtd_produto AS qtd_produto, 
-           p.valor AS valor
+           p.valor AS valor,
+           p.id_estab
     FROM carrinho ca
     INNER JOIN produtos p ON p.id_produto = ca.id_produto
     WHERE ca.id_cliente = p_id_cliente;
@@ -544,7 +545,8 @@ CREATE TABLE `carrinho` (
 --
 
 INSERT INTO `carrinho` (`id_cliente`, `id_produto`, `qtd_produto`, `data_adicao`) VALUES
-(6, 1, 2, '2025-03-28 17:17:48');
+(6, 1, 2, '2025-03-28 17:17:48'),
+(30, 11, 1, '2025-04-17 20:05:00');
 
 -- --------------------------------------------------------
 
@@ -636,7 +638,7 @@ INSERT INTO `clientes` (`id_cliente`, `nome`, `cpf`, `data_nasc`, `telefone`, `e
 (5, 'Pedro Henrique Souza', '345.768.902-65', '2001-09-10', '(41) 96543-2109', 'pedro.souza@teste.com', 'senhaPedro123', 1, 1),
 (6, 'Ronaldo Silveira', '1234567891', '2002-02-22', '195226512', 'ronaldo@teste.com.br', '$2y$12$RjB8fKNNrPDTEW4xbMNoIuDnasjQ7vbn9.okm/lUpbm07jdbHJbCK', 1, 1),
 (7, 'teste', '49333379851', '2001-03-02', '19971794122', 'teste@exemplo.com', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', 0, 1),
-(30, 'teste2', '12957597802', '2001-03-02', '(19) 98908-5358', 'rodrigooliveirafeitosa@gmail.com', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', 1, 1);
+(30, 'teste2', '12957597802', '2001-03-02', '(19) 97179-4122', 'rodrigooliveirafeitosa@gmail.com', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', 1, 1);
 
 --
 -- Acionadores `clientes`
@@ -950,7 +952,8 @@ INSERT INTO `grades_horario` (`id_grade`, `id_estab`, `dia_semana`, `inicio_expe
 (40, 6, '5', '08:00:00', '21:00:00'),
 (41, 6, '6', '08:00:00', '21:00:00'),
 (42, 6, '7', '08:00:00', '21:00:00'),
-(55, 12, '6', '19:00:00', '23:00:00');
+(55, 12, '6', '19:00:00', '23:00:00'),
+(56, 12, '4', '08:00:00', '20:00:00');
 
 -- --------------------------------------------------------
 
@@ -986,7 +989,8 @@ INSERT INTO `historico_clientes` (`id_alteracao`, `id_cliente`, `campo_alterado`
 (14, 30, 'senha', '$2y$12$E8DfUp0E2M7tTpwq9AcOoeH/2I6tNwv7ZNt9ZFydBBBbiJ0M5widC', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', '2025-03-10 17:17:38'),
 (15, 30, 'telefone', '19994298868', '(19) 99429-8868', '2025-04-12 11:58:45'),
 (16, 30, 'telefone', '(19) 99429-8868', '(19) 97179-4122', '2025-04-12 11:58:52'),
-(17, 30, 'telefone', '(19) 97179-4122', '(19) 98908-5358', '2025-04-12 11:59:15');
+(17, 30, 'telefone', '(19) 97179-4122', '(19) 98908-5358', '2025-04-12 11:59:15'),
+(18, 30, 'telefone', '(19) 98908-5358', '(19) 97179-4122', '2025-04-16 21:11:08');
 
 -- --------------------------------------------------------
 
@@ -1102,7 +1106,8 @@ INSERT INTO `itens_pedidos` (`id_pedido`, `id_produto`, `qtd_produto`) VALUES
 (26, 8, 1),
 (27, 7, 1),
 (28, 9, 1),
-(29, 8, 2);
+(29, 8, 2),
+(30, 12, 1);
 
 -- --------------------------------------------------------
 
@@ -1252,7 +1257,8 @@ INSERT INTO `pedidos` (`id_pedido`, `id_cliente`, `valor_total`, `forma_pagament
 (26, 30, 7.50, 1, '2025-03-15 18:13:43', 2, 7),
 (27, 30, 15.90, 3, '2025-03-15 18:14:35', 5, 7),
 (28, 30, 40.90, 3, '2025-03-15 18:15:24', 6, 9),
-(29, 30, 15.00, 1, '2025-04-12 11:49:21', 2, 6);
+(29, 30, 15.00, 1, '2025-04-12 11:49:21', 2, 6),
+(30, 30, 10.00, 3, '2025-04-17 19:55:20', 6, 2);
 
 --
 -- Acionadores `pedidos`
@@ -1696,13 +1702,13 @@ ALTER TABLE `formas_pagamentos`
 -- AUTO_INCREMENT de tabela `grades_horario`
 --
 ALTER TABLE `grades_horario`
-  MODIFY `id_grade` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id_grade` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT de tabela `historico_clientes`
 --
 ALTER TABLE `historico_clientes`
-  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de tabela `historico_estabelecimentos`
@@ -1714,7 +1720,7 @@ ALTER TABLE `historico_estabelecimentos`
 -- AUTO_INCREMENT de tabela `itens_pedidos`
 --
 ALTER TABLE `itens_pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT de tabela `logs_tokens`
@@ -1738,7 +1744,7 @@ ALTER TABLE `mensagens_estab`
 -- AUTO_INCREMENT de tabela `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT de tabela `planos`
