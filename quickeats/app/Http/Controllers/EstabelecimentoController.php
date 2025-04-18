@@ -721,7 +721,12 @@ class EstabelecimentoController extends Controller
         ->where('dia_semana', $validatedData['dia_semana'])->first();
 
         if ($gradeExistente) {
-            return redirect()->back()->with('error', 'Já existe um horário cadastrado para este dia da semana.');
+            $gradeExistente->update([
+                'inicio_expediente' => $validatedData['inicio_expediente'],
+                'termino_expediente' => $validatedData['termino_expediente']
+            ]);
+
+            return redirect()->back()->with('success', 'Horário atualizado!');
         }
         
         // Cria a grade
