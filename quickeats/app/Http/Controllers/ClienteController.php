@@ -336,28 +336,60 @@ class ClienteController extends Controller
     {
         $idCliente = auth()->guard('cliente')->id();
         $produtos = DB::select('CALL produtos_carrinho(?)', [$idCliente]);
-        $produto = $produtos[0];
-        
+
+        if (empty($produtos)) {
+            return redirect()->back()->with('error', 'Seu carrinho está vazio.');
+        }
+
+        $mensagens = [];
+
+        foreach ($produtos as $produto) {
+            $estoque = DB::table('produtos')->where('id_produto', $produto->id_produto)->value('qtd_estoque');
+
+            if ($estoque === null || $estoque == 0) {
+                DB::table('carrinho')->where([
+                    ['id_cliente', '=', $idCliente],
+                    ['id_produto', '=', $produto->id_produto]
+                ])->delete();
+
+                $mensagens[] = "O produto '{$produto->nome_produto}' está sem estoque e foi removido do carrinho.";
+            } elseif ($estoque < $produto->qtd_produto) {
+                DB::table('carrinho')->where([
+                    ['id_cliente', '=', $idCliente],
+                    ['id_produto', '=', $produto->id_produto]
+                ])->update(['qtd_produto' => $estoque]);
+
+                $mensagens[] = "A quantidade do produto '{$produto->nome_produto}' foi ajustada para {$estoque} devido à limitação de estoque.";
+            }
+        }
+
+        if (!empty($mensagens)) {
+            return redirect()->back()->with('error', implode(' ', $mensagens));
+        }
+
+        $produtosAtualizados = DB::select('CALL produtos_carrinho(?)', [$idCliente]);
+        $produto = $produtosAtualizados[0];
+
+        // Verificação de horário
         $agora = Carbon::now();
         $diaSemana = $agora->dayOfWeekIso;
         $horaAtual = $agora->format('H:i:s');
         $horarios = DB::select("SELECT * FROM grades_horario WHERE id_estab = ? AND dia_semana = ?", [$produto->id_estab, $diaSemana]);
 
         $estabAberto = false;
-
         foreach ($horarios as $horario) {
             if ($horaAtual >= $horario->inicio_expediente && $horaAtual <= $horario->termino_expediente) {
                 $estabAberto = true;
                 break;
             }
         }
-    
+
         if (!$estabAberto) {
             return redirect()->back()->with('error', 'O estabelecimento está fora do horário de atendimento.');
         }
 
         $enderecos = DB::select('CALL exibir_enderecos_cliente(?)', [$idCliente]);
-    
+
         return view('checkout_endereco', compact('enderecos'));
     }
 
@@ -399,8 +431,43 @@ class ClienteController extends Controller
         $idEndereco = session('id_endereco');
 
         $produtos = DB::select('CALL produtos_carrinho(?)', [$idCliente]);
-        $produto = $produtos[0];
-        
+
+        if (empty($produtos)) {
+            return redirect()->route('carrinho')->with('error', 'Seu carrinho está vazio.');
+        }
+
+        // Verificação de estoque
+        $mensagens = [];
+
+        foreach ($produtos as $produto) {
+            $estoque = DB::table('produtos')->where('id_produto', $produto->id_produto)->value('qtd_estoque');
+
+            if ($estoque === null || $estoque == 0) {
+                DB::table('carrinho')->where([
+                    ['id_cliente', '=', $idCliente],
+                    ['id_produto', '=', $produto->id_produto]
+                ])->delete();
+
+                $mensagens[] = "O produto '{$produto->nome_produto}' está sem estoque e foi removido do carrinho.";
+            } elseif ($estoque < $produto->qtd_produto) {
+                DB::table('carrinho')->where([
+                    ['id_cliente', '=', $idCliente],
+                    ['id_produto', '=', $produto->id_produto]
+                ])->update(['qtd_produto' => $estoque]);
+
+                $mensagens[] = "A quantidade do produto '{$produto->nome_produto}' foi ajustada para {$estoque} devido à limitação de estoque.";
+            }
+        }
+
+        if (!empty($mensagens)) {
+            return redirect()->route('carrinho')->with('error', implode(' ', $mensagens));
+        }
+
+        // Recarrega produtos para verificar o estabelecimento
+        $produtosAtualizados = DB::select('CALL produtos_carrinho(?)', [$idCliente]);
+        $produto = $produtosAtualizados[0];
+
+        // Verifica se o estabelecimento está aberto
         $agora = Carbon::now();
         $diaSemana = $agora->dayOfWeekIso;
         $horaAtual = $agora->format('H:i:s');
@@ -414,7 +481,7 @@ class ClienteController extends Controller
                 break;
             }
         }
-    
+
         if (!$estabAberto) {
             return redirect()->route('carrinho')->with('error', 'O estabelecimento está fora do horário de atendimento.');
         }
@@ -423,6 +490,7 @@ class ClienteController extends Controller
             return redirect()->back()->with('error', 'Endereço não selecionado.');
         }
 
+        // Tudo certo, realiza o pedido
         Pedido::realizarPedido($idCliente, $idEndereco, $idPagamento);
 
         return redirect()->route('pedidos_cliente')->with('success', 'Pedido realizado!');
