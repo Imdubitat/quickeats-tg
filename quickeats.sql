@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Tempo de geração: 18/04/2025 às 01:26
+-- Host: 127.0.0.1
+-- Tempo de geração: 23/04/2025 às 18:48
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -444,11 +444,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `produtos_carrinho` (IN `p_id_client
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `realizar_pedido` (IN `p_id_cliente` INT, IN `p_endereco` INT, IN `p_forma_pagamento` INT)   BEGIN
-    -- Declara variáveis
     DECLARE p_id_pedido INT;
     DECLARE p_valor_total DECIMAL(10,2);
 
-    -- Criar o pedido na tabela pedidos (id_status será sempre 1)
+    -- Inserir pedido
     INSERT INTO pedidos (
         id_cliente, endereco, forma_pagamento, status_entrega, data_compra, valor_total
     ) 
@@ -456,30 +455,33 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `realizar_pedido` (IN `p_id_cliente`
         p_id_cliente, p_endereco, p_forma_pagamento, 2, NOW(), 0
     );
 
-    -- Recupera o último ID gerado para o pedido
     SET p_id_pedido = LAST_INSERT_ID();
 
-    -- Inserir os itens do carrinho na tabela itens_pedidos
+    -- Inserir itens
     INSERT INTO itens_pedidos (id_pedido, id_produto, qtd_produto)
     SELECT p_id_pedido, id_produto, qtd_produto
     FROM carrinho
     WHERE id_cliente = p_id_cliente;
 
-    -- Calcular o valor total do pedido
+    -- Calcular total
     SELECT SUM(ip.qtd_produto * p.valor) 
     INTO p_valor_total
     FROM itens_pedidos ip
     JOIN produtos p ON ip.id_produto = p.id_produto
     WHERE ip.id_pedido = p_id_pedido;
 
-    -- Atualizar o valor total do pedido na tabela pedidos
     UPDATE pedidos
     SET valor_total = p_valor_total
     WHERE id_pedido = p_id_pedido;
 
-    -- Esvaziar o carrinho do cliente
-    DELETE FROM carrinho WHERE id_cliente = p_id_cliente;
+    -- Atualizar o estoque aqui mesmo!
+    UPDATE produtos p
+    JOIN itens_pedidos ip ON p.id_produto = ip.id_produto
+    SET p.qtd_estoque = p.qtd_estoque - ip.qtd_produto
+    WHERE ip.id_pedido = p_id_pedido;
 
+    -- Esvaziar carrinho
+    DELETE FROM carrinho WHERE id_cliente = p_id_cliente;
 END$$
 
 DELIMITER ;
@@ -545,7 +547,6 @@ CREATE TABLE `carrinho` (
 --
 
 INSERT INTO `carrinho` (`id_cliente`, `id_produto`, `qtd_produto`, `data_adicao`) VALUES
-(6, 1, 2, '2025-03-28 17:17:48'),
 (30, 11, 1, '2025-04-17 20:05:00');
 
 -- --------------------------------------------------------
@@ -1107,7 +1108,15 @@ INSERT INTO `itens_pedidos` (`id_pedido`, `id_produto`, `qtd_produto`) VALUES
 (27, 7, 1),
 (28, 9, 1),
 (29, 8, 2),
-(30, 12, 1);
+(30, 12, 1),
+(31, 1, 2),
+(32, 3, 3),
+(33, 3, 1),
+(33, 7, 10),
+(34, 7, 8),
+(34, 3, 1),
+(35, 3, 1),
+(35, 7, 8);
 
 -- --------------------------------------------------------
 
@@ -1256,19 +1265,33 @@ INSERT INTO `pedidos` (`id_pedido`, `id_cliente`, `valor_total`, `forma_pagament
 (25, 30, 12.90, 1, '2025-03-15 17:57:23', 2, 6),
 (26, 30, 7.50, 1, '2025-03-15 18:13:43', 2, 7),
 (27, 30, 15.90, 3, '2025-03-15 18:14:35', 5, 7),
-(28, 30, 40.90, 3, '2025-03-15 18:15:24', 6, 9),
+(28, 30, 40.90, 3, '2025-03-15 18:15:24', 7, 9),
 (29, 30, 15.00, 1, '2025-04-12 11:49:21', 2, 6),
-(30, 30, 10.00, 3, '2025-04-17 19:55:20', 6, 2);
+(30, 30, 10.00, 3, '2025-04-17 19:55:20', 6, 2),
+(31, 6, 47.80, 1, '2025-04-22 15:51:00', 2, 1),
+(32, 6, 89.70, 2, '2025-04-22 15:54:07', 2, 1),
+(33, 6, 188.90, 2, '2025-04-22 16:02:54', 2, 1),
+(34, 6, 157.10, 1, '2025-04-23 13:16:02', 8, 1),
+(35, 6, 157.10, 1, '2025-04-23 13:23:35', 7, 1);
 
 --
 -- Acionadores `pedidos`
 --
 DELIMITER $$
-CREATE TRIGGER `atualiza_estoque` AFTER UPDATE ON `pedidos` FOR EACH ROW BEGIN
-    IF OLD.status_entrega = 2 AND NEW.status_entrega = 3 THEN
+CREATE TRIGGER `devolve_estoque_pedido` AFTER UPDATE ON `pedidos` FOR EACH ROW BEGIN
+    -- Pedido recusado direto (de 2 para 8)
+    IF OLD.status_entrega = 2 AND NEW.status_entrega = 8 THEN
         UPDATE produtos p
         JOIN itens_pedidos ip ON p.id_produto = ip.id_produto
-        SET p.qtd_estoque = p.qtd_estoque - ip.qtd_produto
+        SET p.qtd_estoque = p.qtd_estoque + ip.qtd_produto
+        WHERE ip.id_pedido = NEW.id_pedido;
+    END IF;
+
+    -- Pedido cancelado após andamento (de 6 para 7)
+    IF OLD.status_entrega = 6 AND NEW.status_entrega = 7 THEN
+        UPDATE produtos p
+        JOIN itens_pedidos ip ON p.id_produto = ip.id_produto
+        SET p.qtd_estoque = p.qtd_estoque + ip.qtd_produto
         WHERE ip.id_pedido = NEW.id_pedido;
     END IF;
 END
@@ -1360,15 +1383,15 @@ CREATE TABLE `produtos` (
 --
 
 INSERT INTO `produtos` (`id_produto`, `nome`, `descricao`, `valor`, `id_categoria`, `id_estab`, `qtd_estoque`, `imagem_produto`) VALUES
-(1, 'Arroz Branco 5kg', NULL, 23.90, 1, 2, 24, NULL),
+(1, 'Arroz Branco 5kg', NULL, 23.90, 1, 2, 5, NULL),
 (2, 'Feijão Carioca 1kg', NULL, 8.50, 1, 2, 92, NULL),
 (3, 'Pizza Calabresa', 'prato típico da Itália, feito com linguiça calabresa, queijo mussarela, cebola, azeitonas e molho de tomate', 29.90, 2, 6, 9, '1743374133.png'),
 (4, 'Peixe Grelhado', NULL, 49.90, 2, 5, 12, NULL),
 (5, 'Sabonete Líquido 500ml', NULL, 12.90, 3, 4, 26, NULL),
 (6, 'Macarrão Instantâneo 80g', NULL, 3.99, 1, 3, 188, NULL),
-(7, 'BreadSticks', 'bastões de pão secos e crocantes, geralmente do tamanho de um lápis, que são assados no forno', 15.90, 2, 6, 30, '1743374383.jpg'),
+(7, 'BreadSticks', 'bastões de pão secos e crocantes, geralmente do tamanho de um lápis, que são assados no forno', 15.90, 2, 6, 9, '1743374383.jpg'),
 (8, 'Coca-Cola', NULL, 7.50, 4, 6, 200, NULL),
-(9, 'Pizza Morango com Chocolate', NULL, 40.90, 5, 6, 0, NULL),
+(9, 'Pizza Morango com Chocolate', NULL, 40.90, 5, 6, 1, NULL),
 (10, 'X-burguer mega', 'Pão de hamburguer, 150g de patinho, 50g de queijo prato, alface, tomate e cebola.', 50.00, 1, 12, 55, '1743269496_x-burguer-73517.jpg'),
 (11, 'Coca-cola lata 220ml', 'refrigerante de cola', 6.00, 4, 12, 150, '1744472036.jpg'),
 (12, 'Bala', 'Sabor pessego', 10.00, 5, 12, 15, '1744472241_9405729837Bala-de-Pessego-Momo-3Sabores-85g-01.jpg');
@@ -1720,7 +1743,7 @@ ALTER TABLE `historico_estabelecimentos`
 -- AUTO_INCREMENT de tabela `itens_pedidos`
 --
 ALTER TABLE `itens_pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT de tabela `logs_tokens`
@@ -1744,7 +1767,7 @@ ALTER TABLE `mensagens_estab`
 -- AUTO_INCREMENT de tabela `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT de tabela `planos`
