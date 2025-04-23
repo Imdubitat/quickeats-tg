@@ -7,12 +7,6 @@
 
 @section('content')
 <section class="container px-5 mx-auto" style="margin-top: 13rem;">
-    <div class="d-flex justify-content-start mb-4">
-        <button onclick="window.history.back()" class="btn btn-outline-primary d-flex align-items-center">
-            <i class="bi bi-arrow-left me-2"></i> Voltar
-        </button>
-    </div>
-
     <div class="mb-5 ps-3 border-bottom border-start border-danger border-3 rounded-start" style="border-left-width: 5px !important; padding-left: 10px;">
         <h3 class="fw-bold">Meu perfil</h3>
     </div>

@@ -9,12 +9,6 @@
 @section('content')
 <section class="px-5" style="margin-top: 13rem;">
     <div class="container mt-4">
-        <div class="d-flex justify-content-start mb-4">
-            <button onclick="window.history.back()" class="btn btn-outline-primary d-flex align-items-center">
-                <i class="bi bi-arrow-left me-2"></i> Voltar
-            </button>
-        </div>
-
         <h2 class="mb-4">Meus Produtos Favoritos</h2>
 
         @if(session('success'))
