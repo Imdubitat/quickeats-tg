@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Tempo de geração: 23/04/2025 às 18:48
+-- Host: localhost
+-- Tempo de geração: 11/05/2025 às 01:47
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -443,33 +443,36 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `produtos_carrinho` (IN `p_id_client
     WHERE ca.id_cliente = p_id_cliente;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `realizar_pedido` (IN `p_id_cliente` INT, IN `p_endereco` INT, IN `p_forma_pagamento` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `realizar_pedido` (IN `p_id_cliente` INT, IN `p_endereco` INT, IN `p_forma_pagamento` INT, IN `p_payment_intent_id` VARCHAR(255))   BEGIN
+    -- Declara variáveis
     DECLARE p_id_pedido INT;
     DECLARE p_valor_total DECIMAL(10,2);
 
-    -- Inserir pedido
+    -- Criar o pedido na tabela pedidos (id_status será sempre 1)
     INSERT INTO pedidos (
-        id_cliente, endereco, forma_pagamento, status_entrega, data_compra, valor_total
+        id_cliente, endereco, forma_pagamento, status_entrega, data_compra, valor_total, payment_intent_id
     ) 
     VALUES (
-        p_id_cliente, p_endereco, p_forma_pagamento, 2, NOW(), 0
+        p_id_cliente, p_endereco, p_forma_pagamento, 2, NOW(), 0, p_payment_intent_id
     );
 
+    -- Recupera o último ID gerado para o pedido
     SET p_id_pedido = LAST_INSERT_ID();
 
-    -- Inserir itens
+    -- Inserir os itens do carrinho na tabela itens_pedidos
     INSERT INTO itens_pedidos (id_pedido, id_produto, qtd_produto)
     SELECT p_id_pedido, id_produto, qtd_produto
     FROM carrinho
     WHERE id_cliente = p_id_cliente;
 
-    -- Calcular total
+    -- Calcular o valor total do pedido
     SELECT SUM(ip.qtd_produto * p.valor) 
     INTO p_valor_total
     FROM itens_pedidos ip
     JOIN produtos p ON ip.id_produto = p.id_produto
     WHERE ip.id_pedido = p_id_pedido;
 
+    -- Atualizar o valor total do pedido na tabela pedidos
     UPDATE pedidos
     SET valor_total = p_valor_total
     WHERE id_pedido = p_id_pedido;
@@ -482,6 +485,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `realizar_pedido` (IN `p_id_cliente`
 
     -- Esvaziar carrinho
     DELETE FROM carrinho WHERE id_cliente = p_id_cliente;
+
 END$$
 
 DELIMITER ;
@@ -547,7 +551,7 @@ CREATE TABLE `carrinho` (
 --
 
 INSERT INTO `carrinho` (`id_cliente`, `id_produto`, `qtd_produto`, `data_adicao`) VALUES
-(30, 11, 1, '2025-04-17 20:05:00');
+(6, 1, 2, '2025-03-28 17:17:48');
 
 -- --------------------------------------------------------
 
@@ -954,7 +958,8 @@ INSERT INTO `grades_horario` (`id_grade`, `id_estab`, `dia_semana`, `inicio_expe
 (41, 6, '6', '08:00:00', '21:00:00'),
 (42, 6, '7', '08:00:00', '21:00:00'),
 (55, 12, '6', '19:00:00', '23:00:00'),
-(56, 12, '4', '08:00:00', '20:00:00');
+(56, 12, '4', '08:00:00', '20:00:00'),
+(57, 12, '5', '08:00:00', '14:33:00');
 
 -- --------------------------------------------------------
 
@@ -1109,14 +1114,11 @@ INSERT INTO `itens_pedidos` (`id_pedido`, `id_produto`, `qtd_produto`) VALUES
 (28, 9, 1),
 (29, 8, 2),
 (30, 12, 1),
-(31, 1, 2),
-(32, 3, 3),
-(33, 3, 1),
-(33, 7, 10),
-(34, 7, 8),
-(34, 3, 1),
-(35, 3, 1),
-(35, 7, 8);
+(31, 3, 1),
+(32, 1, 1),
+(33, 1, 1),
+(34, 2, 1),
+(35, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -1231,48 +1233,49 @@ CREATE TABLE `pedidos` (
   `forma_pagamento` int(11) NOT NULL,
   `data_compra` datetime NOT NULL,
   `status_entrega` int(11) NOT NULL,
-  `endereco` int(11) NOT NULL
+  `endereco` int(11) NOT NULL,
+  `payment_intent_id` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `pedidos`
 --
 
-INSERT INTO `pedidos` (`id_pedido`, `id_cliente`, `valor_total`, `forma_pagamento`, `data_compra`, `status_entrega`, `endereco`) VALUES
-(1, 1, 79.80, 1, '2025-02-16 12:31:16', 7, 2),
-(2, 2, 23.90, 2, '2025-01-16 12:31:16', 5, 3),
-(3, 3, 149.70, 1, '2025-01-16 12:31:16', 4, 1),
-(4, 4, 42.50, 3, '2025-01-16 12:31:16', 5, 4),
-(5, 5, 51.60, 2, '2025-01-16 12:31:16', 2, 2),
-(6, 1, 7.98, 1, '2025-01-16 12:33:00', 5, 2),
-(7, 1, 50.00, 1, '2025-02-18 14:04:09', 6, 3),
-(8, 6, 151.50, 2, '2025-01-19 15:10:04', 5, 1),
-(9, 7, 32.40, 1, '2025-02-19 21:06:19', 6, 3),
-(10, 7, 71.70, 1, '2025-01-20 07:55:21', 6, 3),
-(11, 7, 501.90, 2, '2025-02-20 08:21:19', 6, 5),
-(12, 6, 160.20, 1, '2025-02-28 15:05:57', 5, 1),
-(13, 6, 190.80, 1, '2025-02-28 15:42:14', 5, 1),
-(14, 6, 94.80, 1, '2025-02-28 15:42:45', 5, 1),
-(15, 6, 81.80, 1, '2025-02-28 15:43:03', 5, 1),
-(16, 6, 88.30, 1, '2025-02-28 15:43:21', 7, 1),
-(17, 6, 86.70, 1, '2025-01-28 15:43:44', 7, 1),
-(18, 7, 23.90, 1, '2025-03-02 22:02:12', 5, 3),
-(19, 7, 15.90, 3, '2025-03-06 21:36:25', 5, 5),
-(20, 30, 23.90, 2, '2025-03-12 21:10:56', 5, 2),
-(21, 30, 8.50, 3, '2025-03-12 21:11:12', 5, 2),
-(22, 30, 32.40, 1, '2025-03-12 21:11:34', 5, 2),
-(23, 30, 49.90, 2, '2025-03-12 23:05:24', 5, 2),
-(25, 30, 12.90, 1, '2025-03-15 17:57:23', 2, 6),
-(26, 30, 7.50, 1, '2025-03-15 18:13:43', 2, 7),
-(27, 30, 15.90, 3, '2025-03-15 18:14:35', 5, 7),
-(28, 30, 40.90, 3, '2025-03-15 18:15:24', 7, 9),
-(29, 30, 15.00, 1, '2025-04-12 11:49:21', 2, 6),
-(30, 30, 10.00, 3, '2025-04-17 19:55:20', 6, 2),
-(31, 6, 47.80, 1, '2025-04-22 15:51:00', 2, 1),
-(32, 6, 89.70, 2, '2025-04-22 15:54:07', 2, 1),
-(33, 6, 188.90, 2, '2025-04-22 16:02:54', 2, 1),
-(34, 6, 157.10, 1, '2025-04-23 13:16:02', 8, 1),
-(35, 6, 157.10, 1, '2025-04-23 13:23:35', 7, 1);
+INSERT INTO `pedidos` (`id_pedido`, `id_cliente`, `valor_total`, `forma_pagamento`, `data_compra`, `status_entrega`, `endereco`, `payment_intent_id`) VALUES
+(1, 1, 79.80, 1, '2025-02-16 12:31:16', 7, 2, '0'),
+(2, 2, 23.90, 2, '2025-01-16 12:31:16', 5, 3, '0'),
+(3, 3, 149.70, 1, '2025-01-16 12:31:16', 4, 1, '0'),
+(4, 4, 42.50, 3, '2025-01-16 12:31:16', 5, 4, '0'),
+(5, 5, 51.60, 2, '2025-01-16 12:31:16', 2, 2, '0'),
+(6, 1, 7.98, 1, '2025-01-16 12:33:00', 5, 2, '0'),
+(7, 1, 50.00, 1, '2025-02-18 14:04:09', 6, 3, '0'),
+(8, 6, 151.50, 2, '2025-01-19 15:10:04', 5, 1, '0'),
+(9, 7, 32.40, 1, '2025-02-19 21:06:19', 6, 3, '0'),
+(10, 7, 71.70, 1, '2025-01-20 07:55:21', 6, 3, '0'),
+(11, 7, 501.90, 2, '2025-02-20 08:21:19', 6, 5, '0'),
+(12, 6, 160.20, 1, '2025-02-28 15:05:57', 5, 1, '0'),
+(13, 6, 190.80, 1, '2025-02-28 15:42:14', 5, 1, '0'),
+(14, 6, 94.80, 1, '2025-02-28 15:42:45', 5, 1, '0'),
+(15, 6, 81.80, 1, '2025-02-28 15:43:03', 5, 1, '0'),
+(16, 6, 88.30, 1, '2025-02-28 15:43:21', 7, 1, '0'),
+(17, 6, 86.70, 1, '2025-01-28 15:43:44', 7, 1, '0'),
+(18, 7, 23.90, 1, '2025-03-02 22:02:12', 5, 3, '0'),
+(19, 7, 15.90, 3, '2025-03-06 21:36:25', 5, 5, '0'),
+(20, 30, 23.90, 2, '2025-03-12 21:10:56', 5, 2, '0'),
+(21, 30, 8.50, 3, '2025-03-12 21:11:12', 5, 2, '0'),
+(22, 30, 32.40, 1, '2025-03-12 21:11:34', 5, 2, '0'),
+(23, 30, 49.90, 2, '2025-03-12 23:05:24', 5, 2, '0'),
+(25, 30, 12.90, 1, '2025-03-15 17:57:23', 2, 6, '0'),
+(26, 30, 7.50, 1, '2025-03-15 18:13:43', 2, 7, '0'),
+(27, 30, 15.90, 3, '2025-03-15 18:14:35', 5, 7, '0'),
+(28, 30, 40.90, 3, '2025-03-15 18:15:24', 6, 9, '0'),
+(29, 30, 15.00, 1, '2025-04-12 11:49:21', 2, 6, '0'),
+(30, 30, 10.00, 3, '2025-04-17 19:55:20', 6, 2, '0'),
+(31, 30, 29.90, 2, '2025-05-04 15:09:43', 2, 6, '0'),
+(32, 30, 23.90, 1, '2025-05-07 21:27:29', 2, 6, '0'),
+(33, 30, 23.90, 1, '2025-05-10 20:33:17', 2, 6, 'pi_3RNMsm4U9pgCLCrt05Zz6gpS'),
+(34, 30, 8.50, 1, '2025-05-10 20:36:39', 2, 2, 'pi_3RNMwN4U9pgCLCrt0I7uozOj'),
+(35, 30, 29.90, 1, '2025-05-10 20:46:08', 2, 10, 'pi_3RNN5Y4U9pgCLCrt0BqTF9tk');
 
 --
 -- Acionadores `pedidos`
@@ -1383,15 +1386,15 @@ CREATE TABLE `produtos` (
 --
 
 INSERT INTO `produtos` (`id_produto`, `nome`, `descricao`, `valor`, `id_categoria`, `id_estab`, `qtd_estoque`, `imagem_produto`) VALUES
-(1, 'Arroz Branco 5kg', NULL, 23.90, 1, 2, 5, NULL),
+(1, 'Arroz Branco 5kg', NULL, 23.90, 1, 2, 24, NULL),
 (2, 'Feijão Carioca 1kg', NULL, 8.50, 1, 2, 92, NULL),
 (3, 'Pizza Calabresa', 'prato típico da Itália, feito com linguiça calabresa, queijo mussarela, cebola, azeitonas e molho de tomate', 29.90, 2, 6, 9, '1743374133.png'),
 (4, 'Peixe Grelhado', NULL, 49.90, 2, 5, 12, NULL),
 (5, 'Sabonete Líquido 500ml', NULL, 12.90, 3, 4, 26, NULL),
 (6, 'Macarrão Instantâneo 80g', NULL, 3.99, 1, 3, 188, NULL),
-(7, 'BreadSticks', 'bastões de pão secos e crocantes, geralmente do tamanho de um lápis, que são assados no forno', 15.90, 2, 6, 9, '1743374383.jpg'),
+(7, 'BreadSticks', 'bastões de pão secos e crocantes, geralmente do tamanho de um lápis, que são assados no forno', 15.90, 2, 6, 30, '1743374383.jpg'),
 (8, 'Coca-Cola', NULL, 7.50, 4, 6, 200, NULL),
-(9, 'Pizza Morango com Chocolate', NULL, 40.90, 5, 6, 1, NULL),
+(9, 'Pizza Morango com Chocolate', NULL, 40.90, 5, 6, 0, NULL),
 (10, 'X-burguer mega', 'Pão de hamburguer, 150g de patinho, 50g de queijo prato, alface, tomate e cebola.', 50.00, 1, 12, 55, '1743269496_x-burguer-73517.jpg'),
 (11, 'Coca-cola lata 220ml', 'refrigerante de cola', 6.00, 4, 12, 150, '1744472036.jpg'),
 (12, 'Bala', 'Sabor pessego', 10.00, 5, 12, 15, '1744472241_9405729837Bala-de-Pessego-Momo-3Sabores-85g-01.jpg');
@@ -1725,7 +1728,7 @@ ALTER TABLE `formas_pagamentos`
 -- AUTO_INCREMENT de tabela `grades_horario`
 --
 ALTER TABLE `grades_horario`
-  MODIFY `id_grade` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `id_grade` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT de tabela `historico_clientes`

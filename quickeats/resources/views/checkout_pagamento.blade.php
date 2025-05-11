@@ -14,23 +14,73 @@
     </div>
 
     <div class="container">
-        <form action="{{ route('realizar_pedido') }}" method="POST">
+        <form id="payment-form">
             @csrf
-            @foreach($formasPagamento as $fp)
-            <div class="row border p-4 rounded-4 align-items-center mb-3">
-                <div class="col-md-1 d-flex align-items-center">
-                    <input class="form-check-input" type="radio" name="pagamento" id="pagamento{{ $fp->id_formapag }}" value="{{ $fp->id_formapag }}" required>
+            <div class="mb-4">
+                <label for="card-element" class="form-label">Informações do cartão</label>
+                <div id="card-element" class="form-control p-3">
+                    <!-- Stripe vai injetar o campo aqui -->
                 </div>
-                <label class="col-md-11" for="pagamento{{ $fp->id_formapag }}">
-                    <h5>{{ $fp->descricao }}</h6>
-                </label>
+                <div id="card-errors" class="text-danger mt-2"></div>
             </div>
-            @endforeach
 
             <div class="text-center mt-4">
-                <button type="submit" class="btn btn-custom4 w-50">Realizar pagamento</button>
+                <button id="submit" class="btn btn-custom4 w-50">Pagar agora</button>
             </div>
         </form>
     </div>
 </section>
+
+<!-- Stripe.js -->
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    const stripe = Stripe("{{ env('STRIPE_KEY') }}");
+    const elements = stripe.elements();
+    const card = elements.create("card");
+    card.mount("#card-element");
+
+    const form = document.getElementById('payment-form');
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const {error, paymentIntent} = await stripe.confirmCardPayment(
+            "{{ $clientSecret }}",
+            {
+                payment_method: {
+                    card: card
+                }
+            }
+        );
+
+        if (error) {
+            document.getElementById('card-errors').textContent = error.message;
+        } else if (paymentIntent.status === 'succeeded') {
+            // Envia os dados para o back-end via POST
+            fetch("{{ route('realizar_pedido') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({
+                    payment_intent_id: paymentIntent.id,
+                    forma_pagamento_id: 1, // exemplo
+                    valor_total: 99.90     // exemplo
+                })
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("Erro ao salvar pedido");
+                return response.json();
+            })
+            .then(data => {
+                // Redireciona para uma página de sucesso
+                window.location.href = "carrinho";
+            })
+            .catch(error => {
+                console.error(error);
+                document.getElementById('card-errors').textContent = "Erro ao finalizar o pedido.";
+            });
+        }
+    });
+</script>
 @endsection

@@ -26,17 +26,26 @@ class Pedido extends Model
         'data_compra',
         'status_entrega',
         'endereco',
+        'payment_intent_id',
     ];
 
     // Desativa os timestamps automáticos
     public $timestamps = false;
 
-    public static function realizarPedido($id_cliente, $id_endereco, $id_pagamento)
+    public static function realizarPedido($id_cliente, $id_endereco, $id_pagamento, $payment_intent_id)
     {
-        return DB::select('CALL realizar_pedido(?, ?, ?)', [
-            $id_cliente,
-            $id_endereco,
-            $id_pagamento,
-        ]);
+        try {
+            return DB::select('CALL realizar_pedido(?, ?, ?, ?)', [
+                $id_cliente,
+                $id_endereco,
+                $id_pagamento,
+                $payment_intent_id,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Erro na procedure realizar_pedido: ' . $e->getMessage());
+            \Log::error('Trace: ' . $e->getTraceAsString());
+            throw $e; // Repassa a exceção para a controller capturar
+        }
     }
+
 }

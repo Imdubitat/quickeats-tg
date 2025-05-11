@@ -5,6 +5,22 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\EstabelecimentoController;
 use App\Http\Controllers\AdministradorController;
+use Stripe\Stripe;
+use Stripe\PaymentIntent;
+
+Route::post('/criar-pagamento', function (Request $request) {
+    Stripe::setApiKey(config('services.stripe.secret'));
+
+    $intent = PaymentIntent::create([
+        'amount' => 5000, // valor em centavos (ex: R$50,00 = 5000)
+        'currency' => 'brl',
+        'payment_method_types' => ['card'],
+    ]);
+
+    return response()->json([
+        'clientSecret' => $intent->client_secret,
+    ]);
+});
 
 Route::get('/', function () {
     return view('welcome');

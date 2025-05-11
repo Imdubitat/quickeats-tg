@@ -26,6 +26,11 @@ use App\Rules\validaCPF;
 use App\Rules\validaCelular;
 use App\Rules\validaData;
 use App\Models\ProdutoFavorito;
+use Stripe\Stripe;
+use Stripe\PaymentIntent;
+use App\Models\FormaPagamento;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 class ClienteController extends Controller
 {
@@ -396,39 +401,7 @@ class ClienteController extends Controller
     public function exibirFormasPagamento(Request $request)
     {
         $idCliente = auth()->guard('cliente')->id();
-        $formasPagamento = DB::table('formas_pagamentos')->get();
-
         session(['id_endereco' => $request->endereco]);
-
-        $produtos = DB::select('CALL produtos_carrinho(?)', [$idCliente]);
-        $produto = $produtos[0];
-        
-        $agora = Carbon::now();
-        $diaSemana = $agora->dayOfWeekIso;
-        $horaAtual = $agora->format('H:i:s');
-        $horarios = DB::select("SELECT * FROM grades_horario WHERE id_estab = ? AND dia_semana = ?", [$produto->id_estab, $diaSemana]);
-
-        $estabAberto = false;
-
-        foreach ($horarios as $horario) {
-            if ($horaAtual >= $horario->inicio_expediente && $horaAtual <= $horario->termino_expediente) {
-                $estabAberto = true;
-                break;
-            }
-        }
-    
-        if (!$estabAberto) {
-            return redirect()->route('carrinho')->with('error', 'O estabelecimento está fora do horário de atendimento.');
-        }
-
-        return view('checkout_pagamento', compact('formasPagamento'));
-    }
-
-    public function realizarPedido(Request $request)
-    {
-        $idCliente = auth()->guard('cliente')->id();
-        $idPagamento = $request->input('pagamento');
-        $idEndereco = session('id_endereco');
 
         $produtos = DB::select('CALL produtos_carrinho(?)', [$idCliente]);
 
@@ -436,36 +409,7 @@ class ClienteController extends Controller
             return redirect()->route('carrinho')->with('error', 'Seu carrinho está vazio.');
         }
 
-        // Verificação de estoque
-        $mensagens = [];
-
-        foreach ($produtos as $produto) {
-            $estoque = DB::table('produtos')->where('id_produto', $produto->id_produto)->value('qtd_estoque');
-
-            if ($estoque === null || $estoque == 0) {
-                DB::table('carrinho')->where([
-                    ['id_cliente', '=', $idCliente],
-                    ['id_produto', '=', $produto->id_produto]
-                ])->delete();
-
-                $mensagens[] = "O produto '{$produto->nome_produto}' está sem estoque e foi removido do carrinho.";
-            } elseif ($estoque < $produto->qtd_produto) {
-                DB::table('carrinho')->where([
-                    ['id_cliente', '=', $idCliente],
-                    ['id_produto', '=', $produto->id_produto]
-                ])->update(['qtd_produto' => $estoque]);
-
-                $mensagens[] = "A quantidade do produto '{$produto->nome_produto}' foi ajustada para {$estoque} devido à limitação de estoque.";
-            }
-        }
-
-        if (!empty($mensagens)) {
-            return redirect()->route('carrinho')->with('error', implode(' ', $mensagens));
-        }
-
-        // Recarrega produtos para verificar o estabelecimento
-        $produtosAtualizados = DB::select('CALL produtos_carrinho(?)', [$idCliente]);
-        $produto = $produtosAtualizados[0];
+        $produto = $produtos[0];
 
         // Verifica se o estabelecimento está aberto
         $agora = Carbon::now();
@@ -473,27 +417,135 @@ class ClienteController extends Controller
         $horaAtual = $agora->format('H:i:s');
         $horarios = DB::select("SELECT * FROM grades_horario WHERE id_estab = ? AND dia_semana = ?", [$produto->id_estab, $diaSemana]);
 
-        $estabAberto = false;
-
-        foreach ($horarios as $horario) {
-            if ($horaAtual >= $horario->inicio_expediente && $horaAtual <= $horario->termino_expediente) {
-                $estabAberto = true;
-                break;
-            }
-        }
+        $estabAberto = collect($horarios)->contains(function ($horario) use ($horaAtual) {
+            return $horaAtual >= $horario->inicio_expediente && $horaAtual <= $horario->termino_expediente;
+        });
 
         if (!$estabAberto) {
             return redirect()->route('carrinho')->with('error', 'O estabelecimento está fora do horário de atendimento.');
         }
 
-        if (!$idEndereco) {
-            return redirect()->back()->with('error', 'Endereço não selecionado.');
+        // Recupera os itens do carrinho do cliente
+        $itensCarrinho = DB::table('carrinho')
+            ->where('id_cliente', $idCliente)
+            ->get();
+
+        // Inicializa o valor total
+        $valorTotal = 0;
+
+        foreach ($itensCarrinho as $item) {
+            // Busca o valor unitário do produto na tabela 'produtos'
+            $valorUnitario = DB::table('produtos')
+                ->where('id_produto', $item->id_produto)
+                ->value('valor'); // Supondo que 'valor_unitario' seja o campo que armazena o preço
+
+            // Se o produto tiver valor unitário válido, calcula o valor total
+            if ($valorUnitario) {
+                $valorTotal += $valorUnitario * $item->qtd_produto;
+            }
         }
 
-        // Tudo certo, realiza o pedido
-        Pedido::realizarPedido($idCliente, $idEndereco, $idPagamento);
+        // Converte o valor total para centavos (o Stripe trabalha com centavos)
+        $valorEmCentavos = $valorTotal * 100;
 
-        return redirect()->route('pedidos_cliente')->with('success', 'Pedido realizado!');
+        // Cria o PaymentIntent com o valor correto
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+        $paymentIntent = PaymentIntent::create([
+            'amount' => $valorEmCentavos, // O valor é o total calculado
+            'currency' => 'brl',
+        ]);
+
+        // Salva o ID do PaymentIntent na sessão
+        session([
+            'payment_intent_id' => $paymentIntent->id
+        ]);
+
+
+        $formasPagamento = FormaPagamento::all();
+
+        return view('checkout_pagamento', [
+            'clientSecret' => $paymentIntent->client_secret,
+            'formasPagamento' => $formasPagamento
+        ]);
+    }
+
+    public function realizarPedido(Request $request): JsonResponse
+    {
+        try {
+            $idCliente = auth()->guard('cliente')->id();
+            $idPagamento = $request->input('forma_pagamento_id'); // vindo do JS
+            $valorTotal = $request->input('valor_total'); // pode validar se quiser
+            $idEndereco = session('id_endereco');
+            $paymentIntentId = session('payment_intent_id');
+
+            $produtos = DB::select('CALL produtos_carrinho(?)', [$idCliente]);
+
+            if (empty($produtos)) {
+                return response()->json(['error' => 'Seu carrinho está vazio.'], 400);
+            }
+
+            // Verificação de estoque
+            $mensagens = [];
+
+            foreach ($produtos as $produto) {
+                $estoque = DB::table('produtos')->where('id_produto', $produto->id_produto)->value('qtd_estoque');
+
+                if ($estoque === null || $estoque == 0) {
+                    DB::table('carrinho')->where([
+                        ['id_cliente', '=', $idCliente],
+                        ['id_produto', '=', $produto->id_produto]
+                    ])->delete();
+
+                    $mensagens[] = "O produto '{$produto->nome_produto}' está sem estoque e foi removido do carrinho.";
+                } elseif ($estoque < $produto->qtd_produto) {
+                    DB::table('carrinho')->where([
+                        ['id_cliente', '=', $idCliente],
+                        ['id_produto', '=', $produto->id_produto]
+                    ])->update(['qtd_produto' => $estoque]);
+
+                    $mensagens[] = "A quantidade do produto '{$produto->nome_produto}' foi ajustada para {$estoque} devido à limitação de estoque.";
+                }
+            }
+
+            if (!empty($mensagens)) {
+                return response()->json(['error' => implode(' ', $mensagens)], 400);
+            }
+
+            // Recarrega produtos para verificar o estabelecimento
+            $produtosAtualizados = DB::select('CALL produtos_carrinho(?)', [$idCliente]);
+            $produto = $produtosAtualizados[0];
+
+            // Verifica se o estabelecimento está aberto
+            $agora = Carbon::now();
+            $diaSemana = $agora->dayOfWeekIso;
+            $horaAtual = $agora->format('H:i:s');
+            $horarios = DB::select("SELECT * FROM grades_horario WHERE id_estab = ? AND dia_semana = ?", [$produto->id_estab, $diaSemana]);
+
+            $estabAberto = false;
+
+            foreach ($horarios as $horario) {
+                if ($horaAtual >= $horario->inicio_expediente && $horaAtual <= $horario->termino_expediente) {
+                    $estabAberto = true;
+                    break;
+                }
+            }
+
+            if (!$estabAberto) {
+                return response()->json(['error' => 'O estabelecimento está fora do horário de atendimento.'], 400);
+            }
+
+            if (!$idEndereco) {
+                return response()->json(['error' => 'Endereço não selecionado.'], 400);
+            }            
+
+            // Realiza o pedido
+            Pedido::realizarPedido($idCliente, $idEndereco, $idPagamento, $paymentIntentId);
+
+            return response()->json(['success' => 'Pedido realizado com sucesso!']);
+        } catch (\Exception $e) {
+            Log::error('Erro ao realizar pedido: ' . $e->getMessage());
+            return response()->json(['error' => 'Erro interno. Tente novamente.'], 500);
+        }
     }
 
     public function avaliarPedido(Request $request, $id)
