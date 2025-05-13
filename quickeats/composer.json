@@ -10,7 +10,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "laravel/framework": "^11.31",
+        "laravel/framework": "^11.44.1",
+        "league/commonmark":"^2.7",
         "laravel/tinker": "^2.9",
         "stripe/stripe-php": "^17.2"
     },
