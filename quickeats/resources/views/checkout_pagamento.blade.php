@@ -36,8 +36,11 @@
 <script>
     const stripe = Stripe("{{ env('STRIPE_KEY') }}");
     const elements = stripe.elements();
-    const card = elements.create("card");
+    const card = elements.create("card", {
+        hidePostalCode: true // isso oculta o campo de CEP
+    });
     card.mount("#card-element");
+
 
     const form = document.getElementById('payment-form');
     form.addEventListener('submit', async (e) => {
