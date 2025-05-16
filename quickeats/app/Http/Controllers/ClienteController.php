@@ -402,6 +402,9 @@ class ClienteController extends Controller
     {
         $idCliente = auth()->guard('cliente')->id();
         session(['id_endereco' => $request->endereco]);
+        
+        $idEndereco = session('id_endereco');
+        $endereco = DB::selectOne("SELECT * FROM enderecos WHERE id_endereco = ?", [$idEndereco]);
 
         $produtos = DB::select('CALL produtos_carrinho(?)', [$idCliente]);
 
@@ -465,7 +468,9 @@ class ClienteController extends Controller
 
         return view('checkout_pagamento', [
             'clientSecret' => $paymentIntent->client_secret,
-            'formasPagamento' => $formasPagamento
+            'formasPagamento' => $formasPagamento,
+            'produtos' =>$produtos,
+            'endereco' => $endereco
         ]);
     }
 

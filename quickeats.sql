@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Tempo de geração: 11/05/2025 às 01:47
+-- Host: 127.0.0.1
+-- Tempo de geração: 16/05/2025 às 21:10
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -437,7 +437,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `produtos_carrinho` (IN `p_id_client
            p.nome AS nome_produto, 
            ca.qtd_produto AS qtd_produto, 
            p.valor AS valor,
-           p.id_estab
+           p.id_estab,
+           p.imagem_produto AS imagem
     FROM carrinho ca
     INNER JOIN produtos p ON p.id_produto = ca.id_produto
     WHERE ca.id_cliente = p_id_cliente;
@@ -545,13 +546,6 @@ CREATE TABLE `carrinho` (
   `qtd_produto` int(11) NOT NULL,
   `data_adicao` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Despejando dados para a tabela `carrinho`
---
-
-INSERT INTO `carrinho` (`id_cliente`, `id_produto`, `qtd_produto`, `data_adicao`) VALUES
-(6, 1, 2, '2025-03-28 17:17:48');
 
 -- --------------------------------------------------------
 
@@ -1118,7 +1112,12 @@ INSERT INTO `itens_pedidos` (`id_pedido`, `id_produto`, `qtd_produto`) VALUES
 (32, 1, 1),
 (33, 1, 1),
 (34, 2, 1),
-(35, 3, 1);
+(35, 3, 1),
+(36, 1, 1),
+(37, 8, 2),
+(37, 7, 1),
+(38, 3, 1),
+(38, 7, 1);
 
 -- --------------------------------------------------------
 
@@ -1275,7 +1274,10 @@ INSERT INTO `pedidos` (`id_pedido`, `id_cliente`, `valor_total`, `forma_pagament
 (32, 30, 23.90, 1, '2025-05-07 21:27:29', 2, 6, '0'),
 (33, 30, 23.90, 1, '2025-05-10 20:33:17', 2, 6, 'pi_3RNMsm4U9pgCLCrt05Zz6gpS'),
 (34, 30, 8.50, 1, '2025-05-10 20:36:39', 2, 2, 'pi_3RNMwN4U9pgCLCrt0I7uozOj'),
-(35, 30, 29.90, 1, '2025-05-10 20:46:08', 2, 10, 'pi_3RNN5Y4U9pgCLCrt0BqTF9tk');
+(35, 30, 29.90, 1, '2025-05-10 20:46:08', 2, 10, 'pi_3RNN5Y4U9pgCLCrt0BqTF9tk'),
+(36, 6, 23.90, 1, '2025-05-16 14:08:16', 2, 1, 'pi_3RPRjh4U9pgCLCrt1y1lWgQ1'),
+(37, 6, 30.90, 1, '2025-05-16 15:00:31', 2, 1, 'pi_3RPSXR4U9pgCLCrt06adjw0s'),
+(38, 6, 45.80, 1, '2025-05-16 15:57:50', 2, 1, 'pi_3RPTQt4U9pgCLCrt15L57ion');
 
 --
 -- Acionadores `pedidos`
@@ -1386,14 +1388,14 @@ CREATE TABLE `produtos` (
 --
 
 INSERT INTO `produtos` (`id_produto`, `nome`, `descricao`, `valor`, `id_categoria`, `id_estab`, `qtd_estoque`, `imagem_produto`) VALUES
-(1, 'Arroz Branco 5kg', NULL, 23.90, 1, 2, 24, NULL),
+(1, 'Arroz Branco 5kg', NULL, 23.90, 1, 2, 23, NULL),
 (2, 'Feijão Carioca 1kg', NULL, 8.50, 1, 2, 92, NULL),
-(3, 'Pizza Calabresa', 'prato típico da Itália, feito com linguiça calabresa, queijo mussarela, cebola, azeitonas e molho de tomate', 29.90, 2, 6, 9, '1743374133.png'),
+(3, 'Pizza Calabresa', 'prato típico da Itália, feito com linguiça calabresa, queijo mussarela, cebola, azeitonas e molho de tomate', 29.90, 2, 6, 8, '1743374133.png'),
 (4, 'Peixe Grelhado', NULL, 49.90, 2, 5, 12, NULL),
 (5, 'Sabonete Líquido 500ml', NULL, 12.90, 3, 4, 26, NULL),
 (6, 'Macarrão Instantâneo 80g', NULL, 3.99, 1, 3, 188, NULL),
-(7, 'BreadSticks', 'bastões de pão secos e crocantes, geralmente do tamanho de um lápis, que são assados no forno', 15.90, 2, 6, 30, '1743374383.jpg'),
-(8, 'Coca-Cola', NULL, 7.50, 4, 6, 200, NULL),
+(7, 'BreadSticks', 'bastões de pão secos e crocantes, geralmente do tamanho de um lápis, que são assados no forno', 15.90, 2, 6, 28, '1743374383.jpg'),
+(8, 'Coca-Cola', NULL, 7.50, 4, 6, 198, NULL),
 (9, 'Pizza Morango com Chocolate', NULL, 40.90, 5, 6, 0, NULL),
 (10, 'X-burguer mega', 'Pão de hamburguer, 150g de patinho, 50g de queijo prato, alface, tomate e cebola.', 50.00, 1, 12, 55, '1743269496_x-burguer-73517.jpg'),
 (11, 'Coca-cola lata 220ml', 'refrigerante de cola', 6.00, 4, 12, 150, '1744472036.jpg'),
@@ -1746,7 +1748,7 @@ ALTER TABLE `historico_estabelecimentos`
 -- AUTO_INCREMENT de tabela `itens_pedidos`
 --
 ALTER TABLE `itens_pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT de tabela `logs_tokens`
@@ -1770,7 +1772,7 @@ ALTER TABLE `mensagens_estab`
 -- AUTO_INCREMENT de tabela `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT de tabela `planos`
