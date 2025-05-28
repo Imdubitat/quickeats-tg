@@ -21,6 +21,11 @@
             {{ session('error') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+    @elseif(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     @endif
 
     <div class="container text-center mt-5">
@@ -105,9 +110,9 @@
                 <form action="{{ route('cadastro_cliente') }}" method="POST">
                     @csrf
                     <div class="form-floating mb-3">
-                        <input id="nomeSignup" name="nomeSignup" type="text" class="form-control rounded-4 @error('nomeSignup') is-invalid @enderror" placeholder="Nome"  value="{{ old('nome') }}" required>
+                        <input id="nomeSignup" name="nomeSignup" type="text" class="form-control rounded-4 @error('nomeSignup') is-invalid @enderror" placeholder="Nome"  value="{{ old('nomeSignup') }}" required pattern="^[A-Za-zÀ-ÿ\s]+$">
                         <label for="nomeSignup">Nome Completo</label>
-                        @error('nonomeSignupme')
+                        @error('nomeSignup')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -186,9 +191,12 @@
 
 
 <script src="https://unpkg.com/imask"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+
         // Mostrar modal de cadastro se houver erros de cadastro
         @if ($errors->has('nomeSignup') || $errors->has('dataNascSignup') || $errors->has('cpfSignup') || $errors->has('telefoneSignup') || $errors->has('emailSignup') || $errors->has('senhaSignup'))
             var signupModal = new bootstrap.Modal(document.getElementById('signupModal'));
@@ -200,9 +208,21 @@
             var signinModal = new bootstrap.Modal(document.getElementById('signinModal'));
             signinModal.show();
         @endif
-    });
 
-    document.addEventListener('DOMContentLoaded', function () {
+        // Máscara para telefone
+        IMask(document.getElementById('telefoneSignup'), {
+            mask: [
+                { mask: '(00) 0000-0000' },
+                { mask: '(00) 00000-0000' }
+            ]
+        });
+
+        // Máscara para CPF
+        IMask(document.getElementById('cpfSignup'), {
+            mask: '000.000.000-00'
+        });
+
+        // Flatpickr para data de nascimento
         const flatpickrInstance = flatpickr("#dataNascSignup", {
             dateFormat: "Y-m-d",
             altInput: true,
@@ -210,48 +230,25 @@
             maxDate: "today",
             locale: "pt",
             allowInput: true,
+            onReady: function (selectedDates, dateStr, instance) {
+                if (instance.altInput) {
+                    // Aplicar máscara no altInput
+                    const mask = IMask(instance.altInput, {
+                        mask: '00/00/0000'
+                    });
+
+                    instance.altInput.addEventListener('input', function () {
+                        const dateParts = this.value.split('/');
+                        if (dateParts.length === 3) {
+                            const [day, month, year] = dateParts.map(Number);
+                            if (day > 0 && month > 0 && year > 1000) {
+                                const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+                                flatpickrInstance.setDate(formattedDate, true);
+                            }
+                        }
+                    });
+                }
+            }
         });
-
-        if (flatpickrInstance.altInput) {
-            const mask = IMask(flatpickrInstance.altInput, {
-                mask: "00/00/0000"
-            });
-
-            // Atualiza a data do Flatpickr ao digitar
-            flatpickrInstance.altInput.addEventListener('input', function () {
-                const dateParts = this.value.split('/');
-                if (dateParts.length === 3) {
-                    const [day, month, year] = dateParts.map(Number);
-                    if (day > 0 && month > 0 && year > 1000) {
-                        const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-                        flatpickrInstance.setDate(formattedDate, true);
-                    }
-                }
-            });
-        }
     });
-
-    IMask(
-        document.getElementById('telefoneSignup'),
-        {
-            mask: [
-                {
-                    mask: '(00) 0000-0000',
-                },
-                {
-                    mask: '(00) 00000-0000',
-                }
-            ],
-        }
-    );
-
-    IMask(
-        document.getElementById('cpfSignup'),
-        {
-            mask: '000.000.000-00',
-        },
-    );
 </script>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>  

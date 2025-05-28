@@ -21,6 +21,11 @@
             {{ session('error') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+    @elseif(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     @endif
 
     <div class="container text-center mt-5">
@@ -188,24 +193,6 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input id="inicioExpedienteSignup" name="inicioExpedienteSignup" type="time" class="form-control rounded-4 @error('inicioExpedienteSignup') is-invalid @enderror" placeholder="Início Expediente" value="{{ old('inicioExpedienteSignup') }}" required>
-                                <label for="inicioExpedienteSignup">Início Expediente</label>
-                                @error('inicioExpedienteSignup')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input id="terminoExpedienteSignup" name="terminoExpedienteSignup" type="time" class="form-control rounded-4 @error('terminoExpedienteSignup') is-invalid @enderror" placeholder="Término Expediente" value="{{ old('terminoExpedienteSignup') }}" required>
-                                <label for="terminoExpedienteSignup">Término Expediente</label>
-                                @error('terminoExpedienteSignup')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating">
                                 <input id="emailSignup" name="emailSignup" type="email" class="form-control rounded-4 @error('emailSignup') is-invalid @enderror" placeholder="Email" value="{{ old('emailSignup') }}" required>
                                 <label for="emailSignup">Email</label>
                                 @error('emailSignup')
@@ -264,6 +251,7 @@
 
 
 <script src="https://unpkg.com/imask"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -281,52 +269,43 @@
             var signinModal = new bootstrap.Modal(document.getElementById('signinModal'));
             signinModal.show();
         @endif
-    });
 
-    document.addEventListener('DOMContentLoaded', function () {
-        // Configuração geral do horário
+        // Configuração do Flatpickr
         const configHorario = {
-            enableTime: true,       // Ativa a escolha de horário
-            noCalendar: true,       // Oculta o calendário (apenas horário)
-            dateFormat: "H:i",      // Formato 24h (HH:mm)
-            time_24hr: true,        // Usa formato 24h
-            minuteIncrement: 5,      // Incremento de minutos
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            time_24hr: true,
+            minuteIncrement: 5,
             allowInput: true
         };
 
-        // Aplica o Flatpickr nos campos
         flatpickr("#inicioExpedienteSignup", configHorario);
         flatpickr("#terminoExpedienteSignup", configHorario);
-    });
 
-    IMask(
-        document.getElementById('cnpjSignup'),
-        {
-            mask: '00.000.000/0000-00',
-        },
-    );
-
-    IMask(
-        document.getElementById('telefoneSignup'),
-        {
-            mask: [
-                {
-                    mask: '(00) 0000-0000',
-                },
-                {
-                    mask: '(00) 00000-0000',
-                }
-            ],
+        // Máscaras
+        const cnpjElement = document.getElementById('cnpjSignup');
+        if (cnpjElement) {
+            IMask(cnpjElement, { mask: '00.000.000/0000-00' });
         }
-    );
 
-    IMask(
-        document.getElementById('cepSignup'),
-        {
-            mask: '00000-000',
-        },
-    );
+        const telefoneElement = document.getElementById('telefoneSignup');
+        if (telefoneElement) {
+            IMask(telefoneElement, {
+                mask: [
+                    { mask: '(00) 0000-0000' },
+                    { mask: '(00) 00000-0000' }
+                ]
+            });
+        }
+
+        const cepElement = document.getElementById('cepSignup');
+        if (cepElement) {
+            IMask(cepElement, { mask: '00000-000' });
+        }
+    });
 </script>
+
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>  

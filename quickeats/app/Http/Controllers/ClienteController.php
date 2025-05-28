@@ -781,7 +781,7 @@ class ClienteController extends Controller
     {
         // Validação dos dados
         $request->validate([
-            'cep' => 'required|string|max:9', // 00000-000 formato
+            'cepCad' => 'required|string|max:9', // 00000-000 formato
             'estado' => 'required|string|max:2',
             'cidade' => 'required|string|max:100',
             'bairro' => 'required|string|max:100',
@@ -801,7 +801,7 @@ class ClienteController extends Controller
                 $request->bairro, 
                 $request->cidade, 
                 $request->estado, 
-                $request->cep
+                $request->cepCad
             );
 
             return redirect()->back()->with('success', 'Endereço cadastrado com sucesso!');

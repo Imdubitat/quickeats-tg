@@ -57,8 +57,6 @@ class Estabelecimento extends Authenticatable
             'cidade' => $data['cidadeSignup'],
             'estado' => $data['estadoSignup'],
             'cep' => $data['cepSignup'],
-            'inicio_expediente' => $data['inicioExpedienteSignup'],
-            'termino_expediente' => $data['terminoExpedienteSignup'],
             'email' => $data['emailSignup'],
             'senha' => Hash::make($data['senhaSignup']),
             'email_verificado' => 0,

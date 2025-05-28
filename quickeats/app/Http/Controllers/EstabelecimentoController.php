@@ -38,8 +38,6 @@ class EstabelecimentoController extends Controller
                 'cidadeSignup' => 'required|string|max:100',
                 'estadoSignup' => 'required|string|max:2',
                 'cepSignup' => 'required|string|max:9',
-                'inicioExpedienteSignup' => 'required|string|max:255',
-                'terminoExpedienteSignup' => 'required|string|max:255',
                 'emailSignup' => 'required|string|email|max:255|unique:estabelecimentos,email',
                 'senhaSignup' => 'required|string|min:8',
             ]);

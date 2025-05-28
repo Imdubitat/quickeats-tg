@@ -74,7 +74,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="numero{{ $endereco->id_endereco }}" class="form-label">Número</label>
-                        <input type="text" class="form-control" id="numero{{ $endereco->id_endereco }}" name="numero" value="{{ $endereco->numero }}" required>
+                        <input type="number" class="form-control" id="numero{{ $endereco->id_endereco }}" name="numero" value="{{ $endereco->numero }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="bairro{{ $endereco->id_endereco }}" class="form-label">Bairro</label>
@@ -90,7 +90,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="cep{{ $endereco->id_endereco }}" class="form-label">CEP</label>
-                        <input type="text" class="form-control" id="cep{{ $endereco->id_endereco }}" name="cep" value="{{ $endereco->cep }}" required>
+                        <input type="text" class="form-control cep-mask" id="cep{{ $endereco->id_endereco }}" name="cep" value="{{ $endereco->cep }}" required>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -116,8 +116,8 @@
                 <form action="{{ route('cadastrar_endereco') }}" method="POST">
                     @csrf
                     <div class="form-floating mb-3">
-                        <input id="cep" type="text" class="form-control rounded-4" placeholder="CEP" name="cep" required>
-                        <label for="cep">CEP</label>
+                        <input id="cepCad" type="text" class="form-control rounded-4" placeholder="CEP" name="cepCad" required>
+                        <label for="cepCad">CEP</label>
                     </div>
                     <div class="form-floating mb-3">
                         <select id="estado" class="form-select rounded-4" name="estado" required>
@@ -154,3 +154,19 @@
     </div>
 </div>
 @endsection
+
+<script src="https://unpkg.com/imask"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const cepElement = document.getElementById('cepCad');
+        if (cepElement) {
+            IMask(cepElement, { mask: '00000-000' });
+        }
+
+        const cepInputs = document.querySelectorAll('.cep-mask');
+        cepInputs.forEach(function(input) {
+            IMask(input, { mask: '00000-000' });
+        });
+    });
+</script>
