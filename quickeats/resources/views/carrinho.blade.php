@@ -41,7 +41,7 @@
                             <form action="{{ route('diminuir_carrinho') }}" method="POST" class="me-2">
                                 @csrf
                                 <input type="hidden" name="produto" value="{{ $p->id_produto }}">
-                                <button type="submit" class="btn btn-custom3">-</button>
+                                <button type="submit" class="btn btn-custom3" @if($p->qtd_produto <= 1) disabled @endif>-</button>
                             </form>
                             <h6 class="mb-0">{{ $p->qtd_produto }}</h6>
                             <form action="{{ route('aumentar_carrinho') }}" method="POST" class="ms-2">

@@ -64,8 +64,8 @@
                                                     {{ $p->estab }}</p>
                                                     
                                                     <label for="qtd_produto_{{ $p->id_produto }}" class="form-label">Quantidade:</label>
-                                                    <input type="text" name="qtd_produto" id="qtd_produto_{{ $p->id_produto }}"
-                                                    class="form-control-sm mb-2" value="1" min="1" style="width: 30px; height: 10px;" required><br>
+                                                    <input type="number" name="qtd_produto" id="qtd_produto_{{ $p->id_produto }}"
+                                                    class="form-control-sm mb-2" value="1" min="1" step="1" style="width: 50px;" required><br>
                                                     @if($p->estab_fechado)
                                                         <button type="button" class="btn btn-secondary" disabled>
                                                             Estabelecimento fechado
