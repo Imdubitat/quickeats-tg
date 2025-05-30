@@ -77,7 +77,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="valor" class="form-label">Valor</label>
-                            <input type="number" class="form-control" id="valor" name="valor" step="0.01" required>
+                            <input type="number" class="form-control" id="valor" name="valor" min="0.01"  step="0.01" required>
                         </div>
                         <div class="mb-3">
                             <label for="id_categoria" class="form-label">Categoria</label>
@@ -89,7 +89,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="qtd_estoque" class="form-label">Quantidade em Estoque</label>
-                            <input type="number" class="form-control" id="qtd_estoque" name="qtd_estoque" required>
+                            <input type="number" class="form-control" id="qtd_estoque" name="qtd_estoque" min="1" step="1" required>
                         </div>
                         <div class="mb-3">
                             <label for="imagem_produto" class="form-label">Imagem do Produto</label>
