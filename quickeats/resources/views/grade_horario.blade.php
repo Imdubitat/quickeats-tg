@@ -38,15 +38,19 @@
         </div>
     </form>
 
+    <div id="error-message" class="mt-2 text-danger mb-3" style="display:none;"></div>
+
     @if (session('success'))
-        <div class="mt-2 alert alert-success">
+        <div class="mt-2 alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
 
     @if (session('error'))
-        <div class="mt-2 alert alert-danger">
+        <div class="mt-2 alert alert-success alert-dismissible fade show" role="alert">|
             {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
 
@@ -129,18 +133,38 @@
 </section>
 
 <script>
-    // Quando o botão de exclusão é clicado, atualiza a ação do formulário no modal
-    document.querySelectorAll('.delete-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            const id = this.getAttribute('data-id');
-            const form = document.getElementById('delete-form');
-            form.action = "{{ route('deletarHorario', '') }}/" + id;
+    document.addEventListener('DOMContentLoaded', function () {
+        // Atualiza o action do formulário de exclusão
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                const form = document.getElementById('delete-form');
+                form.action = "{{ route('deletarHorario', '') }}/" + id;
+            });
+        });
+
+        // Foca no botão cancelar ao abrir o modal
+        var confirmModal = document.getElementById('confirmModal');
+        confirmModal.addEventListener('shown.bs.modal', function () {
+            confirmModal.querySelector('button[data-bs-dismiss="modal"]').focus();
+        });
+
+        // Validação do horário no envio do formulário
+        document.getElementById('form-grade-horario').addEventListener('submit', function(event) {
+            const inicio = document.getElementById('inicio_expediente').value;
+            const termino = document.getElementById('termino_expediente').value;
+            const errorMessage = document.getElementById('error-message');
+
+            if (termino <= inicio) {
+                event.preventDefault();
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = 'O horário de término deve ser posterior ao horário de início.';
+            } else {
+                errorMessage.style.display = 'none';
+                errorMessage.textContent = '';
+            }
         });
     });
-
-    // Garantir que o foco inicial seja no botão Cancelar ao abrir o modal
-    $('#confirmModal').on('shown.bs.modal', function () {
-        $(this).find('button[data-bs-dismiss="modal"]').focus();
-    });
 </script>
+
 @endsection
