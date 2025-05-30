@@ -8,12 +8,6 @@
 
 @section('content')
 <div class="px-5" style="margin-top: 13rem;">
-    <div class="d-flex justify-content-start mb-4">
-        <button onclick="window.history.back()" class="btn btn-outline-primary d-flex align-items-center">
-            <i class="bi bi-arrow-left me-2"></i> Voltar
-        </button>
-    </div>
-
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -86,7 +80,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="estado{{ $endereco->id_endereco }}" class="form-label">Estado</label>
-                        <input type="text" class="form-control" id="estado{{ $endereco->id_endereco }}" name="estado" value="{{ $endereco->estado }}" required>
+                        <input type="text" class="form-control" maxlength="2" id="estado{{ $endereco->id_endereco }}" name="estado" value="{{ $endereco->estado }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="cep{{ $endereco->id_endereco }}" class="form-label">CEP</label>
@@ -122,10 +116,33 @@
                     <div class="form-floating mb-3">
                         <select id="estado" class="form-select rounded-4" name="estado" required>
                             <option value="" selected>Selecione</option>
-                            <option value="SP">São Paulo</option>
-                            <option value="RJ">Rio de Janeiro</option>
+                            <option value="AC">Acre</option>
+                            <option value="AL">Alagoas</option>
+                            <option value="AP">Amapá</option>
+                            <option value="AM">Amazonas</option>
+                            <option value="BA">Bahia</option>
+                            <option value="CE">Ceará</option>
+                            <option value="DF">Distrito Federal</option>
+                            <option value="ES">Espirito Santo</option>
+                            <option value="GO">Goiás</option>
+                            <option value="MA">Maranhão</option>
+                            <option value="MS">Mato Grosso do Sul</option>
+                            <option value="MT">Mato Grosso</option>
                             <option value="MG">Minas Gerais</option>
-                            <!-- Adicione mais estados -->
+                            <option value="PA">Pará</option>
+                            <option value="PB">Paraíba</option>
+                            <option value="PR">Paraná</option>
+                            <option value="PE">Pernambuco</option>
+                            <option value="PI">Piauí</option>
+                            <option value="RJ">Rio de Janeiro</option>
+                            <option value="RN">Rio Grande do Norte</option>
+                            <option value="RS">Rio Grande do Sul</option>
+                            <option value="RO">Rondônia</option>
+                            <option value="RR">Roraima</option>
+                            <option value="SC">Santa Catarina</option>
+                            <option value="SP">São Paulo</option>
+                            <option value="SE">Sergipe</option>
+                            <option value="TO">Tocantins</option>
                         </select>
                         <label for="estado">Estado</label>
                     </div>
