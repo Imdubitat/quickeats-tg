@@ -21,6 +21,8 @@ use App\Models\ResetSenha;
 use App\Models\LogsToken;   
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Stripe\Stripe;
+use Stripe\Refund;
 
 class EstabelecimentoController extends Controller
 {
@@ -164,14 +166,34 @@ class EstabelecimentoController extends Controller
         // Verificar se o pedido existe
         $pedido = DB::select("SELECT * FROM pedidos WHERE id_pedido = ?", [$id]);
 
-        if (empty($pedido)) { // Como DB::select() retorna um array, verificamos se está vazio
+        if (empty($pedido)) {
             return redirect()->back()->with('error', 'Pedido não encontrado.');
         }
 
-        // Atualizar o status do pedido
-        DB::update("UPDATE pedidos SET status_entrega = ? WHERE id_pedido = ?", [$request->novo_status, $id]);
+        $pedido = $pedido[0]; // Pega o primeiro resultado do array
 
-        return redirect()->back()->with('success', 'Status atualizado com sucesso.');
+        try {
+            // Se o novo status for "6", realizar o reembolso
+            if ($request->novo_status == "7") {
+                // Configurar a chave da Stripe
+                Stripe::setApiKey(env('STRIPE_SECRET'));
+
+                // Realizar o reembolso
+                $reembolso = Refund::create([
+                    'payment_intent' => $pedido->payment_intent_id, // Supondo que tenha esse campo na tabela pedidos
+                    // 'amount' => opcional, se quiser reembolsar parcial
+                ]);
+            }
+
+            // Atualizar o status do pedido no banco
+            DB::update("UPDATE pedidos SET status_entrega = ? WHERE id_pedido = ?", [$request->novo_status, $id]);
+
+            return redirect()->back()->with('success', 'Status atualizado com sucesso.' . 
+                ($request->novo_status == "6" ? ' Reembolso realizado.' : '')
+            );
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Erro ao atualizar status: ' . $e->getMessage());
+        }
     }
 
     // Método para ir para a página de adm
