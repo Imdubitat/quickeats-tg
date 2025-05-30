@@ -131,7 +131,8 @@
             })
             .then(data => {
                 // Redireciona para uma página de sucesso
-                window.location.href = "carrinho";
+                sessionStorage.setItem('mensagem', 'Pedido realizado com sucesso!');
+                window.location.href = "carrinho"; 
             })
             .catch(error => {
                 console.error(error);
