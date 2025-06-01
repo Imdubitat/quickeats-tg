@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Tempo de geração: 16/05/2025 às 21:10
+-- Host: localhost
+-- Tempo de geração: 01/06/2025 às 18:29
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -752,10 +752,10 @@ CREATE TABLE `estabelecimentos` (
   `rg_titular` varchar(12) DEFAULT NULL,
   `cnae` varchar(9) DEFAULT NULL,
   `logradouro` varchar(100) NOT NULL,
-  `numero` int(11) NOT NULL,
+  `numero` varchar(50) NOT NULL,
   `bairro` varchar(100) NOT NULL,
   `cidade` varchar(100) NOT NULL,
-  `estado` varchar(2) NOT NULL,
+  `estado` enum('AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO') NOT NULL,
   `cep` varchar(9) NOT NULL,
   `email` varchar(255) NOT NULL,
   `senha` varchar(255) NOT NULL,
@@ -769,13 +769,13 @@ CREATE TABLE `estabelecimentos` (
 --
 
 INSERT INTO `estabelecimentos` (`id_estab`, `razao_social`, `nome_fantasia`, `cnpj`, `telefone`, `cpf_titular`, `rg_titular`, `cnae`, `logradouro`, `numero`, `bairro`, `cidade`, `estado`, `cep`, `email`, `senha`, `email_verificado`, `perfil_ativo`, `imagem_perfil`) VALUES
-(1, 'Restaurante Sabor Caseiro Ltda.', 'Novo Sabor Caseiro', '12.345.678/0001-90', '11999999999', '987.654.321-00', '98.765.432-1', '5611-2', 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', 'teste@email.com', 'NovaSenhaSegura2', 0, 0, NULL),
-(2, 'Mercado Bom Preço Ltda.', 'Bom Preço', '23.456.789/0001-91', '(21) 99876-5432', '987.654.321-00', '98.765.432-1', '4711-3', 'Avenida Brasil', 456, 'Zona Sul', 'Rio de Janeiro', 'RJ', '20000-000', 'contato@bompreco.com', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', 1, 1, NULL),
-(3, 'Restaurante Delícias do Campo Ltda.', 'Delícias do Campo', '34.567.890/0001-92', '(31) 91234-5678', '654.321.987-00', '65.432.198-7', '5611-2', 'Rua Tranquila', 789, 'Bairro Novo', 'Belo Horizonte', 'MG', '30000-000', 'contato@deliciasdocampo.com', 'senhaSegura789', 0, 0, NULL),
-(4, 'Supermercado Sempre Fresco Ltda.', 'Sempre Fresco', '45.678.901/0001-93', '(41) 98765-6789', '321.987.654-00', '32.198.765-4', '4711-3', 'Rua Principal', 321, 'Zona Norte', 'Curitiba', 'PR', '80000-000', 'contato@semprefresco.com', 'senhaSuper123', 0, 1, NULL),
-(5, 'Restaurante Sabores do Mar Ltda.', 'Sabores do Mar', '56.789.012/0001-94', '(51) 97654-3210', '210.987.654-00', '21.098.765-4', '5611-2', 'Rua da Praia', 654, 'Centro', 'Porto Alegre', 'RS', '90000-000', 'contato@saboresdomar.com', 'senhaSabores123', 0, 1, NULL),
-(6, NULL, 'Novo Sabor Caseiro', '12.345.678/0001-90', '1199999999', NULL, NULL, NULL, 'Rua Nova Esperança', 321, 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', 'contato@saborcaseiro.com', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', 1, 1, '1743374485_images.jpeg'),
-(12, NULL, 'teste', '15454655', '(19) 12345-6789', NULL, NULL, NULL, 'teste', 123, 'teste', 'teste', 'sp', '13183271', 'rodrigooliveirafeitosa@gmail.com', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', 1, 1, '1744472517_Restaurant-Logo-by-Koko-Store-580x386.jpg');
+(1, 'Restaurante Sabor Caseiro Ltda.', 'Novo Sabor Caseiro', '12.345.678/0001-90', '11999999999', '987.654.321-00', '98.765.432-1', '5611-2', 'Rua Nova Esperança', '321', 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', 'teste@email.com', 'NovaSenhaSegura2', 0, 0, NULL),
+(2, 'Mercado Bom Preço Ltda.', 'Bom Preço', '23.456.789/0001-91', '(21) 99876-5432', '987.654.321-00', '98.765.432-1', '4711-3', 'Avenida Brasil', '456', 'Zona Sul', 'Rio de Janeiro', 'RJ', '20000-000', 'contato@bompreco.com', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', 1, 1, NULL),
+(3, 'Restaurante Delícias do Campo Ltda.', 'Delícias do Campo', '34.567.890/0001-92', '(31) 91234-5678', '654.321.987-00', '65.432.198-7', '5611-2', 'Rua Tranquila', '789', 'Bairro Novo', 'Belo Horizonte', 'MG', '30000-000', 'contato@deliciasdocampo.com', 'senhaSegura789', 0, 0, NULL),
+(4, 'Supermercado Sempre Fresco Ltda.', 'Sempre Fresco', '45.678.901/0001-93', '(41) 98765-6789', '321.987.654-00', '32.198.765-4', '4711-3', 'Rua Principal', '321', 'Zona Norte', 'Curitiba', 'PR', '80000-000', 'contato@semprefresco.com', 'senhaSuper123', 0, 1, NULL),
+(5, 'Restaurante Sabores do Mar Ltda.', 'Sabores do Mar', '56.789.012/0001-94', '(51) 97654-3210', '210.987.654-00', '21.098.765-4', '5611-2', 'Rua da Praia', '654', 'Centro', 'Porto Alegre', 'RS', '90000-000', 'contato@saboresdomar.com', 'senhaSabores123', 0, 1, NULL),
+(6, NULL, 'Novo Sabor Caseiro', '12.345.678/0001-90', '1199999999', NULL, NULL, NULL, 'Rua Nova Esperança', '321', 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', 'contato@saborcaseiro.com', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', 1, 1, '1743374485_images.jpeg'),
+(12, NULL, 'teste', '15454655', '(19) 12345-6789', NULL, NULL, NULL, 'teste', '123', 'teste', 'teste', 'SP', '13183271', 'rodrigooliveirafeitosa@gmail.com', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', 1, 1, '1744472517_Restaurant-Logo-by-Koko-Store-580x386.jpg');
 
 --
 -- Acionadores `estabelecimentos`

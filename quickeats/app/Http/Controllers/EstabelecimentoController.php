@@ -32,16 +32,19 @@ class EstabelecimentoController extends Controller
             // Valida apenas os campos obrigatórios para o cadastro inicial
             $validatedData = $request->validate([
                 'nomeFantasiaSignup' => 'required|string|max:55',
-                'cnpjSignup' => ['required', new validaCNPJ],
+                'cnpjSignup' => ['required', new validaCNPJ, 'unique:estabelecimentos,cnpj'],
                 'telefoneSignup' => ['required', new validaCelular],
                 'logradouroSignup' => 'required|string|max:100',
-                'numeroSignup' => 'required|numeric',
+                'numeroSignup' => 'required|string',
                 'bairroSignup' => 'required|string|max:100',
                 'cidadeSignup' => 'required|string|max:100',
                 'estadoSignup' => 'required|string|max:2',
                 'cepSignup' => 'required|string|max:9',
                 'emailSignup' => 'required|string|email|max:255|unique:estabelecimentos,email',
                 'senhaSignup' => 'required|string|min:8',
+            ], [
+                'cnpjSignup.unique' => 'Este CNPJ já está cadastrado.',
+                'emailSignup.unique' => 'Este e-mail já está cadastrado.',
             ]);
 
             // Chama o método para criar o estabelecimento no model

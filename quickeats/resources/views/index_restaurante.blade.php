@@ -148,7 +148,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input id="numeroSignup" name="numeroSignup" type="number" class="form-control rounded-4 @error('numeroSignup') is-invalid @enderror" value="{{ old('numeroSignup') }}" placeholder="Número" required>
+                                <input id="numeroSignup" name="numeroSignup" type="text" class="form-control rounded-4 @error('numeroSignup') is-invalid @enderror" value="{{ old('numeroSignup') }}" placeholder="Número" required>
                                 <label for="numeroSignup">Número</label>
                                 @error('numeroSignup')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -175,10 +175,39 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input id="estadoSignup" name="estadoSignup" type="text" class="form-control rounded-4 @error('estadoSignup') is-invalid @enderror" placeholder="Estado" value="{{ old('estadoSignup') }}" required>
+                                <select id="estadoSignup" name="estadoSignup" class="form-select rounded-4 @error('estadoSignup') is-invalid @enderror" required aria-label="Selecione o estado">
+                                    <option value="" disabled selected>Selecione</option>
+                                    <option value="AC">Acre</option>
+                                    <option value="AL">Alagoas</option>
+                                    <option value="AP">Amapá</option>
+                                    <option value="AM">Amazonas</option>
+                                    <option value="BA">Bahia</option>
+                                    <option value="CE">Ceará</option>
+                                    <option value="DF">Distrito Federal</option>
+                                    <option value="ES">Espirito Santo</option>
+                                    <option value="GO">Goiás</option>
+                                    <option value="MA">Maranhão</option>
+                                    <option value="MS">Mato Grosso do Sul</option>
+                                    <option value="MT">Mato Grosso</option>
+                                    <option value="MG">Minas Gerais</option>
+                                    <option value="PA">Pará</option>
+                                    <option value="PB">Paraíba</option>
+                                    <option value="PR">Paraná</option>
+                                    <option value="PE">Pernambuco</option>
+                                    <option value="PI">Piauí</option>
+                                    <option value="RJ">Rio de Janeiro</option>
+                                    <option value="RN">Rio Grande do Norte</option>
+                                    <option value="RS">Rio Grande do Sul</option>
+                                    <option value="RO">Rondônia</option>
+                                    <option value="RR">Roraima</option>
+                                    <option value="SC">Santa Catarina</option>
+                                    <option value="SP">São Paulo</option>
+                                    <option value="SE">Sergipe</option>
+                                    <option value="TO">Tocantins</option>
+                                </select>
                                 <label for="estadoSignup">Estado</label>
                                 @error('estadoSignup')
-                                <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
