@@ -40,11 +40,14 @@ class ClienteController extends Controller
             // Valida os dados enviados pelo modal
             $validatedData = $request->validate([
                 'nomeSignup' => 'required|string|max:50',
-                'cpfSignup' => ['required', new validaCPF],
+                'cpfSignup' => ['required', new validaCPF, 'unique:clientes,cpf'],
                 'dataNascSignup' => ['required', new validaData],
                 'telefoneSignup' => ['required', new validaCelular],
                 'emailSignup' => 'required|string|email|max:100|unique:clientes,email',
                 'senhaSignup' => 'required|string|min:8',
+            ], [
+                'cpfSignup.unique' => 'Este CPF já está cadastrado.',
+                'emailSignup.unique' => 'Este e-mail já está cadastrado.',
             ]);
 
             // Chama o método para criar o cliente no model
