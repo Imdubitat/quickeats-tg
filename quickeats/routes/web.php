@@ -165,6 +165,8 @@ Route::middleware('auth:estabelecimento')->group(function () {
     // Página inicial do estabelecimento
     Route::get('/home-restaurante', [EstabelecimentoController::class, 'exibirPaginaInicial'])->name('home_restaurante');
 
+    Route::post('/salvar-dados-complementares', [EstabelecimentoController::class, 'salvarDadosComplementares'])->name('salvar_dados_complementares');
+
     // Página gerenciar pedidos estabelecimento
     Route::get('/pedidos-restaurante', [EstabelecimentoController::class, 'exibirPaginaPedidos'])->name('pedidos_restaurante');
 

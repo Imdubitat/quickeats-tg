@@ -89,4 +89,74 @@
         </div>
     </div>
 </section>
+
+<!-- Modal -->
+<div class="modal fade" id="dadosComplementaresModal" tabindex="-1" aria-labelledby="dadosComplementaresModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ route('salvar_dados_complementares') }}" method="POST">
+            @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dadosComplementaresModalLabel">Complete seus dados</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="razao_social" class="form-label">Razão Social</label>
+                        <input type="text" class="form-control" id="razao_social" name="razao_social" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="cpf_titular" class="form-label">CPF do Titular</label>
+                        <input type="text" class="form-control" id="cpf_titular" name="cpf_titular" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="rg_titular" class="form-label">RG do Titular</label>
+                        <input type="text" class="form-control" id="rg_titular" name="rg_titular" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="cnae" class="form-label">CNAE</label>
+                        <input type="text" class="form-control" id="cnae" name="cnae" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-custom4">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/imask"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        @if($exibirModal)
+            var dadosModal = new bootstrap.Modal(document.getElementById('dadosComplementaresModal'), {
+                backdrop: 'static',
+                keyboard: false
+            });
+            dadosModal.show();
+        @endif
+
+
+        // Máscaras
+        const cpfElement = document.getElementById('cpf_titular');
+        if (cpfElement) {
+            IMask(cpfElement, { mask: '000.000.000-00' });
+        }
+
+        const rgElement = document.getElementById('rg_titular');
+        if (rgElement) {
+            IMask(rgElement, { mask: '00.000.000-0' });
+        }
+
+        const cnaeElement = document.getElementById('cnae');
+        if (cnaeElement) {
+            IMask(cnaeElement, { mask: '0000-0/00' });
+        }
+    });
+</script>
+
 @endsection

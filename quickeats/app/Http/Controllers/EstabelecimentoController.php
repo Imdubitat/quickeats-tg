@@ -138,8 +138,33 @@ class EstabelecimentoController extends Controller
                             ->where('qtd_estoque', '<', 10)
                             ->count();
 
-        return view('home_restaurante', compact('totalPedidos', 'pendentes', 'preparacao', 'emRota', 'finalizados', 'estoqueBaixo', 'avaliacao'));
+        $exibirModal = empty($estabelecimento->razao_social) 
+                        || empty($estabelecimento->cpf_titular)
+                        || empty($estabelecimento->rg_titular)
+                        || empty($estabelecimento->cnae);
+
+        return view('home_restaurante', compact('totalPedidos', 'pendentes', 'preparacao', 'emRota', 'finalizados', 'estoqueBaixo', 'avaliacao', 'exibirModal'));
     }
+
+    public function salvarDadosComplementares(Request $request)
+    {
+        $request->validate([
+            'razao_social' => 'required|string|max:255',
+            'cpf_titular' => 'required|string|max:14',
+            'rg_titular' => 'required|string|max:20',
+            'cnae' => 'required|string|max:9',
+        ]);
+
+        $estabelecimento = Auth::guard('estabelecimento')->user();
+        $estabelecimento->razao_social = $request->razao_social;
+        $estabelecimento->cpf_titular = $request->cpf_titular;
+        $estabelecimento->rg_titular = $request->rg_titular;
+        $estabelecimento->cnae = $request->cnae;
+        $estabelecimento->save();
+
+        return redirect()->back()->with('success', 'Dados complementares salvos com sucesso!');
+    }
+
 
     public function exibirPaginaPedidos()
     {
