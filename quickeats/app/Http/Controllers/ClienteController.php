@@ -735,6 +735,8 @@ class ClienteController extends Controller
         // Valida a entrada
         $request->validate([
             'new_password' => 'required|min:8', 
+        ],[
+            'new_password.min' => 'Sua senha deve ter pelo menos 8 caracteres.'
         ]);
 
         // Obtém o email da sessão
