@@ -734,7 +734,7 @@ class ClienteController extends Controller
     {
         // Valida a entrada
         $request->validate([
-            'new_password' => 'required|min:8', // Adicione outras regras de validação conforme necessário
+            'new_password' => 'required|min:8', 
         ]);
 
         // Obtém o email da sessão

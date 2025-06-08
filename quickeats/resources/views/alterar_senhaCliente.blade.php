@@ -44,17 +44,34 @@
                         <div class="mb-3">
                             <label for="novaSenha" class="form-label">Nova senha</label>
                             <input type="password" id="novaSenha" name="novaSenha" class="form-control" required>
+                            <div id="senhaCurta" class="text-danger mt-1" style="display: none;">
+                                A senha precisa conter pelo menos 8 caracteres.
+                            </div>
+                            <div id="novaSenhaValida" class="text-success mt-1" style="display: none;">
+                                Sua nova senha é válida.
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="confirmarSenha" class="form-label">Confirmar senha</label>
                             <input type="password" id="confirmarSenha" name="confirmarSenha" class="form-control" required>
+                            <div id="mensagemMesmaSenha" class="text-danger mt-1" style="display: none;">
+                                As senhas não coincidem.
+                            </div>
+                            <div id="senhasIguais" class="text-success mt-1" style="display: none;">
+                                As senhas são iguais.
+                            </div>
                         </div>
+
                         <div class="text-center">
-                            <button type="submit" class="btn btn-custom3">Atualizar Dados</button>
+                            <button id="btnAtualizarDados" type="submit" class="btn btn-custom3">Atualizar Dados</button>
                         </div>
                     @endforeach
                 </form>
             </div>
         </div>
     </div>
+
+    <script src="{{ asset('js/mensagem_senhas.js') }}"></script>
+
 </section>
+@endsection
