@@ -102,7 +102,7 @@
                                 @elseif($p->status_entrega == 5)
                                     @if(!$p->avaliado)
                                         {{-- Formulário de avaliação --}}
-                                        <form action="{{ route('avaliar_pedido', $p->id_pedido) }}" method="POST">
+                                        <form action="{{ route('avaliar_pedido', $p->id_pedido) }}" method="POST" class="avaliar-form">
                                             @csrf
                                             <input type="hidden" name="nota" id="rating-value" value="">
                                             <div class="rating">
@@ -118,7 +118,9 @@
                                                 <label for="star1-{{ $p->id_pedido }}" title="1 estrela">&#9733;</label>
                                             </div>
                                             <button type="submit" class="btn btn-custom4 w-100">Avaliar pedido</button>
+                                            <div class="erro-avaliacao text-danger mt-2" style="font-size: 0.9rem;"></div>
                                         </form>
+
                                         @else
                                             <p class="fs-5 fw-bold text-center">Avaliação:</p>
                                             <div class="rating">
@@ -152,4 +154,21 @@
     @endforeach
 </div>
 </section>
+
+<script>
+    document.querySelectorAll('.avaliar-form').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            const notaSelecionada = form.querySelector('input[name="nota"]:checked');
+            const erroDiv = form.querySelector('.erro-avaliacao');
+            erroDiv.textContent = ''; // Limpa mensagens anteriores
+
+            if (!notaSelecionada) {
+                e.preventDefault();
+                erroDiv.textContent = 'Por favor, selecione uma nota antes de enviar a avaliação.';
+            }
+        });
+    });
+</script>
+
+
 @endsection
