@@ -48,6 +48,7 @@ class ClienteController extends Controller
             ], [
                 'cpfSignup.unique' => 'Este CPF já está cadastrado.',
                 'emailSignup.unique' => 'Este e-mail já está cadastrado.',
+                'senhaSignup.min' => 'A senha deve ter no mínimo 8 caracteres',
             ]);
 
             // Chama o método para criar o cliente no model

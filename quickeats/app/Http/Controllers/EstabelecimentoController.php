@@ -39,12 +39,14 @@ class EstabelecimentoController extends Controller
                 'bairroSignup' => 'required|string|max:100',
                 'cidadeSignup' => 'required|string|max:100',
                 'estadoSignup' => 'required|string|max:2',
-                'cepSignup' => 'required|string|max:9',
+                'cepSignup' => 'required|string|min:9|max:9',
                 'emailSignup' => 'required|string|email|max:255|unique:estabelecimentos,email',
                 'senhaSignup' => 'required|string|min:8',
             ], [
                 'cnpjSignup.unique' => 'Este CNPJ já está cadastrado.',
                 'emailSignup.unique' => 'Este e-mail já está cadastrado.',
+                'cepSignup.min' => 'CEP deve ter no mínimo 8 caracteres',
+                'senhaSignup.min' => 'A senha deve ter no mínimo 8 caracteres',
             ]);
 
             // Chama o método para criar o estabelecimento no model
