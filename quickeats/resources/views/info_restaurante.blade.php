@@ -34,7 +34,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="telefone" class="form-label">Telefone</label>
-                                    <input type="text" id="telefone" name="telefone" class="form-control @error('telefone') is-invalid @enderror" value="{{ $c->telefone }}">
+                                    <input type="text" id="telefone" name="telefone" class="form-control @error('telefone') is-invalid @enderror" value="{{ $c->telefone }}" required>
                                     @error('telefone')
                                         <div class="invalid-feedback">
                                             {{ $message }}
