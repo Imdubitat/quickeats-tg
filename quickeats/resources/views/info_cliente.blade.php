@@ -37,7 +37,12 @@
                         </div>
                         <div class="mb-3">
                             <label for="telefone" class="form-label">Telefone</label>
-                            <input type="text" id="telefone" name="telefone" class="form-control" value="{{ $c->telefone }}">
+                            <input type="text" id="telefone" name="telefone" class="form-control @error('telefone') is-invalid @enderror" value="{{ $c->telefone }}">
+                            @error('telefone')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                         <div class="text-center">
                             <button type="submit" class="btn btn-custom3">Atualizar Dados</button>

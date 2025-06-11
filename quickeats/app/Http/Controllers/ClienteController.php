@@ -648,6 +648,8 @@ class ClienteController extends Controller
         $request->validate([
             'telefone' => ['required', new validaCelular],
             'email' => ['required', 'email', 'max:100', 'unique:clientes,email,' . $idCliente . ',id_cliente',],
+        ], [
+            'telefone.required' => 'O telefone é um campo obrigatório.',
         ]);
 
         // Capturando os dados validados
