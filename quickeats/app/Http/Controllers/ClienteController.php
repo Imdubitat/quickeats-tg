@@ -786,15 +786,16 @@ class ClienteController extends Controller
     public function cadastrarEndereco(Request $request)
     {
         $request->validate([
-        'cepCad' => 'required|string|min:9|max:9',
-        'estado' => 'required|string|max:2',
-        'cidade' => 'required|string|max:100',
-        'bairro' => 'required|string|max:100',
-        'logradouro' => 'required|string|max:150',
-        'numero' => 'required', 'string',
-    ],[
-        'cepCad.min' => 'CEP deve ter no mínimo 8 caracteres',
-    ]);
+            'cepCad' => 'required|string|min:9|max:9',
+            'estado' => 'required|string|max:2',
+            'cidade' => 'required|string|max:100',
+            'bairro' => 'required|string|max:100',
+            'logradouro' => 'required|string|max:150',
+            'numeroCad' => 'required|string|regex:/^[a-zA-Z0-9]+$/',
+        ],[
+            'cepCad.min' => 'CEP deve ter no mínimo 8 caracteres',
+            'numeroCad.regex' => 'O número deve conter apenas letras e números, sem caracteres especiais ou números negativos.',
+        ]);
 
         // Captura o id do cliente da sessão
         $idCliente = Auth::guard('cliente')->id();
@@ -804,7 +805,7 @@ class ClienteController extends Controller
             Endereco::cadastrar(
                 $idCliente, 
                 $request->logradouro, 
-                $request->numero, 
+                $request->numeroCad, 
                 $request->bairro, 
                 $request->cidade, 
                 $request->estado, 
@@ -821,7 +822,6 @@ class ClienteController extends Controller
 
     public function editarEndereco(Request $request, $id)
     {
-
         // Validação dos dados
         $request->validate([
             'cep' => 'required|string|min:9|max:9', // 00000-000 formato
@@ -829,9 +829,10 @@ class ClienteController extends Controller
             'cidade' => 'required|string|max:100',
             'bairro' => 'required|string|max:100',
             'logradouro' => 'required|string|max:150',
-            'numero' => 'required|string',
+            'numero' => 'required|string|regex:/^[a-zA-Z0-9]+$/',
         ],[
             'cep.min' => 'CEP deve ter no mínimo 8 caracteres',
+            'numero.regex' => 'O número deve conter apenas letras e números, sem caracteres especiais ou números negativos.',
         ]);
         
         // Buscar o endereço pelo ID

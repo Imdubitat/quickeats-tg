@@ -68,7 +68,12 @@
                     </div>
                     <div class="mb-3">
                         <label for="numero{{ $endereco->id_endereco }}" class="form-label">Número</label>
-                        <input type="text" class="form-control" id="numero{{ $endereco->id_endereco }}" name="numero" value="{{ old('numero', $endereco->numero) }}" required>
+                        <input type="text" class="form-control rounded-4 @error('numero') is-invalid @enderror" id="numero{{ $endereco->id_endereco }}" name="numero" value="{{ old('numero', $endereco->numero) }}" required>
+                        @error('numero')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
                     <div class="mb-3">
                         <label for="bairro{{ $endereco->id_endereco }}" class="form-label">Bairro</label>
@@ -169,9 +174,9 @@
                         <label for="logradouro">Rua</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input id="numero" type="text" class="form-control rounded-4 @error('numero') is-invalid @enderror" placeholder="Número" name="numero" value="{{ old('numero') }}" required>
-                        <label for="numero">Número</label>
-                        @error('numero')
+                        <input id="numeroCad" type="text" class="form-control rounded-4 @error('numeroCad') is-invalid @enderror" placeholder="Número" name="numeroCad" value="{{ old('numeroCad') }}" required>
+                        <label for="numeroCad">Número</label>
+                        @error('numeroCad')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -192,12 +197,12 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         // Mostrar modal de cadastro se houver erros de cadastro
-        @if ($errors->has('cepCad') || $errors->has('numero'))
+        @if ($errors->has('cepCad') || $errors->has('numeroCad'))
             var enderecoModal = new bootstrap.Modal(document.getElementById('enderecoModal'));
             enderecoModal.show();
         @endif
 
-        @if ($errors->has('cep'))
+        @if ($errors->has('cep') || $errors->has('numero'))
             var editarEnderecoModal = new bootstrap.Modal(document.getElementById('editarEnderecoModal{{ $endereco->id_endereco }}'));
             editarEnderecoModal.show();
         @endif
