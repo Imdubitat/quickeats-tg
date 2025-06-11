@@ -64,27 +64,32 @@
                     @csrf
                     <div class="mb-3">
                         <label for="logradouro{{ $endereco->id_endereco }}" class="form-label">Logradouro</label>
-                        <input type="text" class="form-control" id="logradouro{{ $endereco->id_endereco }}" name="logradouro" value="{{ $endereco->logradouro }}" required>
+                        <input type="text" class="form-control" id="logradouro{{ $endereco->id_endereco }}" name="logradouro" value="{{ old('logradouro', $endereco->logradouro) }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="numero{{ $endereco->id_endereco }}" class="form-label">Número</label>
-                        <input type="number" class="form-control" id="numero{{ $endereco->id_endereco }}" name="numero" value="{{ $endereco->numero }}" required>
+                        <input type="text" class="form-control" id="numero{{ $endereco->id_endereco }}" name="numero" value="{{ old('numero', $endereco->numero) }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="bairro{{ $endereco->id_endereco }}" class="form-label">Bairro</label>
-                        <input type="text" class="form-control" id="bairro{{ $endereco->id_endereco }}" name="bairro" value="{{ $endereco->bairro }}" required>
+                        <input type="text" class="form-control" id="bairro{{ $endereco->id_endereco }}" name="bairro" value="{{ old('bairro', $endereco->bairro) }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="cidade{{ $endereco->id_endereco }}" class="form-label">Cidade</label>
-                        <input type="text" class="form-control" id="cidade{{ $endereco->id_endereco }}" name="cidade" value="{{ $endereco->cidade }}" required>
+                        <input type="text" class="form-control" id="cidade{{ $endereco->id_endereco }}" name="cidade" value="{{ old('cidade', $endereco->cidade) }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="estado{{ $endereco->id_endereco }}" class="form-label">Estado</label>
-                        <input type="text" class="form-control" maxlength="2" id="estado{{ $endereco->id_endereco }}" name="estado" value="{{ $endereco->estado }}" required>
+                        <input type="text" class="form-control" maxlength="2" id="estado{{ $endereco->id_endereco }}" name="estado" value="{{ old('estado', $endereco->estado) }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="cep{{ $endereco->id_endereco }}" class="form-label">CEP</label>
-                        <input type="text" class="form-control cep-mask" id="cep{{ $endereco->id_endereco }}" name="cep" value="{{ $endereco->cep }}" required>
+                        <input type="text" class="form-control cep-mask @error('cep') is-invalid @enderror" id="cep{{ $endereco->id_endereco }}" name="cep" value="{{ old('cep', $endereco->cep) }}" required>
+                        @error('cep')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -110,57 +115,67 @@
                 <form action="{{ route('cadastrar_endereco') }}" method="POST">
                     @csrf
                     <div class="form-floating mb-3">
-                        <input id="cepCad" type="text" class="form-control rounded-4" placeholder="CEP" name="cepCad" required>
+                        <input id="cepCad" type="text" class="form-control rounded-4 @error('cepCad') is-invalid @enderror" placeholder="CEP" name="cepCad" value="{{ old('cepCad') }}" required>
                         <label for="cepCad">CEP</label>
+                        @error('cepCad')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
                     <div class="form-floating mb-3">
-                        <select id="estado" class="form-select rounded-4" name="estado" required>
-                            <option value="" selected>Selecione</option>
-                            <option value="AC">Acre</option>
-                            <option value="AL">Alagoas</option>
-                            <option value="AP">Amapá</option>
-                            <option value="AM">Amazonas</option>
-                            <option value="BA">Bahia</option>
-                            <option value="CE">Ceará</option>
-                            <option value="DF">Distrito Federal</option>
-                            <option value="ES">Espirito Santo</option>
-                            <option value="GO">Goiás</option>
-                            <option value="MA">Maranhão</option>
-                            <option value="MS">Mato Grosso do Sul</option>
-                            <option value="MT">Mato Grosso</option>
-                            <option value="MG">Minas Gerais</option>
-                            <option value="PA">Pará</option>
-                            <option value="PB">Paraíba</option>
-                            <option value="PR">Paraná</option>
-                            <option value="PE">Pernambuco</option>
-                            <option value="PI">Piauí</option>
-                            <option value="RJ">Rio de Janeiro</option>
-                            <option value="RN">Rio Grande do Norte</option>
-                            <option value="RS">Rio Grande do Sul</option>
-                            <option value="RO">Rondônia</option>
-                            <option value="RR">Roraima</option>
-                            <option value="SC">Santa Catarina</option>
-                            <option value="SP">São Paulo</option>
-                            <option value="SE">Sergipe</option>
-                            <option value="TO">Tocantins</option>
+                        <select id="estado" class="form-select rounded-4" name="estado" value="{{ old('estado') }}" required>
+                            <option value="" disabled {{ old('estado') ? '' : 'selected' }}>Selecione</option>
+                            <option value="AC" {{ old('estado') == 'AC' ? 'selected' : '' }}>Acre</option>
+                            <option value="AL" {{ old('estado') == 'AL' ? 'selected' : '' }}>Alagoas</option>
+                            <option value="AP" {{ old('estado') == 'AP' ? 'selected' : '' }}>Amapá</option>
+                            <option value="AM" {{ old('estado') == 'AM' ? 'selected' : '' }}>Amazonas</option>
+                            <option value="BA" {{ old('estado') == 'BA' ? 'selected' : '' }}>Bahia</option>
+                            <option value="CE" {{ old('estado') == 'CE' ? 'selected' : '' }}>Ceará</option>
+                            <option value="DF" {{ old('estado') == 'DF' ? 'selected' : '' }}>Distrito Federal</option>
+                            <option value="ES" {{ old('estado') == 'ES' ? 'selected' : '' }}>Espírito Santo</option>
+                            <option value="GO" {{ old('estado') == 'GO' ? 'selected' : '' }}>Goiás</option>
+                            <option value="MA" {{ old('estado') == 'MA' ? 'selected' : '' }}>Maranhão</option>
+                            <option value="MT" {{ old('estado') == 'MT' ? 'selected' : '' }}>Mato Grosso</option>
+                            <option value="MS" {{ old('estado') == 'MS' ? 'selected' : '' }}>Mato Grosso do Sul</option>
+                            <option value="MG" {{ old('estado') == 'MG' ? 'selected' : '' }}>Minas Gerais</option>
+                            <option value="PA" {{ old('estado') == 'PA' ? 'selected' : '' }}>Pará</option>
+                            <option value="PB" {{ old('estado') == 'PB' ? 'selected' : '' }}>Paraíba</option>
+                            <option value="PR" {{ old('estado') == 'PR' ? 'selected' : '' }}>Paraná</option>
+                            <option value="PE" {{ old('estado') == 'PE' ? 'selected' : '' }}>Pernambuco</option>
+                            <option value="PI" {{ old('estado') == 'PI' ? 'selected' : '' }}>Piauí</option>
+                            <option value="RJ" {{ old('estado') == 'RJ' ? 'selected' : '' }}>Rio de Janeiro</option>
+                            <option value="RN" {{ old('estado') == 'RN' ? 'selected' : '' }}>Rio Grande do Norte</option>
+                            <option value="RS" {{ old('estado') == 'RS' ? 'selected' : '' }}>Rio Grande do Sul</option>
+                            <option value="RO" {{ old('estado') == 'RO' ? 'selected' : '' }}>Rondônia</option>
+                            <option value="RR" {{ old('estado') == 'RR' ? 'selected' : '' }}>Roraima</option>
+                            <option value="SC" {{ old('estado') == 'SC' ? 'selected' : '' }}>Santa Catarina</option>
+                            <option value="SP" {{ old('estado') == 'SP' ? 'selected' : '' }}>São Paulo</option>
+                            <option value="SE" {{ old('estado') == 'SE' ? 'selected' : '' }}>Sergipe</option>
+                            <option value="TO" {{ old('estado') == 'TO' ? 'selected' : '' }}>Tocantins</option>
                         </select>
                         <label for="estado">Estado</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input id="cidade" type="text" class="form-control rounded-4" placeholder="Cidade" name="cidade" required>
+                        <input id="cidade" type="text" class="form-control rounded-4" placeholder="Cidade" name="cidade" value="{{ old('cidade') }}" required>
                         <label for="cidade">Cidade</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input id="bairro" type="text" class="form-control rounded-4" placeholder="Bairro" name="bairro" required>
+                        <input id="bairro" type="text" class="form-control rounded-4" placeholder="Bairro" name="bairro" value="{{ old('bairro') }}" required>
                         <label for="bairro">Bairro</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input id="logradouro" type="text" class="form-control rounded-4" placeholder="Rua" name="logradouro" required>
+                        <input id="logradouro" type="text" class="form-control rounded-4" placeholder="Rua" name="logradouro" value="{{ old('logradouro') }}" required>
                         <label for="logradouro">Rua</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input id="numero" type="number" class="form-control rounded-4" placeholder="Número" name="numero" required>
+                        <input id="numero" type="text" class="form-control rounded-4 @error('numero') is-invalid @enderror" placeholder="Número" name="numero" value="{{ old('numero') }}" required>
                         <label for="numero">Número</label>
+                        @error('numero')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
                     <div class="d-flex justify-content-center">
                         <button type="submit" class="btn btn-custom4 w-50">Cadastrar</button>
@@ -176,6 +191,17 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Mostrar modal de cadastro se houver erros de cadastro
+        @if ($errors->has('cepCad') || $errors->has('numero'))
+            var enderecoModal = new bootstrap.Modal(document.getElementById('enderecoModal'));
+            enderecoModal.show();
+        @endif
+
+        @if ($errors->has('cep'))
+            var editarEnderecoModal = new bootstrap.Modal(document.getElementById('editarEnderecoModal{{ $endereco->id_endereco }}'));
+            editarEnderecoModal.show();
+        @endif
+
         const cepElement = document.getElementById('cepCad');
         if (cepElement) {
             IMask(cepElement, { mask: '00000-000' });

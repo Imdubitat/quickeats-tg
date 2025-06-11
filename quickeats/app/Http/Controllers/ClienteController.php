@@ -784,15 +784,16 @@ class ClienteController extends Controller
 
     public function cadastrarEndereco(Request $request)
     {
-        // Validação dos dados
         $request->validate([
-            'cepCad' => 'required|string|max:9', // 00000-000 formato
-            'estado' => 'required|string|max:2',
-            'cidade' => 'required|string|max:100',
-            'bairro' => 'required|string|max:100',
-            'logradouro' => 'required|string|max:150',
-            'numero' => 'required|numeric'
-        ]);
+        'cepCad' => 'required|string|min:9|max:9',
+        'estado' => 'required|string|max:2',
+        'cidade' => 'required|string|max:100',
+        'bairro' => 'required|string|max:100',
+        'logradouro' => 'required|string|max:150',
+        'numero' => 'required', 'string',
+    ],[
+        'cepCad.min' => 'CEP deve ter no mínimo 8 caracteres',
+    ]);
 
         // Captura o id do cliente da sessão
         $idCliente = Auth::guard('cliente')->id();
@@ -810,6 +811,8 @@ class ClienteController extends Controller
             );
 
             return redirect()->back()->with('success', 'Endereço cadastrado com sucesso!');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Erro ao cadastrar endereço: ' . $e->getMessage());
         }
@@ -817,6 +820,19 @@ class ClienteController extends Controller
 
     public function editarEndereco(Request $request, $id)
     {
+
+        // Validação dos dados
+        $request->validate([
+            'cep' => 'required|string|min:9|max:9', // 00000-000 formato
+            'estado' => 'required|string|max:2',
+            'cidade' => 'required|string|max:100',
+            'bairro' => 'required|string|max:100',
+            'logradouro' => 'required|string|max:150',
+            'numero' => 'required|string',
+        ],[
+            'cep.min' => 'CEP deve ter no mínimo 8 caracteres',
+        ]);
+        
         // Buscar o endereço pelo ID
         $endereco = DB::select("SELECT * FROM enderecos WHERE id_endereco = ?", [$id]);
 
@@ -824,18 +840,24 @@ class ClienteController extends Controller
             return redirect()->back()->with('error', 'Endereço não encontrado.');
         }
 
-        // Atualizar os dados do endereço
-        DB::update("UPDATE enderecos SET logradouro = ?, numero = ?, bairro = ?, cidade = ?, estado = ?, cep = ? WHERE id_endereco = ?", [
-            $request->logradouro,
-            $request->numero,
-            $request->bairro,
-            $request->cidade,
-            $request->estado,
-            $request->cep,
-            $id
-        ]);
+        try {
+            // Atualizar os dados do endereço
+            DB::update("UPDATE enderecos SET logradouro = ?, numero = ?, bairro = ?, cidade = ?, estado = ?, cep = ? WHERE id_endereco = ?", [
+                $request->logradouro,
+                $request->numero,
+                $request->bairro,
+                $request->cidade,
+                $request->estado,
+                $request->cep,
+                $id
+            ]);
 
-        return redirect()->back()->with('success', 'Endereço atualizado com sucesso!');
+            return redirect()->back()->with('success', 'Endereço atualizado com sucesso!');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Erro ao editar endereço: ' . $e->getMessage());
+        }
     }
 
     public function excluirEndereco(Request $request, $id)
