@@ -706,6 +706,8 @@ class EstabelecimentoController extends Controller
         // Validação da imagem
         $request->validate([
             'imagem_perfil' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ], [
+            'imagem_perfil.image' => 'Os formatos aceitos são .jpeg, .png e .jpg'
         ]);
 
         // Verifica se o arquivo foi enviado
