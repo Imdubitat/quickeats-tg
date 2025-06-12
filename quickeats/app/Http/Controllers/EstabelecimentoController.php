@@ -35,7 +35,7 @@ class EstabelecimentoController extends Controller
                 'cnpjSignup' => ['required', new validaCNPJ, 'unique:estabelecimentos,cnpj'],
                 'telefoneSignup' => ['required', new validaCelular],
                 'logradouroSignup' => 'required|string|max:100',
-                'numeroSignup' => 'required|string',
+                'numeroSignup' => 'required|string|regex:/^[a-zA-Z0-9]+$/',
                 'bairroSignup' => 'required|string|max:100',
                 'cidadeSignup' => 'required|string|max:100',
                 'estadoSignup' => 'required|string|max:2',
@@ -47,6 +47,7 @@ class EstabelecimentoController extends Controller
                 'emailSignup.unique' => 'Este e-mail já está cadastrado.',
                 'cepSignup.min' => 'CEP deve ter no mínimo 8 caracteres',
                 'senhaSignup.min' => 'A senha deve ter no mínimo 8 caracteres',
+                'numeroSignup.regex' => 'O número deve conter apenas letras e números, sem caracteres especiais ou números negativos.',
             ]);
 
             // Chama o método para criar o estabelecimento no model

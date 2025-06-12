@@ -175,35 +175,35 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <select id="estadoSignup" name="estadoSignup" class="form-select rounded-4 @error('estadoSignup') is-invalid @enderror" required aria-label="Selecione o estado">
-                                    <option value="" disabled selected>Selecione</option>
-                                    <option value="AC">Acre</option>
-                                    <option value="AL">Alagoas</option>
-                                    <option value="AP">Amapá</option>
-                                    <option value="AM">Amazonas</option>
-                                    <option value="BA">Bahia</option>
-                                    <option value="CE">Ceará</option>
-                                    <option value="DF">Distrito Federal</option>
-                                    <option value="ES">Espirito Santo</option>
-                                    <option value="GO">Goiás</option>
-                                    <option value="MA">Maranhão</option>
-                                    <option value="MS">Mato Grosso do Sul</option>
-                                    <option value="MT">Mato Grosso</option>
-                                    <option value="MG">Minas Gerais</option>
-                                    <option value="PA">Pará</option>
-                                    <option value="PB">Paraíba</option>
-                                    <option value="PR">Paraná</option>
-                                    <option value="PE">Pernambuco</option>
-                                    <option value="PI">Piauí</option>
-                                    <option value="RJ">Rio de Janeiro</option>
-                                    <option value="RN">Rio Grande do Norte</option>
-                                    <option value="RS">Rio Grande do Sul</option>
-                                    <option value="RO">Rondônia</option>
-                                    <option value="RR">Roraima</option>
-                                    <option value="SC">Santa Catarina</option>
-                                    <option value="SP">São Paulo</option>
-                                    <option value="SE">Sergipe</option>
-                                    <option value="TO">Tocantins</option>
+                                <select id="estadoSignup" name="estadoSignup" value="{{ old('estadoSignup') }}" class="form-select rounded-4 @error('estadoSignup') is-invalid @enderror" required aria-label="Selecione o estado">
+                                    <option value="" disabled {{ old('estadoSignup') ? '' : 'selected' }}>Selecione</option>
+                                    <option value="AC" {{ old('estadoSignup') == 'AC' ? 'selected' : '' }}>Acre</option>
+                                    <option value="AL" {{ old('estadoSignup') == 'AL' ? 'selected' : '' }}>Alagoas</option>
+                                    <option value="AP" {{ old('estadoSignup') == 'AP' ? 'selected' : '' }}>Amapá</option>
+                                    <option value="AM" {{ old('estadoSignup') == 'AM' ? 'selected' : '' }}>Amazonas</option>
+                                    <option value="BA" {{ old('estadoSignup') == 'BA' ? 'selected' : '' }}>Bahia</option>
+                                    <option value="CE" {{ old('estadoSignup') == 'CE' ? 'selected' : '' }}>Ceará</option>
+                                    <option value="DF" {{ old('estadoSignup') == 'DF' ? 'selected' : '' }}>Distrito Federal</option>
+                                    <option value="ES" {{ old('estadoSignup') == 'ES' ? 'selected' : '' }}>Espírito Santo</option>
+                                    <option value="GO" {{ old('estadoSignup') == 'GO' ? 'selected' : '' }}>Goiás</option>
+                                    <option value="MA" {{ old('estadoSignup') == 'MA' ? 'selected' : '' }}>Maranhão</option>
+                                    <option value="MT" {{ old('estadoSignup') == 'MT' ? 'selected' : '' }}>Mato Grosso</option>
+                                    <option value="MS" {{ old('estadoSignup') == 'MS' ? 'selected' : '' }}>Mato Grosso do Sul</option>
+                                    <option value="MG" {{ old('estadoSignup') == 'MG' ? 'selected' : '' }}>Minas Gerais</option>
+                                    <option value="PA" {{ old('estadoSignup') == 'PA' ? 'selected' : '' }}>Pará</option>
+                                    <option value="PB" {{ old('estadoSignup') == 'PB' ? 'selected' : '' }}>Paraíba</option>
+                                    <option value="PR" {{ old('estadoSignup') == 'PR' ? 'selected' : '' }}>Paraná</option>
+                                    <option value="PE" {{ old('estadoSignup') == 'PE' ? 'selected' : '' }}>Pernambuco</option>
+                                    <option value="PI" {{ old('estadoSignup') == 'PI' ? 'selected' : '' }}>Piauí</option>
+                                    <option value="RJ" {{ old('estadoSignup') == 'RJ' ? 'selected' : '' }}>Rio de Janeiro</option>
+                                    <option value="RN" {{ old('estadoSignup') == 'RN' ? 'selected' : '' }}>Rio Grande do Norte</option>
+                                    <option value="RS" {{ old('estadoSignup') == 'RS' ? 'selected' : '' }}>Rio Grande do Sul</option>
+                                    <option value="RO" {{ old('estadoSignup') == 'RO' ? 'selected' : '' }}>Rondônia</option>
+                                    <option value="RR" {{ old('estadoSignup') == 'RR' ? 'selected' : '' }}>Roraima</option>
+                                    <option value="SC" {{ old('estadoSignup') == 'SC' ? 'selected' : '' }}>Santa Catarina</option>
+                                    <option value="SP" {{ old('estadoSignup') == 'SP' ? 'selected' : '' }}>São Paulo</option>
+                                    <option value="SE" {{ old('estadoSignup') == 'SE' ? 'selected' : '' }}>Sergipe</option>
+                                    <option value="TO" {{ old('estadoSignup') == 'TO' ? 'selected' : '' }}>Tocantins</option>
                                 </select>
                                 <label for="estadoSignup">Estado</label>
                                 @error('estadoSignup')
