@@ -104,7 +104,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `calcular_media_avaliacoes` (IN `p_i
         FROM itens_pedidos ip
         INNER JOIN produtos p ON p.id_produto = ip.id_produto
         WHERE ip.id_pedido = pe.id_pedido
-        AND p.id_estab = 2
+        AND p.id_estab = p_id_estab
     );
 END$$
 
