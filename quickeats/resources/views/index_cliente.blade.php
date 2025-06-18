@@ -98,6 +98,16 @@
     </div>
 </div>
 
+<!-- Script para abrir o modal automaticamente -->
+@if(request()->has('abrir_modal') || session('abrir_modal'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var myModal = new bootstrap.Modal(document.getElementById('signinModal'));
+        myModal.show();
+    });
+</script>
+@endif
+
 <!-- Modal de cadastro -->
 <div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document" style="max-width: 350px;">

@@ -20,7 +20,7 @@
             <div class="py-5 text-center">
                 <h1 class="fw-bold" style="color: #1E3A8A">Encontre sua próxima refeição com rapidez e facilidade</h1>
                 <p class="opacity-75 fs-5">Descubra restaurantes incríveis perto de você e peça sua comida favorita em poucos cliques.</p>
-                <p><a class="btn btn-lg btn-custom3 rounded-5" href="">Tô com fome</a></p>
+                <p><a class="btn btn-lg btn-custom3 rounded-5" href="{{ route('index_cliente', ['abrir_modal' => true]) }}">Tô com fome</a></p>
             </div>
         </div>
     </section>
