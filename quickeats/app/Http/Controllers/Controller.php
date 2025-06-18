@@ -38,15 +38,6 @@ class Controller extends BaseController
         return view('index_restaurante');
     }
 
-    public function logout(Request $request)
-    {
-        // Remover todas as variáveis de sessão
-        Session::flush();
-
-        // Redirecionar para a página de login
-        return redirect('/quickeats')->with('success', 'Logout realizado com sucesso.');
-    }
-
     // Função para confirmar o e-mail
     public function confirmaEmail(Request $request)
     {

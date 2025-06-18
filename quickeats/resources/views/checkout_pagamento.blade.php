@@ -21,8 +21,9 @@
                 <h5 class="fw-semibold text-primary mb-3">Valor Total</h5>
                 @php
                 $valorTotal = 0;
-                foreach($produtos as $p) {
-                    $valorTotal += floatval($p->valor);
+                foreach ($produtos as $p) {
+                    $subtotal = floatval($p->valor) * $p->qtd_produto;
+                    $valorTotal += $subtotal;
                 }
                 @endphp
                 <h3 class="text-success fw-bold">R$ {{ number_format($valorTotal, 2, ',', '.') }}</h3>
@@ -91,16 +92,15 @@
     const stripe = Stripe("{{ env('STRIPE_KEY') }}");
     const elements = stripe.elements();
     const card = elements.create("card", {
-        hidePostalCode: true // isso oculta o campo de CEP
+        hidePostalCode: true
     });
     card.mount("#card-element");
-
 
     const form = document.getElementById('payment-form');
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const {error, paymentIntent} = await stripe.confirmCardPayment(
+        const { error, paymentIntent } = await stripe.confirmCardPayment(
             "{{ $clientSecret }}",
             {
                 payment_method: {
@@ -111,8 +111,11 @@
 
         if (error) {
             document.getElementById('card-errors').textContent = error.message;
-        } else if (paymentIntent.status === 'succeeded') {
-            // Envia os dados para o back-end via POST
+            return;
+        }
+
+        if (paymentIntent.status === 'succeeded') {
+            // Envia o ID do paymentIntent e payment_method para o back-end
             fetch("{{ route('realizar_pedido') }}", {
                 method: "POST",
                 headers: {
@@ -121,8 +124,8 @@
                 },
                 body: JSON.stringify({
                     payment_intent_id: paymentIntent.id,
-                    forma_pagamento_id: 1, // exemplo
-                    valor_total: 99.90     // exemplo
+                    payment_method_id: paymentIntent.payment_method,
+                    valor_total: 99.90 // ajuste se necessário
                 })
             })
             .then(response => {
@@ -130,9 +133,8 @@
                 return response.json();
             })
             .then(data => {
-                // Redireciona para uma página de sucesso
                 sessionStorage.setItem('mensagem', 'Pedido realizado com sucesso!');
-                window.location.href = "carrinho"; 
+                window.location.href = "carrinho";
             })
             .catch(error => {
                 console.error(error);
@@ -141,4 +143,5 @@
         }
     });
 </script>
+
 @endsection

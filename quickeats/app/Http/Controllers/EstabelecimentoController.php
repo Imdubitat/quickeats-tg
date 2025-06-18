@@ -831,4 +831,13 @@ class EstabelecimentoController extends Controller
 
         return back()->with('success', 'Senha alterada com sucesso!');
     }
+
+    public function logoutEstabelecimento(Request $request)
+    {
+        Auth::guard('estabelecimento')->logout();
+
+        return redirect()->route('index')->with('success', 'Logout realizado com sucesso!');
+    }
+
+
 }

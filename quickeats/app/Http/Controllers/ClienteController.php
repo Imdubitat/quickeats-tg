@@ -482,10 +482,10 @@ class ClienteController extends Controller
     {
         try {
             $idCliente = auth()->guard('cliente')->id();
-            $idPagamento = $request->input('forma_pagamento_id'); // vindo do JS
             $valorTotal = $request->input('valor_total'); // pode validar se quiser
             $idEndereco = session('id_endereco');
-            $paymentIntentId = session('payment_intent_id');
+            $paymentIntentId = $request->input('payment_intent_id');
+            $paymentMethodId = $request->input('payment_method_id'); // Novo
 
             $produtos = DB::select('CALL produtos_carrinho(?)', [$idCliente]);
 
@@ -520,24 +520,17 @@ class ClienteController extends Controller
                 return response()->json(['error' => implode(' ', $mensagens)], 400);
             }
 
-            // Recarrega produtos para verificar o estabelecimento
+            // Verificação de horário do estabelecimento
             $produtosAtualizados = DB::select('CALL produtos_carrinho(?)', [$idCliente]);
             $produto = $produtosAtualizados[0];
-
-            // Verifica se o estabelecimento está aberto
             $agora = Carbon::now();
             $diaSemana = $agora->dayOfWeekIso;
             $horaAtual = $agora->format('H:i:s');
             $horarios = DB::select("SELECT * FROM grades_horario WHERE id_estab = ? AND dia_semana = ?", [$produto->id_estab, $diaSemana]);
 
-            $estabAberto = false;
-
-            foreach ($horarios as $horario) {
-                if ($horaAtual >= $horario->inicio_expediente && $horaAtual <= $horario->termino_expediente) {
-                    $estabAberto = true;
-                    break;
-                }
-            }
+            $estabAberto = collect($horarios)->contains(function ($horario) use ($horaAtual) {
+                return $horaAtual >= $horario->inicio_expediente && $horaAtual <= $horario->termino_expediente;
+            });
 
             if (!$estabAberto) {
                 return response()->json(['error' => 'O estabelecimento está fora do horário de atendimento.'], 400);
@@ -545,7 +538,18 @@ class ClienteController extends Controller
 
             if (!$idEndereco) {
                 return response()->json(['error' => 'Endereço não selecionado.'], 400);
-            }            
+            }
+
+            // Detectar tipo do cartão via Stripe
+            Stripe::setApiKey(env('STRIPE_SECRET'));
+            $paymentMethod = \Stripe\PaymentMethod::retrieve($paymentMethodId);
+            $funding = $paymentMethod->card->funding;
+
+            // Define o tipo de pagamento: 2 = crédito, 3 = débito
+            $idPagamento = match ($funding) {
+                'debit' => 3,
+                default => 2
+            };
 
             // Realiza o pedido
             Pedido::realizarPedido($idCliente, $idEndereco, $idPagamento, $paymentIntentId);
@@ -556,6 +560,7 @@ class ClienteController extends Controller
             return response()->json(['error' => 'Erro interno. Tente novamente.'], 500);
         }
     }
+
 
     public function avaliarPedido(Request $request, $id)
     {
@@ -1064,5 +1069,12 @@ class ClienteController extends Controller
         ]);
 
         return back()->with('success', 'Senha alterada com sucesso!');
+    }
+
+    public function logoutCliente(Request $request)
+    {
+        Auth::guard('cliente')->logout();
+
+        return redirect()->route('index')->with('success', 'Logout realizado com sucesso!');
     }
 }

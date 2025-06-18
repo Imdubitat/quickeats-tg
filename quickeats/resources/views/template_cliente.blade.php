@@ -64,7 +64,7 @@
                                 <li><a class="dropdown-item" href="{{ route('adm_cliente') }}">Meu perfil</a></li>
                                 <li><a class="dropdown-item" href="{{ route('enderecos') }}">Meus Endereços</a></li>
                                 <li><a class="dropdown-item" href="{{ route('listar_chamados_cliente') }}">Suporte</a></li>
-                                <li><a class="dropdown-item" href="{{ route('logout') }}">Log out</a></li>
+                                <li><a class="dropdown-item" href="{{ route('logout_cliente') }}">Log out</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -100,7 +100,7 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" href="{{ route('catalogo_produtos') }}">Produtos</a>
                     </li>
-                    <li><a class="dropdown-item" href="{{ route('logout') }}">Log out</a></li>
+                    <li><a class="dropdown-item" href="{{ route('logout_cliente') }}">Log out</a></li>
                 </ul>
             </div>
         </div>

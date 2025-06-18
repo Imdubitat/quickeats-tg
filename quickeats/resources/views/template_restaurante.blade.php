@@ -48,7 +48,7 @@
                                 <li><a class="dropdown-item" href="{{ route('adm_restaurante') }}">Minha conta</a></li>
                                 <li><a class="dropdown-item" href="{{ route('planos_restaurante') }}">Meus planos</a></li>
                                 <li><a class="dropdown-item" href="{{ route('listar_chamados_estab') }}">Suporte</a></li>
-                                <li><a class="dropdown-item" href="{{ route('logout') }}">Log out</a></li>
+                                <li><a class="dropdown-item" href="{{ route('logout_estabelecimento') }}">Log out</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -79,7 +79,7 @@
                     <li><a class="dropdown-item" href="{{ route('dashboard_restaurante') }}">Dashboard </a></li>
                     <li><a class="dropdown-item" href="{{ route('adm_restaurante') }}">Minha conta</a></li>
                     <li><a class="dropdown-item" href="{{ route('listar_chamados_estab') }}">Suporte</a></li>
-                    <li><a class="dropdown-item" href="{{ route('logout') }}">Log out</a></li>
+                    <li><a class="dropdown-item" href="{{ route('logout_estabelecimento') }}">Log out</a></li>
                 </ul>
             </div>
         </div>

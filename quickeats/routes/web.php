@@ -29,7 +29,8 @@ Route::get('/', function () {
 Route::get('/quickeats', [Controller::class, 'exibirIndex'])->name('index');
 Route::get('/clientes', [Controller::class, 'exibirIndexCliente'])->name('index_cliente');
 Route::get('/restaurantes', [Controller::class, 'exibirIndexRestaurante'])->name('index_restaurante');
-Route::get('/logout', [Controller::class, 'logout'])->name('logout');
+Route::get('/logout-cliente', [ClienteController::class, 'logoutCliente'])->name('logout_cliente');
+Route::get('/logout-estabelecimento', [EstabelecimentoController::class, 'logoutEstabelecimento'])->name('logout_estabelecimento');
 Route::get('/confirma-email', [Controller::class, 'confirmaEmail'])->name('confirma_email');
 // Exibir página de perguntas frequentes
 Route::get('/faqs', [Controller::class, 'exibirFaqs'])->name('faqs');
