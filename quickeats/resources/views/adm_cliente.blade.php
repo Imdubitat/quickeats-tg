@@ -43,7 +43,7 @@
             <div class="card text-center p-4 shadow-sm hover-effect">
                 <p class="fw-bold fs-4">Métodos de pagamento</p>
                 <p class="text-muted">Gerencie seus formas de pagamento.</p>
-                <a href="" class="btn btn-custom4">Acessar</a>
+                <button class="btn btn-custom4" disabled>Acessar</button>
             </div>
         </div>
         <div class="col-md-4 col-sm-6">
