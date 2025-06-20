@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Tempo de geração: 12/06/2025 às 01:35
+-- Host: 127.0.0.1
+-- Tempo de geração: 20/06/2025 às 23:27
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -523,17 +523,6 @@ CREATE TABLE `avaliacoes` (
   `nota` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `avaliacoes`
---
-
-INSERT INTO `avaliacoes` (`id_avaliacao`, `id_pedido`, `nota`) VALUES
-(10, 22, 3),
-(11, 21, 4),
-(12, 20, 2),
-(13, 23, 5),
-(14, 27, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -601,11 +590,26 @@ CREATE TABLE `categorias_produtos` (
 --
 
 INSERT INTO `categorias_produtos` (`id_categoria`, `descricao`) VALUES
-(1, 'alimentos'),
-(2, 'comidas preparadas'),
-(3, 'higiene e beleza'),
-(4, 'bebidas'),
-(5, 'sobremesa');
+(1, 'Lanches'),
+(2, 'Pizza'),
+(3, 'Comida Brasileira'),
+(4, 'Comida Japonesa'),
+(5, 'Comida Chinesa'),
+(6, 'Massas'),
+(7, 'Marmitas'),
+(8, 'Doces e Sobremesas'),
+(9, 'Bebidas'),
+(10, 'Açaí'),
+(11, 'Salgados'),
+(12, 'Cafeteria'),
+(13, 'Padaria'),
+(14, 'Vegetariana'),
+(15, 'Vegana'),
+(16, 'Saudável'),
+(17, 'Frutos do Mar'),
+(18, 'Churrasco'),
+(19, 'Comida Mexicana'),
+(20, 'Mercado');
 
 -- --------------------------------------------------------
 
@@ -630,14 +634,16 @@ CREATE TABLE `clientes` (
 --
 
 INSERT INTO `clientes` (`id_cliente`, `nome`, `cpf`, `data_nasc`, `telefone`, `email`, `senha`, `email_verificado`, `perfil_ativo`) VALUES
-(1, 'Adenor Gonçalves da Silva', '716.802.680-15', '2000-01-07', '971794122', 'adenor@teste.com', 'NovaSenhaSegura1', 1, 0),
-(2, 'Mariana Oliveira Santos', '437.215.098-76', '1995-06-15', '(11) 98765-4321', 'mariana.santos@teste.com', 'senhaSegura123', 1, 1),
-(3, 'Roberto Almeida Costa', '152.987.654-01', '1988-12-03', '(21) 99988-7766', 'roberto.almeida@teste.com', 'minhaSenha456', 1, 1),
-(4, 'Carla Beatriz Ferreira', '254.632.198-87', '1992-04-22', '(31) 91234-5678', 'carla.ferreira@teste.com', 'outraSenha789', 1, 1),
-(5, 'Pedro Henrique Souza', '345.768.902-65', '2001-09-10', '(41) 96543-2109', 'pedro.souza@teste.com', 'senhaPedro123', 1, 1),
-(6, 'Ronaldo Silveira', '1234567891', '2002-02-22', '195226512', 'ronaldo@teste.com.br', '$2y$12$RjB8fKNNrPDTEW4xbMNoIuDnasjQ7vbn9.okm/lUpbm07jdbHJbCK', 1, 1),
-(7, 'teste', '493.333.798-51', '2001-03-02', '19971794122', 'teste@exemplo.com', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', 0, 1),
-(30, 'teste2', '12957597802', '2001-03-02', '(19) 97179-4122', 'rodrigooliveirafeitosa@gmail.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1);
+(1, 'Ana Paula Souza', '123.456.789-00', '1990-05-10', '(11) 91234-5678', 'ana.paula@teste.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1),
+(2, 'Carlos Eduardo Lima', '234.567.890-11', '1985-07-20', '(21) 99876-5432', 'carlos.lima@teste.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1),
+(3, 'Fernanda Oliveira', '345.678.901-22', '1992-03-15', '(31) 98765-4321', 'fernanda.oliveira@teste.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1),
+(4, 'Rafael Silva Costa', '456.789.012-33', '1988-12-05', '(41) 91234-1234', 'rafael.costa@teste.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1),
+(5, 'Juliana Mendes', '567.890.123-44', '1995-09-25', '(51) 99876-1111', 'juliana.mendes@teste.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1),
+(6, 'Marcos Vinicius', '678.901.234-55', '1987-06-30', '(61) 91234-2222', 'marcos.vinicius@teste.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1),
+(7, 'Patrícia Ramos', '789.012.345-66', '1991-02-08', '(62) 99876-3333', 'patricia.ramos@teste.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1),
+(8, 'Lucas Fernandes', '890.123.456-77', '1993-11-12', '(71) 98765-4444', 'lucas.fernandes@teste.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1),
+(9, 'Bruna Castro', '901.234.567-88', '1989-08-19', '(81) 99876-5555', 'bruna.castro@teste.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1),
+(10, 'Diego Martins', '012.345.678-99', '1994-04-22', '(91) 91234-6666', 'diego.martins@teste.com.br', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1);
 
 --
 -- Acionadores `clientes`
@@ -698,15 +704,17 @@ CREATE TABLE `enderecos` (
 --
 
 INSERT INTO `enderecos` (`id_endereco`, `logradouro`, `numero`, `bairro`, `cidade`, `estado`, `cep`) VALUES
-(1, 'Rua das Palmeiras', '123', 'Centro', 'São Paulo', 'SP', '01010-010'),
-(2, 'Avenida Brasil', '110', 'Zona Norte', 'Volta Redonda', 'RJ', '20020-020'),
-(3, 'Rua do Sol', '789', 'Jardins', 'Curitiba', 'PR', '80030-030'),
-(4, 'Rua das Flores', '101', 'Centro', 'Porto Alegre', 'RS', '90040-040'),
-(5, 'Rua das Margaridas', '202', 'Bairro Alto', 'Fortaleza', 'CE', '60050-050'),
-(6, 'Odete vieira santos', '450', 'Jd. Nova Hortolandia', 'Hortolândia', 'SP', '13183271'),
-(7, 'hgjjkjhkj', '123', 'hjgj', 'hjgjhg', 'RJ', '64654'),
-(9, 'teste', '156', 'teste', 'Teste', 'MG', '111111'),
-(10, 'Rua 01', '56', 'Jd. blume', 'Blumenau', 'RJ', '12345236');
+(1, 'Rua das Flores', '123', 'Jardim Primavera', 'São Paulo', 'SP', '01001-000'),
+(2, 'Avenida Central', '456', 'Centro', 'Rio de Janeiro', 'RJ', '20010-000'),
+(3, 'Rua da Paz', '789', 'Boa Vista', 'Belo Horizonte', 'MG', '30140-000'),
+(4, 'Rua das Acácias', '321', 'Águas Claras', 'Brasília', 'DF', '70297-400'),
+(5, 'Travessa da Alegria', '654', 'Copacabana', 'Rio de Janeiro', 'RJ', '22060-001'),
+(6, 'Rua do Sol', '987', 'Vila Mariana', 'São Paulo', 'SP', '04117-001'),
+(7, 'Rua das Laranjeiras', '159', 'Laranjeiras', 'Salvador', 'BA', '40140-280'),
+(8, 'Avenida Brasil', '753', 'Jardim América', 'Curitiba', 'PR', '80210-000'),
+(9, 'Rua da Esperança', '852', 'Ponta Verde', 'Maceió', 'AL', '57035-180'),
+(10, 'Rua São Jorge', '147', 'Centro', 'Belém', 'PA', '66015-000');
+
 -- --------------------------------------------------------
 
 --
@@ -728,12 +736,11 @@ INSERT INTO `enderecos_clientes` (`id_endereco`, `id_cliente`) VALUES
 (3, 3),
 (4, 4),
 (5, 5),
-(1, 6),
-(3, 7),
-(5, 7),
-(2, 30),
-(6, 30),
-(10, 30);
+(6, 6),
+(7, 7),
+(8, 8),
+(9, 9),
+(10, 10);
 
 -- --------------------------------------------------------
 
@@ -768,13 +775,16 @@ CREATE TABLE `estabelecimentos` (
 --
 
 INSERT INTO `estabelecimentos` (`id_estab`, `razao_social`, `nome_fantasia`, `cnpj`, `telefone`, `cpf_titular`, `rg_titular`, `cnae`, `logradouro`, `numero`, `bairro`, `cidade`, `estado`, `cep`, `email`, `senha`, `email_verificado`, `perfil_ativo`, `imagem_perfil`) VALUES
-(1, 'Restaurante Sabor Caseiro Ltda.', 'Novo Sabor Caseiro', '12.345.678/0001-90', '11999999999', '987.654.321-00', '98.765.432-1', '5611-2', 'Rua Nova Esperança', '321', 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', 'teste@email.com', 'NovaSenhaSegura2', 0, 0, NULL),
-(2, 'Mercado Bom Preço Ltda.', 'Bom Preço', '23.456.789/0001-91', '(21) 99876-5432', '987.654.321-00', '98.765.432-1', '4711-3', 'Avenida Brasil', '456', 'Zona Sul', 'Rio de Janeiro', 'RJ', '20000-000', 'contato@bompreco.com', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', 1, 1, NULL),
-(3, 'Restaurante Delícias do Campo Ltda.', 'Delícias do Campo', '34.567.890/0001-92', '(31) 91234-5678', '654.321.987-00', '65.432.198-7', '5611-2', 'Rua Tranquila', '789', 'Bairro Novo', 'Belo Horizonte', 'MG', '30000-000', 'contato@deliciasdocampo.com', 'senhaSegura789', 0, 0, NULL),
-(4, 'Supermercado Sempre Fresco Ltda.', 'Sempre Fresco', '45.678.901/0001-93', '(41) 98765-6789', '321.987.654-00', '32.198.765-4', '4711-3', 'Rua Principal', '321', 'Zona Norte', 'Curitiba', 'PR', '80000-000', 'contato@semprefresco.com', 'senhaSuper123', 0, 1, NULL),
-(5, 'Restaurante Sabores do Mar Ltda.', 'Sabores do Mar', '56.789.012/0001-94', '(51) 97654-3210', '210.987.654-00', '21.098.765-4', '5611-2', 'Rua da Praia', '654', 'Centro', 'Porto Alegre', 'RS', '90000-000', 'contato@saboresdomar.com', 'senhaSabores123', 0, 1, NULL),
-(6, NULL, 'Novo Sabor Caseiro', '12.345.678/0001-90', '1199999999', NULL, NULL, NULL, 'Rua Nova Esperança', '321', 'Jardim Paulista', 'Belo Horizonte', 'MG', '01111-111', 'contato@saborcaseiro.com', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', 1, 1, '1743374485_images.jpeg'),
-(12, NULL, 'teste', '15454655', '(19) 12345-6789', NULL, NULL, NULL, 'teste', '123', 'teste', 'teste', 'SP', '13183271', 'rodrigooliveirafeitosa@gmail.com', '$2y$12$tfiMfD.2NbFZ7AHK8QoCXex4oSDGzsktDTSyLBzshAjliKWPT6NTu', 1, 1, '1744472517_Restaurant-Logo-by-Koko-Store-580x386.jpg');
+(1, 'Padaria Pão Quente', 'Pão Quente', '12.345.678/0001-00', '(11) 98888-0001', '123.456.789-00', '12.345.678-9', '4721101', 'Rua das Massas', '100', 'Centro', 'São Paulo', 'SP', '01010-000', 'contato@paoquente.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, NULL),
+(2, 'Restaurante Sabor & Cia', 'Sabor & Cia', '23.456.789/0001-11', '(21) 97777-0002', '234.567.890-11', '23.456.789-0', '5611203', 'Avenida Gourmet', '200', 'Jardins', 'Rio de Janeiro', 'RJ', '20020-000', 'contato@saborcia.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, NULL),
+(3, 'Açaí da Hora LTDA', 'Açaí da Hora', '34.567.890/0001-22', '(31) 96666-0003', '345.678.901-22', '34.567.890-1', '4729601', 'Rua Tropical', '300', 'Centro', 'Belo Horizonte', 'MG', '30130-000', 'contato@acaihora.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, NULL),
+(4, 'Pizza & Ponto ME', 'Pizza & Ponto', '45.678.901/0001-33', '(41) 95555-0004', '456.789.012-33', '45.678.901-2', '5611201', 'Rua das Pizzas', '400', 'Santa Felicidade', 'Curitiba', 'PR', '80230-000', 'contato@pizzaponto.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, NULL),
+(5, 'Grãos do Cerrado', 'Grãos do Cerrado', '56.789.012/0001-44', '(61) 94444-0005', '567.890.123-44', '56.789.012-3', '4721102', 'Rua do Café', '500', 'Asa Sul', 'Brasília', 'DF', '70300-000', 'contato@graoscerrado.com', 'HASH_AQUI', 1, 1, NULL),
+(6, 'Tempero Nordestino', 'Tempero Nordestino', '67.890.123/0001-55', '(71) 93333-0006', '678.901.234-55', '67.890.123-4', '5611203', 'Rua do Sertão', '120', 'Liberdade', 'Salvador', 'BA', '40025-000', 'contato@tempero.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, NULL),
+(7, 'Café na Praça ME', 'Café na Praça', '78.901.234/0001-66', '(51) 92222-0007', '789.012.345-66', '78.901.234-5', '5611204', 'Praça Central', '45', 'Moinhos de Vento', 'Porto Alegre', 'RS', '90520-040', 'cafe@napraca.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, NULL),
+(8, 'Delícias Caseiras Ltda', 'Delícias Caseiras', '89.012.345/0001-77', '(81) 91111-0008', '890.123.456-77', '89.012.345-6', '5611201', 'Rua das Receitas', '88', 'Boa Viagem', 'Recife', 'PE', '51020-200', 'delicias@caseiras.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, NULL),
+(9, 'Sushi Yamada', 'Sushi Yamada', '90.123.456/0001-88', '(85) 90000-0009', '901.234.567-88', '90.123.456-7', '5611205', 'Avenida Japão', '201', 'Aldeota', 'Fortaleza', 'CE', '60160-000', 'contato@sushiyamada.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, NULL),
+(10, 'Tapiocaria da Esquina', 'Tapiocaria da Esquina', '01.234.567/0001-99', '(95) 98888-0010', '012.345.678-99', '01.234.567-8', '5611206', 'Rua do Norte', '19', 'São Francisco', 'Boa Vista', 'RR', '69300-000', 'contato@tapioca.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, NULL);
 
 --
 -- Acionadores `estabelecimentos`
@@ -885,9 +895,9 @@ CREATE TABLE `formas_pagamentos` (
 --
 
 INSERT INTO `formas_pagamentos` (`id_formapag`, `descricao`) VALUES
-(1, 'pix'),
-(2, 'credito'),
-(3, 'debito');
+(1, 'Pix'),
+(2, 'Cartão de crédito'),
+(3, 'Cartão de débito');
 
 -- --------------------------------------------------------
 
@@ -908,51 +918,66 @@ CREATE TABLE `grades_horario` (
 --
 
 INSERT INTO `grades_horario` (`id_grade`, `id_estab`, `dia_semana`, `inicio_expediente`, `termino_expediente`) VALUES
-(1, 1, '1', '08:00:00', '21:00:00'),
-(2, 1, '2', '08:00:00', '21:00:00'),
-(3, 1, '3', '08:00:00', '21:00:00'),
-(4, 1, '4', '08:00:00', '21:00:00'),
-(5, 1, '5', '08:00:00', '21:00:00'),
-(6, 1, '6', '08:00:00', '21:00:00'),
-(7, 1, '7', '08:00:00', '21:00:00'),
-(8, 2, '1', '07:00:00', '23:00:00'),
-(9, 2, '2', '07:00:00', '23:00:00'),
-(10, 2, '3', '07:00:00', '23:00:00'),
-(11, 2, '4', '07:00:00', '23:00:00'),
-(12, 2, '5', '07:00:00', '23:00:00'),
-(13, 2, '6', '07:00:00', '23:00:00'),
-(14, 2, '7', '07:00:00', '23:00:00'),
-(15, 3, '1', '11:00:00', '23:00:00'),
-(16, 3, '2', '11:00:00', '23:00:00'),
-(17, 3, '3', '11:00:00', '23:00:00'),
-(18, 3, '4', '11:00:00', '23:00:00'),
-(19, 3, '5', '11:00:00', '23:00:00'),
-(20, 3, '6', '11:00:00', '23:00:00'),
-(21, 3, '7', '11:00:00', '23:00:00'),
-(22, 4, '1', '08:00:00', '22:00:00'),
-(23, 4, '2', '08:00:00', '22:00:00'),
-(24, 4, '3', '08:00:00', '22:00:00'),
-(25, 4, '4', '08:00:00', '22:00:00'),
-(26, 4, '5', '08:00:00', '22:00:00'),
-(27, 4, '6', '08:00:00', '22:00:00'),
-(28, 4, '7', '08:00:00', '22:00:00'),
-(29, 5, '1', '12:00:00', '23:00:00'),
-(30, 5, '2', '12:00:00', '23:00:00'),
-(31, 5, '3', '12:00:00', '23:00:00'),
-(32, 5, '4', '12:00:00', '23:00:00'),
-(33, 5, '5', '12:00:00', '23:00:00'),
-(34, 5, '6', '12:00:00', '23:00:00'),
-(35, 5, '7', '12:00:00', '23:00:00'),
-(36, 6, '1', '08:00:00', '21:00:00'),
-(37, 6, '2', '08:00:00', '21:00:00'),
-(38, 6, '3', '08:00:00', '21:00:00'),
-(39, 6, '4', '08:00:00', '21:00:00'),
-(40, 6, '5', '08:00:00', '21:00:00'),
-(41, 6, '6', '08:00:00', '21:00:00'),
-(42, 6, '7', '08:00:00', '21:00:00'),
-(55, 12, '6', '19:00:00', '23:00:00'),
-(56, 12, '4', '08:00:00', '20:00:00'),
-(57, 12, '5', '08:00:00', '14:33:00');
+(1, 1, '1', '10:00:00', '22:00:00'),
+(2, 1, '2', '10:00:00', '22:00:00'),
+(3, 1, '3', '10:00:00', '22:00:00'),
+(4, 1, '4', '10:00:00', '22:00:00'),
+(5, 1, '5', '10:00:00', '22:00:00'),
+(6, 1, '6', '10:00:00', '22:00:00'),
+(7, 2, '1', '10:00:00', '22:00:00'),
+(8, 2, '2', '10:00:00', '22:00:00'),
+(9, 2, '3', '10:00:00', '22:00:00'),
+(10, 2, '4', '10:00:00', '22:00:00'),
+(11, 2, '5', '10:00:00', '22:00:00'),
+(12, 2, '6', '10:00:00', '22:00:00'),
+(13, 3, '1', '10:00:00', '22:00:00'),
+(14, 3, '2', '10:00:00', '22:00:00'),
+(15, 3, '3', '10:00:00', '22:00:00'),
+(16, 3, '4', '10:00:00', '22:00:00'),
+(17, 3, '5', '10:00:00', '22:00:00'),
+(18, 3, '6', '10:00:00', '22:00:00'),
+(19, 4, '1', '10:00:00', '22:00:00'),
+(20, 4, '2', '10:00:00', '22:00:00'),
+(21, 4, '3', '10:00:00', '22:00:00'),
+(22, 4, '4', '10:00:00', '22:00:00'),
+(23, 4, '5', '10:00:00', '22:00:00'),
+(24, 4, '6', '10:00:00', '22:00:00'),
+(25, 5, '1', '10:00:00', '22:00:00'),
+(26, 5, '2', '10:00:00', '22:00:00'),
+(27, 5, '3', '10:00:00', '22:00:00'),
+(28, 5, '4', '10:00:00', '22:00:00'),
+(29, 5, '5', '10:00:00', '22:00:00'),
+(30, 5, '6', '10:00:00', '22:00:00'),
+(31, 6, '1', '10:00:00', '22:00:00'),
+(32, 6, '2', '10:00:00', '22:00:00'),
+(33, 6, '3', '10:00:00', '22:00:00'),
+(34, 6, '4', '10:00:00', '22:00:00'),
+(35, 6, '5', '10:00:00', '22:00:00'),
+(36, 6, '6', '10:00:00', '22:00:00'),
+(37, 7, '1', '10:00:00', '22:00:00'),
+(38, 7, '2', '10:00:00', '22:00:00'),
+(39, 7, '3', '10:00:00', '22:00:00'),
+(40, 7, '4', '10:00:00', '22:00:00'),
+(41, 7, '5', '10:00:00', '22:00:00'),
+(42, 7, '6', '10:00:00', '22:00:00'),
+(43, 8, '1', '10:00:00', '22:00:00'),
+(44, 8, '2', '10:00:00', '22:00:00'),
+(45, 8, '3', '10:00:00', '22:00:00'),
+(46, 8, '4', '10:00:00', '22:00:00'),
+(47, 8, '5', '10:00:00', '22:00:00'),
+(48, 8, '6', '10:00:00', '22:00:00'),
+(49, 9, '1', '10:00:00', '22:00:00'),
+(50, 9, '2', '10:00:00', '22:00:00'),
+(51, 9, '3', '10:00:00', '22:00:00'),
+(52, 9, '4', '10:00:00', '22:00:00'),
+(53, 9, '5', '10:00:00', '22:00:00'),
+(54, 9, '6', '10:00:00', '22:00:00'),
+(55, 10, '1', '18:00:00', '22:00:00'),
+(56, 10, '2', '18:00:00', '22:00:00'),
+(57, 10, '3', '18:00:00', '22:00:00'),
+(58, 10, '4', '18:00:00', '22:00:00'),
+(59, 10, '5', '18:00:00', '22:00:00'),
+(60, 10, '6', '18:00:00', '22:00:00');
 
 -- --------------------------------------------------------
 
@@ -974,27 +999,17 @@ CREATE TABLE `historico_clientes` (
 --
 
 INSERT INTO `historico_clientes` (`id_alteracao`, `id_cliente`, `campo_alterado`, `valor_antigo`, `valor_novo`, `data_alteracao`) VALUES
-(1, 1, 'telefone', '(79) 2687-5718', '', '2025-01-16 09:16:35'),
-(2, 1, 'email', 'adenor@teste.com', '(19) 97179-4122', '2025-01-16 09:16:35'),
-(3, 1, 'telefone', '', '971794122', '2025-01-16 09:18:33'),
-(4, 1, 'email', '(19) 97179-4122', 'adenor@teste.com', '2025-01-16 09:18:33'),
-(5, 1, 'senha', '123456789', 'NovaSenhaSegura1', '2025-01-16 09:42:21'),
-(6, 7, 'telefone', '19971794122', '19971794126', '2025-02-22 09:38:55'),
-(7, 7, 'telefone', '19971794126', '19971794122', '2025-02-22 09:39:18'),
-(8, 7, 'email', 'teste@exemplo.com', 'teste01@exemplo.com', '2025-02-22 09:39:18'),
-(9, 7, 'email', 'teste01@exemplo.com', 'teste@exemplo.com', '2025-02-22 11:41:39'),
-(10, 6, 'email', 'ronaldo@teste.com', 'ronaldo@teste.com.br', '2025-02-22 14:22:01'),
-(13, 30, 'senha', '$2y$12$4DDh53GH4/fzdUfLYjLM2eHJtw75hjjpfay5l4wGubSbqZze1b2R6', '$2y$12$E8DfUp0E2M7tTpwq9AcOoeH/2I6tNwv7ZNt9ZFydBBBbiJ0M5widC', '2025-03-10 17:14:04'),
-(14, 30, 'senha', '$2y$12$E8DfUp0E2M7tTpwq9AcOoeH/2I6tNwv7ZNt9ZFydBBBbiJ0M5widC', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', '2025-03-10 17:17:38'),
-(15, 30, 'telefone', '19994298868', '(19) 99429-8868', '2025-04-12 11:58:45'),
-(16, 30, 'telefone', '(19) 99429-8868', '(19) 97179-4122', '2025-04-12 11:58:52'),
-(17, 30, 'telefone', '(19) 97179-4122', '(19) 98908-5358', '2025-04-12 11:59:15'),
-(18, 30, 'telefone', '(19) 98908-5358', '(19) 97179-4122', '2025-04-16 21:11:08'),
-(19, 30, 'senha', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', '$2y$12$cHotzaziIACeJiFkW.OK..5VWUu3DkvIA1EskpsavkDYmNqdPK3Za', '2025-06-03 16:28:54'),
-(20, 30, 'senha', '$2y$12$cHotzaziIACeJiFkW.OK..5VWUu3DkvIA1EskpsavkDYmNqdPK3Za', '$2y$12$adoeEsmW4IrNy0kTENafg.pF7zH/vLeOdHRdY1el9EiXjFk2sn/Gq', '2025-06-04 20:01:28'),
-(21, 30, 'senha', '$2y$12$adoeEsmW4IrNy0kTENafg.pF7zH/vLeOdHRdY1el9EiXjFk2sn/Gq', '$2y$12$2v9o6h/ynV64chku705mnecKQOjVjrd4vQj793bUtlHqtAfRcsX6y', '2025-06-04 20:33:03'),
-(22, 30, 'senha', '$2y$12$2v9o6h/ynV64chku705mnecKQOjVjrd4vQj793bUtlHqtAfRcsX6y', '$2y$12$q7E5RhQ8p3N.GtuEr4noJOM066a/qBswtk47nF49RDlkd1N2GNJsK', '2025-06-04 21:02:44'),
-(23, 30, 'senha', '$2y$12$q7E5RhQ8p3N.GtuEr4noJOM066a/qBswtk47nF49RDlkd1N2GNJsK', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-08 20:38:24');
+(24, 10, 'senha', '$2b$12$F0YhKviOSZ9aJDuPrZuXSuao6cxXycmS/8fbTmL13Uv.rbIaiyAeW', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-20 16:43:55'),
+(25, 1, 'senha', '$2b$12$rAGqNtTPikXKghBi2mDs8.Kuy3w46xUYaNG7KFM0xq2L9XiyGUF/2', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-20 16:46:10'),
+(26, 2, 'senha', '$2b$12$BxsbIfeqZWCSwwr/8h7WUuPGQ6mJB5ge2WzY5bkUkczIL2tFs6r9C', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-20 16:46:10'),
+(27, 3, 'senha', '$2b$12$RQlTIohljdsNkrA2c7hO2ubIEAZ124EhMwXe6JIrLw1iOPoRPGmMC', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-20 16:46:10'),
+(28, 4, 'senha', '$2b$12$h2u.M8FblWg7RkLcj/Ggd.Gr0TJqRN1hTebcVHo6vvp7GShgcFd0W', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-20 16:46:10'),
+(29, 5, 'senha', '$2b$12$QjrvIwZNg0OD2WeeOfYOk.e0lPzlLfGuQH6RPcy/uB0skwytgY2TW', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-20 16:46:10'),
+(30, 6, 'senha', '$2b$12$fkH8AK2wnDKeFeZvc6Xo2eWOwbdwX1cb1z7LgC0WL6v4VtJ.B0cq2', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-20 16:46:10'),
+(31, 7, 'senha', '$2b$12$7OtWn8MJgEEXvTXJEdRk..KerGx/S8krUVilUHJlMjlV4bTX6L55e', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-20 16:46:10'),
+(32, 8, 'senha', '$2b$12$hdEKGRLoICMyh8ZRii5iWei1/2fBZsNpzlRoIrmkh8EU6E1pv94zy', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-20 16:46:10'),
+(33, 9, 'senha', '$2b$12$x5j38rve5mcrsk3AL7wfmePScVzTMaJA7vYfmhGyv5wavUAA1wnnK', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-20 16:46:10'),
+(34, 10, 'email', 'diego.martins@teste.com', 'diego.martins@teste.com.br', '2025-06-20 18:22:42');
 
 -- --------------------------------------------------------
 
@@ -1016,48 +1031,17 @@ CREATE TABLE `historico_estabelecimentos` (
 --
 
 INSERT INTO `historico_estabelecimentos` (`id_alteracao`, `id_estab`, `campo_alterado`, `valor_antigo`, `valor_novo`, `data_alteracao`) VALUES
-(1, 1, 'nome_fantasia', 'Sabor Caseiro', 'Novo Sabor Caseiro', '2025-01-16 09:28:37'),
-(2, 1, 'telefone', '(11) 98765-4321', '(11) 99999-9999', '2025-01-16 09:28:37'),
-(3, 1, 'cpf_titular', '123.456.789-00', '987.654.321-00', '2025-01-16 09:28:37'),
-(4, 1, 'rg_titular', '12.345.678-9', '98.765.432-1', '2025-01-16 09:28:37'),
-(5, 1, 'logradouro', 'Rua das Flores', 'Rua Nova Esperança', '2025-01-16 09:28:37'),
-(6, 1, 'numero', '123', '321', '2025-01-16 09:28:37'),
-(7, 1, 'bairro', 'Centro', 'Jardim Paulista', '2025-01-16 09:28:37'),
-(8, 1, 'cep', '01000-000', '01111-111', '2025-01-16 09:28:37'),
-(9, 1, 'inicio_expediente', '09:00:00', '08:00:00', '2025-01-16 09:28:37'),
-(10, 1, 'final_expediente', '22:00:00', '21:00:00', '2025-01-16 09:28:37'),
-(11, 1, 'email', 'contato@saborcaseiro.com', 'novocontato@saborcaseiro.com', '2025-01-16 09:28:37'),
-(12, 1, 'cidade', 'São Paulo', 'Belo Horizonte', '2025-01-16 09:34:35'),
-(13, 1, 'estado', 'SP', 'MG', '2025-01-16 09:34:35'),
-(14, 1, 'senha', 'senhaSegura123', 'NovaSenhaSegura2', '2025-01-16 09:44:47'),
-(15, 2, 'senha', 'senhaSegura456', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', '2025-02-19 21:06:59'),
-(16, 1, 'telefone', '(11) 99999-9999', '11999999999', '2025-02-22 15:54:38'),
-(17, 1, 'email', 'novocontato@saborcaseiro.com', 'teste@email.com', '2025-02-22 15:54:38'),
-(18, 6, 'email', 'contato@saborcaseiro.com', 'contato@saborcaseiro.com.b', '2025-02-22 16:09:17'),
-(19, 6, 'email', 'contato@saborcaseiro.com.b', 'contato@saborcaseiro.com.br', '2025-02-22 16:09:22'),
-(20, 6, 'email', 'contato@saborcaseiro.com.br', 'contato@saborcaseiro.com', '2025-02-22 16:13:47'),
-(21, 6, 'email', 'contato@saborcaseiro.com', 'contato@saborcaseiro.com.br', '2025-02-22 16:19:16'),
-(22, 6, 'telefone', '(11) 99999-9999', '(11) 99999-9998', '2025-02-22 16:20:27'),
-(23, 6, 'telefone', '(11) 99999-9998', '1199999999', '2025-02-22 16:20:59'),
-(24, 6, 'email', 'contato@saborcaseiro.com.br', 'contato@saborcaseiro.com', '2025-02-22 16:21:06'),
-(25, 12, 'senha', '$2y$12$wC7HEvaHP3td2g77Yeu/bOquY6W/YNFJfySwzfTezeULELGQdnDv.', '$2y$12$5EQIZn14KfCvb0cE3FJouemV36Csf.rC7OOiOd6PBX5WdAGPLjJHq', '2025-03-10 16:36:50'),
-(26, 12, 'senha', '$2y$12$5EQIZn14KfCvb0cE3FJouemV36Csf.rC7OOiOd6PBX5WdAGPLjJHq', '$2y$12$1kcaVuigyXvlNRlTEjjFLuZ0EveQWHU6phkrQtwA1Opz/rmP5y9b2', '2025-03-10 17:05:13'),
-(27, 12, 'senha', '$2y$12$1kcaVuigyXvlNRlTEjjFLuZ0EveQWHU6phkrQtwA1Opz/rmP5y9b2', '$2y$12$4bMJUaZjqN4GRi/T7s6lj.jK4OFpHxPdKJ1PZRT9IUqB6SJvKehrK', '2025-03-10 17:09:52'),
-(28, 6, 'senha', '$2y$12$yNISLT2y2pcczjlwjFWIgecvHU2Lig6XuIqZHefoOW5MEtIHZPtuq', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', '2025-03-20 20:22:45'),
-(29, 12, 'senha', '$2y$12$4bMJUaZjqN4GRi/T7s6lj.jK4OFpHxPdKJ1PZRT9IUqB6SJvKehrK', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', '2025-03-20 20:23:25'),
-(30, 12, 'senha', '$2y$12$4bMJUaZjqN4GRi/T7s6lj.jK4OFpHxPdKJ1PZRT9IUqB6SJvKehrK', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', '2025-03-23 15:41:11'),
-(31, 6, 'senha', '$2y$12$yNISLT2y2pcczjlwjFWIgecvHU2Lig6XuIqZHefoOW5MEtIHZPtuq', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', '2025-04-03 21:38:33'),
-(32, 12, 'inicio_expediente', '08:00:00', '09:00:00', '2025-04-11 08:22:21'),
-(33, 12, 'inicio_expediente', '09:00:00', '12:00:00', '2025-04-11 08:25:08'),
-(34, 12, 'final_expediente', '14:00:00', '17:00:00', '2025-04-11 14:03:41'),
-(35, 6, 'final_expediente', '21:00:00', '14:00:00', '2025-04-11 14:08:45'),
-(36, 2, 'inicio_expediente', '07:00:00', '10:00:00', '2025-04-12 09:26:42'),
-(37, 5, 'inicio_expediente', '12:00:00', '13:00:00', '2025-04-12 12:02:58'),
-(38, 2, 'inicio_expediente', '10:00:00', '13:00:00', '2025-04-12 12:03:26'),
-(39, 12, 'telefone', '54656', '(54) 656', '2025-04-12 12:40:07'),
-(40, 12, 'telefone', '(54) 656', '(19) 12345-6789', '2025-04-12 12:41:10'),
-(41, 2, 'senha', '$2y$12$gmemuYaBBtlcqdEObZMlWejTqx3jzvsk7nVz0jkJ0TbYpEPJxwCg.', '$2y$12$C5v1wka00gBbAn9ip/bp0.zy28l.7kp1Ocd5XpebKfaMrasO.n3Hq', '2025-06-03 16:37:00'),
-(42, 12, 'senha', '$2y$12$Ub31tTUILWzDzy7lEsGqnO7c26.4FQ5/jZjGAKL1LqsuKIG8nhAp6', '$2y$12$tfiMfD.2NbFZ7AHK8QoCXex4oSDGzsktDTSyLBzshAjliKWPT6NTu', '2025-06-08 20:39:21');
+(43, 1, 'senha', 'HASH_AQUI', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-20 17:04:13'),
+(44, 2, 'senha', 'HASH_AQUI', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-20 17:04:13'),
+(45, 3, 'senha', 'HASH_AQUI', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-20 17:04:13'),
+(46, 4, 'senha', 'HASH_AQUI', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-20 17:04:13'),
+(47, 6, 'senha', 'HASH_AQUI', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-20 17:04:13'),
+(48, 7, 'senha', 'HASH_AQUI', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-20 17:04:13'),
+(49, 8, 'senha', 'HASH_AQUI', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-20 17:04:13'),
+(50, 9, 'senha', 'HASH_AQUI', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-20 17:04:13'),
+(51, 10, 'cpf_titular', '012.345.678-99', '', '2025-06-20 17:04:13'),
+(52, 10, 'senha', 'HASH_AQUI', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-20 17:05:19'),
+(53, 10, 'cpf_titular', '', '012.345.678-99', '2025-06-20 17:09:34');
 
 -- --------------------------------------------------------
 
@@ -1070,63 +1054,6 @@ CREATE TABLE `itens_pedidos` (
   `id_produto` int(11) NOT NULL,
   `qtd_produto` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Despejando dados para a tabela `itens_pedidos`
---
-
-INSERT INTO `itens_pedidos` (`id_pedido`, `id_produto`, `qtd_produto`) VALUES
-(1, 3, 2),
-(2, 1, 1),
-(3, 4, 3),
-(4, 2, 5),
-(5, 5, 4),
-(6, 6, 2),
-(8, 7, 2),
-(8, 3, 3),
-(9, 1, 1),
-(9, 2, 1),
-(10, 7, 2),
-(10, 3, 1),
-(11, 1, 21),
-(12, 8, 5),
-(12, 9, 3),
-(13, 7, 12),
-(14, 3, 2),
-(14, 8, 2),
-(15, 9, 2),
-(16, 3, 1),
-(16, 9, 1),
-(16, 8, 1),
-(17, 3, 1),
-(17, 7, 2),
-(17, 8, 2),
-(18, 1, 1),
-(19, 7, 1),
-(20, 1, 1),
-(21, 2, 1),
-(22, 1, 1),
-(22, 2, 1),
-(23, 4, 1),
-(25, 5, 1),
-(26, 8, 1),
-(27, 7, 1),
-(28, 9, 1),
-(29, 8, 2),
-(30, 12, 1),
-(31, 3, 1),
-(32, 1, 1),
-(33, 1, 1),
-(34, 2, 1),
-(35, 3, 1),
-(36, 1, 1),
-(37, 8, 2),
-(37, 7, 1),
-(38, 3, 1),
-(38, 7, 1),
-(39, 1, 1),
-(40, 2, 1),
-(41, 10, 1);
 
 -- --------------------------------------------------------
 
@@ -1145,29 +1072,6 @@ CREATE TABLE `logs_tokens` (
   `usado_em` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `logs_tokens`
---
-
-INSERT INTO `logs_tokens` (`id_token`, `id_usuario`, `email`, `motivo`, `tipo_usuario`, `token`, `criado_em`, `usado_em`) VALUES
-(17, 29, 'rodrigooliveirafeitosa@gmail.com', 'token expirado - confirmação de email', 'cliente', 'CwvW7AfZQCE9eKEuUHgS8MEFmd7QJ9nOGcZsSYGut06AohiA5e1jaiHogBqg', '2025-03-10 19:24:03', '2025-03-10 19:25:19'),
-(18, 30, 'rodrigooliveirafeitosa@gmail.com', 'confirmação de email', 'cliente', '7YOwkjZJhOdETMpySyDeYRQSdEIEG8griMhP4oUg6rPhbyrMrmgiiWxaJ96H', '2025-03-10 19:26:29', '2025-03-10 19:27:03'),
-(19, 11, 'rodrigooliveirafeitosa@gmail.com', 'confirmação de email', 'estabelecimento', 'DG9iuXjFAHOZJv1AIQLOmVtQLjK5lgJnQJmkYNF9d2JflO3yTUTbaNdIFbyT', '2025-03-10 19:28:18', '2025-03-10 19:28:52'),
-(20, 12, 'rodrigooliveirafeitosa@gmail.com', 'token expirado - confirmação de email', 'estabelecimento', 'wrC8HM8zN9AaQYDdYcaLRCt3sqi1T8GP8vLQaX1vQ6rFCmpKA9c7R56Dpx2Z', '2025-03-10 19:31:09', '2025-03-10 19:32:14'),
-(25, 12, 'rodrigooliveirafeitosa@gmail.com', 'token expirado - redefinição de senha', 'estabelecimento', 'u1NNeRfyOgXrakwaJ1zbBRxHh72vGa4gUMpm4X6jUdh4AG9X6AfBQA4t245Q', '2025-03-10 20:06:37', '2025-03-10 20:08:17'),
-(26, 12, 'rodrigooliveirafeitosa@gmail.com', 'redefinição de senha', 'estabelecimento', 'KgCS9WziZAB820Y77t75RODwV3D5bYMplzfjkA5kDyuxhUUAakYUitl937MH', '2025-03-10 20:09:08', '2025-03-10 20:09:50'),
-(27, 12, 'rodrigooliveirafeitosa@gmail.com', 'token expirado - redefinição de senha', 'estabelecimento', 'H2C4euOSdpLbiRibWLm1ZJawjl3fPVU2bObkvAscIpG7OIEzTClzfXyvCzfU', '2025-03-10 20:10:26', '2025-03-10 20:12:06'),
-(28, 30, 'rodrigooliveirafeitosa@gmail.com', 'redefinição de senha', 'cliente', '6Zx3lLg5rvDJttxTDr6raU4CaB5SQ9QFq6m7eHUlCNep8K9rzPHCUGS6Vffe', '2025-03-10 20:13:32', '2025-03-10 20:14:03'),
-(29, 30, 'rodrigooliveirafeitosa@gmail.com', 'token expirado - redefinição de senha', 'cliente', 'm5lYvtNPUV7ZTyKpNKNYJKPXn4GqnlBNdQLK3o0MsHaYsl8oUN1Bf2LIy0nm', '2025-03-10 20:14:51', '2025-03-10 20:16:07'),
-(30, 30, 'rodrigooliveirafeitosa@gmail.com', 'redefinição de senha', 'cliente', 'DK7SBSKYD1SANxoMfhSPtToYlAFsH15yIjDO8ordnwiKlkXhp6UPY6KlkVtw', '2025-03-10 20:17:19', '2025-03-10 20:17:37'),
-(31, 30, 'rodrigooliveirafeitosa@gmail.com', 'token expirado - redefinição de senha', 'cliente', 'caaM3LC8UYZMatLCqtCGtfa9EsuOrj6SsEQe3niMfLA0dR4lRvkQQPVgOoRO', '2025-03-10 20:18:13', '2025-03-10 20:19:33'),
-(32, 30, 'rodrigooliveirafeitosa@gmail.com', 'redefinição de senha', 'cliente', 'tCuT9PNAkw6ggw3k1o56f5Ir0hXvxHfVNnFqbGUafZLGxsYeFwKKjpssR6P4', '2025-06-04 20:32:34', '2025-06-04 20:33:03'),
-(33, 30, 'rodrigooliveirafeitosa@gmail.com', 'token expirado - redefinição de senha', 'cliente', 'KeAHmXserrCTW2F8wkTcNaf5pdDVBIZm2gR64b1kV72yXZwPUXlI1OphR9Xk', '2025-06-04 20:35:38', '2025-06-04 20:40:08'),
-(34, 30, 'rodrigooliveirafeitosa@gmail.com', 'token expirado - redefinição de senha', 'cliente', 'YMJ35vq6JaTuEuclOAQe7pkxXfl1zTjS3lDGvM4D0weAcmuv5xWevfpSbru4', '2025-06-04 20:40:21', '2025-06-04 20:41:57'),
-(35, 30, 'rodrigooliveirafeitosa@gmail.com', 'redefinição de senha', 'cliente', 'JDwqCVDHem1txAofkAeB5NOhmsGLwvVOiAlH8juxDgPOHNlFpd9a7QxIOhbc', '2025-06-04 20:42:14', '2025-06-04 21:02:44'),
-(36, 30, 'rodrigooliveirafeitosa@gmail.com', 'redefinição de senha', 'cliente', 'JCbhI94g914UinaAzKIzjFZwzmpgXJrAuyRrXPGKkPB7VC7jQlBN37GYSRdo', '2025-06-04 20:44:07', '2025-06-08 20:38:23'),
-(37, 12, 'rodrigooliveirafeitosa@gmail.com', 'redefinição de senha', 'estabelecimento', 'JCbhI94g914UinaAzKIzjFZwzmpgXJrAuyRrXPGKkPB7VC7jQlBN37GYSRdo', '2025-06-04 20:44:07', '2025-06-08 20:39:21');
-
 -- --------------------------------------------------------
 
 --
@@ -1184,24 +1088,6 @@ CREATE TABLE `mensagens_cliente` (
   `data_envio` datetime NOT NULL,
   `ativo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Despejando dados para a tabela `mensagens_cliente`
---
-
-INSERT INTO `mensagens_cliente` (`id_mensagem`, `id_chat`, `id_remetente`, `id_destinatario`, `categoria`, `mensagem`, `data_envio`, `ativo`) VALUES
-(1, '1e7793c5-937f-4a93-8358-457f81a53c3f', 30, 1, 'Sugestão de melhoria', 'tudo', '2025-03-21 00:48:33', 1),
-(2, '1e7793c5-937f-4a93-8358-457f81a53c3f', 1, 30, 'Sugestão de melhoria', 'ok', '2025-03-21 01:01:27', 1),
-(3, '1e7793c5-937f-4a93-8358-457f81a53c3f', 1, 30, 'Sugestão de melhoria', 'Obrigado', '2025-03-21 01:05:18', 1),
-(4, '1e7793c5-937f-4a93-8358-457f81a53c3f', 1, 30, 'Sugestão de melhoria', 'fodase', '2025-03-21 11:36:33', 1),
-(5, '1e7793c5-937f-4a93-8358-457f81a53c3f', 1, 30, 'Sugestão de melhoria', 'vtnc', '2025-03-21 12:15:47', 1),
-(6, '1e7793c5-937f-4a93-8358-457f81a53c3f', 30, 1, 'Sugestão de melhoria', 'Isso não se faz, parceiro. Vou te pegar nas ideia', '2025-03-23 17:42:13', 1),
-(7, '1e7793c5-937f-4a93-8358-457f81a53c3f', 30, 1, 'Sugestão de melhoria', 'gggdgerte', '2025-03-23 17:54:09', 1),
-(8, '1e7793c5-937f-4a93-8358-457f81a53c3f', 30, 1, 'Sugestão de melhoria', 'chapei', '2025-03-23 18:39:54', 1),
-(9, '1e7793c5-937f-4a93-8358-457f81a53c3f', 1, 30, 'Sugestão de melhoria', 'Opa meu nobre. Tá na paz', '2025-03-23 18:42:12', 1),
-(10, '1e7793c5-937f-4a93-8358-457f81a53c3f', 30, 1, 'Sugestão de melhoria', 'Aí tu tá de sacanagem', '2025-04-12 12:00:15', 1),
-(11, '152b5749-f319-454a-9f7a-94f7cc4fb92e', 30, 1, 'Esqueci minha senha', 'Teste', '2025-04-12 12:00:32', 1),
-(12, '152b5749-f319-454a-9f7a-94f7cc4fb92e', 1, 30, 'Esqueci minha senha', 'testado', '2025-04-12 12:01:39', 1);
 
 -- --------------------------------------------------------
 
@@ -1220,20 +1106,6 @@ CREATE TABLE `mensagens_estab` (
   `ativo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `mensagens_estab`
---
-
-INSERT INTO `mensagens_estab` (`id_mensagem`, `id_chat`, `id_remetente`, `id_destinatario`, `categoria`, `mensagem`, `data_envio`, `ativo`) VALUES
-(1, '49f89de6-dc76-45f0-a491-717f48af85ad', 12, 1, 'Pedido não foi entregue', 'Comeram meu lanche cuzaum', '2025-03-21 00:50:31', 1),
-(2, '49f89de6-dc76-45f0-a491-717f48af85ad', 1, 12, 'Pedido não foi entregue', 'Essa é a caminhada, pa pum', '2025-03-23 17:32:13', 1),
-(3, '49f89de6-dc76-45f0-a491-717f48af85ad', 12, 1, 'Pedido não foi entregue', 'se você da pum, eu tô pumba', '2025-03-23 17:56:07', 1),
-(4, '49f89de6-dc76-45f0-a491-717f48af85ad', 1, 12, 'Pedido não foi entregue', 'hakuna matata', '2025-03-23 18:42:40', 1),
-(5, '49f89de6-dc76-45f0-a491-717f48af85ad', 12, 1, 'Pedido não foi entregue', 'iiiiiiiiiiiih', '2025-03-23 18:43:00', 1),
-(6, '49f89de6-dc76-45f0-a491-717f48af85ad', 12, 1, 'Pedido não foi entregue', 'uhhhuuuu', '2025-04-12 12:42:29', 1),
-(7, '3e54ff2b-3999-4db9-8133-009815cdb645', 12, 1, 'Pedido cancelado sem motivo', 'teste', '2025-04-12 12:42:43', 1),
-(8, '3e54ff2b-3999-4db9-8133-009815cdb645', 1, 12, 'Pedido cancelado sem motivo', 'testado', '2025-04-12 12:43:25', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -1250,52 +1122,6 @@ CREATE TABLE `pedidos` (
   `endereco` int(11) NOT NULL,
   `payment_intent_id` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Despejando dados para a tabela `pedidos`
---
-
-INSERT INTO `pedidos` (`id_pedido`, `id_cliente`, `valor_total`, `forma_pagamento`, `data_compra`, `status_entrega`, `endereco`, `payment_intent_id`) VALUES
-(1, 1, 79.80, 1, '2025-02-16 12:31:16', 7, 2, '0'),
-(2, 2, 23.90, 2, '2025-01-16 12:31:16', 5, 3, '0'),
-(3, 3, 149.70, 1, '2025-01-16 12:31:16', 4, 1, '0'),
-(4, 4, 42.50, 3, '2025-01-16 12:31:16', 5, 4, '0'),
-(5, 5, 51.60, 2, '2025-01-16 12:31:16', 2, 2, '0'),
-(6, 1, 7.98, 1, '2025-01-16 12:33:00', 5, 2, '0'),
-(7, 1, 50.00, 1, '2025-02-18 14:04:09', 6, 3, '0'),
-(8, 6, 151.50, 2, '2025-01-19 15:10:04', 5, 1, '0'),
-(9, 7, 32.40, 1, '2025-02-19 21:06:19', 6, 3, '0'),
-(10, 7, 71.70, 1, '2025-01-20 07:55:21', 6, 3, '0'),
-(11, 7, 501.90, 2, '2025-02-20 08:21:19', 6, 5, '0'),
-(12, 6, 160.20, 1, '2025-02-28 15:05:57', 5, 1, '0'),
-(13, 6, 190.80, 1, '2025-02-28 15:42:14', 5, 1, '0'),
-(14, 6, 94.80, 1, '2025-02-28 15:42:45', 5, 1, '0'),
-(15, 6, 81.80, 1, '2025-02-28 15:43:03', 5, 1, '0'),
-(16, 6, 88.30, 1, '2025-02-28 15:43:21', 7, 1, '0'),
-(17, 6, 86.70, 1, '2025-01-28 15:43:44', 7, 1, '0'),
-(18, 7, 23.90, 1, '2025-03-02 22:02:12', 5, 3, '0'),
-(19, 7, 15.90, 3, '2025-03-06 21:36:25', 5, 5, '0'),
-(20, 30, 23.90, 2, '2025-03-12 21:10:56', 5, 2, '0'),
-(21, 30, 8.50, 3, '2025-03-12 21:11:12', 5, 2, '0'),
-(22, 30, 32.40, 1, '2025-03-12 21:11:34', 5, 2, '0'),
-(23, 30, 49.90, 2, '2025-03-12 23:05:24', 5, 2, '0'),
-(25, 30, 12.90, 1, '2025-03-15 17:57:23', 2, 6, '0'),
-(26, 30, 7.50, 1, '2025-03-15 18:13:43', 2, 7, '0'),
-(27, 30, 15.90, 3, '2025-03-15 18:14:35', 5, 7, '0'),
-(28, 30, 40.90, 3, '2025-03-15 18:15:24', 6, 9, '0'),
-(29, 30, 15.00, 1, '2025-04-12 11:49:21', 2, 6, '0'),
-(30, 30, 10.00, 3, '2025-04-17 19:55:20', 6, 2, '0'),
-(31, 30, 29.90, 2, '2025-05-04 15:09:43', 2, 6, '0'),
-(32, 30, 23.90, 1, '2025-05-07 21:27:29', 2, 6, '0'),
-(33, 30, 23.90, 1, '2025-05-10 20:33:17', 2, 6, 'pi_3RNMsm4U9pgCLCrt05Zz6gpS'),
-(34, 30, 8.50, 1, '2025-05-10 20:36:39', 2, 2, 'pi_3RNMwN4U9pgCLCrt0I7uozOj'),
-(35, 30, 29.90, 1, '2025-05-10 20:46:08', 2, 10, 'pi_3RNN5Y4U9pgCLCrt0BqTF9tk'),
-(36, 6, 23.90, 1, '2025-05-16 14:08:16', 2, 1, 'pi_3RPRjh4U9pgCLCrt1y1lWgQ1'),
-(37, 6, 30.90, 1, '2025-05-16 15:00:31', 2, 1, 'pi_3RPSXR4U9pgCLCrt06adjw0s'),
-(38, 6, 45.80, 1, '2025-05-16 15:57:50', 2, 1, 'pi_3RPTQt4U9pgCLCrt15L57ion'),
-(39, 30, 23.90, 1, '2025-05-29 21:08:02', 7, 2, 'pi_3RUGUB4U9pgCLCrt0maRPr4T'),
-(40, 30, 8.50, 1, '2025-05-29 21:24:25', 7, 10, 'pi_3RUGja4U9pgCLCrt1SXz3xWR'),
-(41, 30, 50.00, 1, '2025-06-05 16:27:45', 5, 6, 'pi_3RWjRm4U9pgCLCrt1xC3ZUlK');
 
 --
 -- Acionadores `pedidos`
@@ -1377,12 +1203,10 @@ CREATE TABLE `planos_estabelecimentos` (
 --
 
 INSERT INTO `planos_estabelecimentos` (`id_estab`, `id_plano`, `ativo`) VALUES
-(6, 1, 0),
-(6, 2, 1),
 (1, 1, 1),
-(4, 2, 1),
-(12, 2, 0),
-(12, 1, 1);
+(2, 2, 1),
+(3, 1, 1),
+(4, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -1406,19 +1230,56 @@ CREATE TABLE `produtos` (
 --
 
 INSERT INTO `produtos` (`id_produto`, `nome`, `descricao`, `valor`, `id_categoria`, `id_estab`, `qtd_estoque`, `imagem_produto`) VALUES
-(1, 'Arroz Branco 5kg', NULL, 23.90, 1, 2, 24, NULL),
-(2, 'Feijão Carioca 1kg', NULL, 8.50, 1, 2, 92, NULL),
-(3, 'Pizza Calabresa', 'prato típico da Itália, feito com linguiça calabresa, queijo mussarela, cebola, azeitonas e molho de tomate', 29.90, 2, 6, 8, '1743374133.png'),
-(4, 'Peixe Grelhado', NULL, 49.90, 2, 5, 12, NULL),
-(5, 'Sabonete Líquido 500ml', NULL, 12.90, 3, 4, 26, NULL),
-(6, 'Macarrão Instantâneo 80g', NULL, 3.99, 1, 3, 188, NULL),
-(7, 'BreadSticks', 'bastões de pão secos e crocantes, geralmente do tamanho de um lápis, que são assados no forno', 15.90, 2, 6, 28, '1743374383.jpg'),
-(8, 'Coca-Cola', NULL, 7.50, 4, 6, 198, NULL),
-(9, 'Pizza Morango com Chocolate', NULL, 40.90, 5, 6, 0, NULL),
-(10, 'X-burguer mega', 'Pão de hamburguer, 150g de patinho, 50g de queijo prato, alface, tomate e cebola.', 50.00, 1, 12, 54, '1743269496_x-burguer-73517.jpg'),
-(11, 'Coca-cola lata 220ml', 'refrigerante de cola', 6.00, 4, 12, 150, '1744472036.jpg'),
-(12, 'Bala', 'Sabor pessego', 10.00, 5, 12, 15, '1744472241_9405729837Bala-de-Pessego-Momo-3Sabores-85g-01.jpg'),
-(13, 'X bacon', 'Pão de hambúrguer, hambúguer bovino 150g, 10 tiras de bacon, 2 fatias de cheddar e cebola fatiada.', 55.00, 2, 12, 10, 'sem_foto.png');
+(1, 'Pão Francês', 'Pão crocante assado na hora.', 0.60, 13, 1, 300, ''),
+(2, 'Croissant de Presunto e Queijo', 'Massa folhada recheada com presunto e queijo.', 5.50, 13, 1, 50, ''),
+(3, 'Bolo de Cenoura com Chocolate', 'Fatia de bolo caseiro com cobertura de chocolate.', 4.00, 8, 1, 40, ''),
+(4, 'Café com Leite', 'Café com leite quente.', 3.00, 12, 1, 80, ''),
+(5, 'Sonho de Creme', 'Doce frito recheado com creme de baunilha.', 8.00, 8, 1, 30, ''),
+(6, 'Feijoada Completa', 'Feijoada com acompanhamentos tradicionais.', 25.00, 3, 2, 20, ''),
+(7, 'Bife à Parmegiana', 'Bife empanado com queijo e molho de tomate.', 27.90, 3, 2, 15, ''),
+(8, 'Moqueca de Peixe', 'Moqueca com arroz e pirão.', 30.00, 17, 2, 10, ''),
+(9, 'Marmita Executiva', 'Arroz, feijão, carne e salada.', 15.00, 7, 2, 40, ''),
+(10, 'Guaraná Natural', 'Refrigerante típico brasileiro.', 5.00, 9, 2, 60, ''),
+(11, 'Açaí Tradicional 300ml', 'Açaí puro com granola.', 10.00, 10, 3, 50, ''),
+(12, 'Açaí com Banana e Leite Condensado', 'Açaí com banana, granola e leite condensado.', 13.00, 10, 3, 40, ''),
+(13, 'Açaí com Morango e Nutella', 'Açaí com morango fresco e Nutella.', 15.00, 10, 3, 30, ''),
+(14, 'Suco de Cupuaçu', 'Suco natural de cupuaçu.', 7.00, 9, 3, 25, ''),
+(15, 'Tigela Power', 'Açaí com mix de frutas e castanhas.', 17.00, 10, 3, 20, ''),
+(16, 'Pizza Margherita', 'Molho de tomate, mussarela e manjericão.', 35.00, 2, 4, 20, ''),
+(17, 'Pizza Calabresa', 'Calabresa fatiada com cebola e queijo.', 38.00, 2, 4, 25, ''),
+(18, 'Pizza Quatro Queijos', 'Mussarela, provolone, gorgonzola e parmesão.', 42.00, 2, 4, 15, ''),
+(19, 'Refrigerante 2L', 'Bebida gaseificada de 2 litros.', 9.00, 9, 4, 30, ''),
+(20, 'Pizza Chocolate com Morango', 'Pizza doce com chocolate e morango.', 40.00, 8, 4, 10, ''),
+(21, 'Café Expresso', 'Café forte e encorpado.', 4.00, 12, 5, 100, ''),
+(22, 'Capuccino', 'Café com leite vaporizado e chocolate.', 6.50, 12, 5, 60, ''),
+(23, 'Bolo de Fubá com Goiabada', 'Fatia de bolo típico do cerrado.', 5.00, 8, 5, 30, ''),
+(24, 'Pão de Queijo', 'Pão de queijo mineiro.', 2.50, 11, 5, 100, ''),
+(25, 'Chá de Hibisco', 'Chá natural gelado.', 5.00, 9, 5, 50, ''),
+(26, 'Baião de Dois', 'Arroz, feijão verde, queijo coalho e carne seca.', 22.00, 3, 6, 20, ''),
+(27, 'Carne de Sol com Macaxeira', 'Prato regional nordestino.', 26.00, 3, 6, 15, ''),
+(28, 'Cuscuz Nordestino', 'Cuscuz de milho com ovos e queijo.', 12.00, 3, 6, 30, ''),
+(29, 'Suco de Cajá', 'Bebida típica do nordeste.', 6.00, 9, 6, 25, ''),
+(30, 'Marmita Nordestina', 'Marmita com carne seca, arroz e feijão.', 18.00, 7, 6, 40, ''),
+(31, 'Café Pingado', 'Café com um toque de leite.', 3.00, 12, 7, 100, ''),
+(32, 'Torrada com Manteiga', 'Pão torrado com manteiga.', 4.00, 13, 7, 50, ''),
+(33, 'Pão de Mel', 'Doce recheado com doce de leite.', 5.00, 8, 7, 40, ''),
+(34, 'Café Gelado com Leite', 'Bebida gelada à base de café.', 6.50, 9, 7, 30, ''),
+(35, 'Torta de Limão', 'Fatia de torta com cobertura de limão.', 6.00, 8, 7, 20, ''),
+(36, 'Escondidinho de Carne', 'Purê de mandioca com carne seca.', 20.00, 3, 8, 20, ''),
+(37, 'Doce de Leite Caseiro', 'Doce tradicional feito em casa.', 6.00, 8, 8, 50, ''),
+(38, 'Torta de Frango', 'Torta salgada com recheio de frango.', 12.00, 11, 8, 30, ''),
+(39, 'Marmita Caseira', 'Arroz, feijão, bife acebolado e salada.', 17.00, 7, 8, 35, ''),
+(40, 'Bolo de Milho Verde', 'Bolo típico do nordeste.', 5.00, 8, 8, 25, ''),
+(41, 'Sushi de Salmão', '6 unidades de sushi fresco.', 22.00, 4, 9, 30, ''),
+(42, 'Temaki de Atum', 'Cone de alga com arroz e atum.', 18.00, 4, 9, 25, ''),
+(43, 'Combinado 20 peças', 'Sushis variados.', 45.00, 4, 9, 20, ''),
+(44, 'Missoshiru', 'Sopa de missô.', 9.00, 4, 9, 40, ''),
+(45, 'Sashimi de Salmão', '10 fatias de sashimi fresco.', 28.00, 4, 9, 15, ''),
+(46, 'Tapioca de Frango com Catupiry', 'Tapioca recheada com frango e catupiry.', 10.00, 3, 10, 30, ''),
+(47, 'Tapioca de Coco com Leite Condensado', 'Tapioca doce tradicional.', 9.00, 8, 10, 40, ''),
+(48, 'Suco Natural de Abacaxi', 'Suco sem adição de açúcar.', 5.50, 9, 10, 35, ''),
+(49, 'Tapioca de Carne Seca', 'Tapioca nordestina recheada.', 11.00, 3, 10, 25, ''),
+(50, 'Cuscuz com Ovo e Queijo', 'Prato regional nordestino.', 8.50, 3, 10, 30, '');
 
 -- --------------------------------------------------------
 
@@ -1450,8 +1311,26 @@ CREATE TABLE `produtos_favoritos` (
 --
 
 INSERT INTO `produtos_favoritos` (`id_produto`, `id_cliente`) VALUES
-(11, 30),
-(7, 30);
+(1, 1),
+(4, 1),
+(6, 2),
+(9, 2),
+(12, 3),
+(14, 3),
+(16, 4),
+(20, 4),
+(21, 5),
+(23, 5),
+(26, 6),
+(29, 6),
+(31, 7),
+(33, 7),
+(36, 8),
+(39, 8),
+(41, 9),
+(43, 9),
+(46, 10),
+(48, 10);
 
 -- --------------------------------------------------------
 
@@ -1707,7 +1586,7 @@ ALTER TABLE `administradores`
 -- AUTO_INCREMENT de tabela `avaliacoes`
 --
 ALTER TABLE `avaliacoes`
-  MODIFY `id_avaliacao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_avaliacao` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `categorias_chamado`
@@ -1719,7 +1598,7 @@ ALTER TABLE `categorias_chamado`
 -- AUTO_INCREMENT de tabela `categorias_produtos`
 --
 ALTER TABLE `categorias_produtos`
-  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de tabela `clientes`
@@ -1743,25 +1622,25 @@ ALTER TABLE `estabelecimentos`
 -- AUTO_INCREMENT de tabela `formas_pagamentos`
 --
 ALTER TABLE `formas_pagamentos`
-  MODIFY `id_formapag` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_formapag` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de tabela `grades_horario`
 --
 ALTER TABLE `grades_horario`
-  MODIFY `id_grade` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `id_grade` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT de tabela `historico_clientes`
 --
 ALTER TABLE `historico_clientes`
-  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT de tabela `historico_estabelecimentos`
 --
 ALTER TABLE `historico_estabelecimentos`
-  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT de tabela `itens_pedidos`
@@ -1803,7 +1682,7 @@ ALTER TABLE `planos`
 -- AUTO_INCREMENT de tabela `produtos`
 --
 ALTER TABLE `produtos`
-  MODIFY `id_produto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id_produto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT de tabela `status_pedidos`
