@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Tempo de geração: 20/06/2025 às 23:27
+-- Host: localhost
+-- Tempo de geração: 21/06/2025 às 22:07
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -775,16 +775,16 @@ CREATE TABLE `estabelecimentos` (
 --
 
 INSERT INTO `estabelecimentos` (`id_estab`, `razao_social`, `nome_fantasia`, `cnpj`, `telefone`, `cpf_titular`, `rg_titular`, `cnae`, `logradouro`, `numero`, `bairro`, `cidade`, `estado`, `cep`, `email`, `senha`, `email_verificado`, `perfil_ativo`, `imagem_perfil`) VALUES
-(1, 'Padaria Pão Quente', 'Pão Quente', '12.345.678/0001-00', '(11) 98888-0001', '123.456.789-00', '12.345.678-9', '4721101', 'Rua das Massas', '100', 'Centro', 'São Paulo', 'SP', '01010-000', 'contato@paoquente.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, NULL),
-(2, 'Restaurante Sabor & Cia', 'Sabor & Cia', '23.456.789/0001-11', '(21) 97777-0002', '234.567.890-11', '23.456.789-0', '5611203', 'Avenida Gourmet', '200', 'Jardins', 'Rio de Janeiro', 'RJ', '20020-000', 'contato@saborcia.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, NULL),
-(3, 'Açaí da Hora LTDA', 'Açaí da Hora', '34.567.890/0001-22', '(31) 96666-0003', '345.678.901-22', '34.567.890-1', '4729601', 'Rua Tropical', '300', 'Centro', 'Belo Horizonte', 'MG', '30130-000', 'contato@acaihora.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, NULL),
-(4, 'Pizza & Ponto ME', 'Pizza & Ponto', '45.678.901/0001-33', '(41) 95555-0004', '456.789.012-33', '45.678.901-2', '5611201', 'Rua das Pizzas', '400', 'Santa Felicidade', 'Curitiba', 'PR', '80230-000', 'contato@pizzaponto.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, NULL),
-(5, 'Grãos do Cerrado', 'Grãos do Cerrado', '56.789.012/0001-44', '(61) 94444-0005', '567.890.123-44', '56.789.012-3', '4721102', 'Rua do Café', '500', 'Asa Sul', 'Brasília', 'DF', '70300-000', 'contato@graoscerrado.com', 'HASH_AQUI', 1, 1, NULL),
-(6, 'Tempero Nordestino', 'Tempero Nordestino', '67.890.123/0001-55', '(71) 93333-0006', '678.901.234-55', '67.890.123-4', '5611203', 'Rua do Sertão', '120', 'Liberdade', 'Salvador', 'BA', '40025-000', 'contato@tempero.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, NULL),
-(7, 'Café na Praça ME', 'Café na Praça', '78.901.234/0001-66', '(51) 92222-0007', '789.012.345-66', '78.901.234-5', '5611204', 'Praça Central', '45', 'Moinhos de Vento', 'Porto Alegre', 'RS', '90520-040', 'cafe@napraca.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, NULL),
-(8, 'Delícias Caseiras Ltda', 'Delícias Caseiras', '89.012.345/0001-77', '(81) 91111-0008', '890.123.456-77', '89.012.345-6', '5611201', 'Rua das Receitas', '88', 'Boa Viagem', 'Recife', 'PE', '51020-200', 'delicias@caseiras.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, NULL),
-(9, 'Sushi Yamada', 'Sushi Yamada', '90.123.456/0001-88', '(85) 90000-0009', '901.234.567-88', '90.123.456-7', '5611205', 'Avenida Japão', '201', 'Aldeota', 'Fortaleza', 'CE', '60160-000', 'contato@sushiyamada.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, NULL),
-(10, 'Tapiocaria da Esquina', 'Tapiocaria da Esquina', '01.234.567/0001-99', '(95) 98888-0010', '012.345.678-99', '01.234.567-8', '5611206', 'Rua do Norte', '19', 'São Francisco', 'Boa Vista', 'RR', '69300-000', 'contato@tapioca.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, NULL);
+(1, 'Padaria Pão Quente', 'Pão Quente', '12.345.678/0001-00', '(11) 98888-0001', '123.456.789-00', '12.345.678-9', '4721101', 'Rua das Massas', '100', 'Centro', 'São Paulo', 'SP', '01010-000', 'contato@paoquente.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, '1750535912_pao_quente.jpg'),
+(2, 'Restaurante Sabor & Cia', 'Sabor & Cia', '23.456.789/0001-11', '(21) 97777-0002', '234.567.890-11', '23.456.789-0', '5611203', 'Avenida Gourmet', '200', 'Jardins', 'Rio de Janeiro', 'RJ', '20020-000', 'contato@saborcia.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, '1750535962_saborecia.jpg'),
+(3, 'Açaí da Hora LTDA', 'Açaí da Hora', '34.567.890/0001-22', '(31) 96666-0003', '345.678.901-22', '34.567.890-1', '4729601', 'Rua Tropical', '300', 'Centro', 'Belo Horizonte', 'MG', '30130-000', 'contato@acaihora.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, '1750535997_acaidahora.jpg'),
+(4, 'Pizza & Ponto ME', 'Pizza & Ponto', '45.678.901/0001-33', '(41) 95555-0004', '456.789.012-33', '45.678.901-2', '5611201', 'Rua das Pizzas', '400', 'Santa Felicidade', 'Curitiba', 'PR', '80230-000', 'contato@pizzaponto.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, '1750536029_pizzaeponto.jpg'),
+(5, 'Grãos do Cerrado', 'Grãos do Cerrado', '56.789.012/0001-44', '(61) 94444-0005', '567.890.123-44', '56.789.012-3', '4721102', 'Rua do Café', '500', 'Asa Sul', 'Brasília', 'DF', '70300-000', 'contato@graoscerrado.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, '1750536130_graosdocerrado.jpg'),
+(6, 'Tempero Nordestino', 'Tempero Nordestino', '67.890.123/0001-55', '(71) 93333-0006', '678.901.234-55', '67.890.123-4', '5611203', 'Rua do Sertão', '120', 'Liberdade', 'Salvador', 'BA', '40025-000', 'contato@tempero.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, '1750536187_temperonordestino.jpg'),
+(7, 'Café na Praça ME', 'Café na Praça', '78.901.234/0001-66', '(51) 92222-0007', '789.012.345-66', '78.901.234-5', '5611204', 'Praça Central', '45', 'Moinhos de Vento', 'Porto Alegre', 'RS', '90520-040', 'cafe@napraca.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, '1750536255_cafenapraca.jpg'),
+(8, 'Delícias Caseiras Ltda', 'Delícias Caseiras', '89.012.345/0001-77', '(81) 91111-0008', '890.123.456-77', '89.012.345-6', '5611201', 'Rua das Receitas', '88', 'Boa Viagem', 'Recife', 'PE', '51020-200', 'delicias@caseiras.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, '1750536292_deliciascaseiras.jpg'),
+(9, 'Sushi Yamada', 'Sushi Yamada', '90.123.456/0001-88', '(85) 90000-0009', '901.234.567-88', '90.123.456-7', '5611205', 'Avenida Japão', '201', 'Aldeota', 'Fortaleza', 'CE', '60160-000', 'contato@sushiyamada.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, '1750536332_sushiyamada.jpg'),
+(10, 'Tapiocaria da Esquina', 'Tapiocaria da Esquina', '01.234.567/0001-99', '(95) 98888-0010', '012.345.678-99', '01.234.567-8', '5611206', 'Rua do Norte', '19', 'São Francisco', 'Boa Vista', 'RR', '69300-000', 'contato@tapioca.com', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', 1, 1, '1750536373_tapiocaesquina.jpg');
 
 --
 -- Acionadores `estabelecimentos`
@@ -1041,7 +1041,8 @@ INSERT INTO `historico_estabelecimentos` (`id_alteracao`, `id_estab`, `campo_alt
 (50, 9, 'senha', 'HASH_AQUI', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-20 17:04:13'),
 (51, 10, 'cpf_titular', '012.345.678-99', '', '2025-06-20 17:04:13'),
 (52, 10, 'senha', 'HASH_AQUI', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-20 17:05:19'),
-(53, 10, 'cpf_titular', '', '012.345.678-99', '2025-06-20 17:09:34');
+(53, 10, 'cpf_titular', '', '012.345.678-99', '2025-06-20 17:09:34'),
+(54, 5, 'senha', 'HASH_AQUI', '$2y$12$uiBNqJTsA.CTOrh3d0Ngbu.9xteriN6xlhhEAU.WHvzaw91hYydm.', '2025-06-21 17:01:44');
 
 -- --------------------------------------------------------
 
@@ -1640,7 +1641,7 @@ ALTER TABLE `historico_clientes`
 -- AUTO_INCREMENT de tabela `historico_estabelecimentos`
 --
 ALTER TABLE `historico_estabelecimentos`
-  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id_alteracao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT de tabela `itens_pedidos`
