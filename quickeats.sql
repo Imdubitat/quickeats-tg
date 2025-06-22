@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 22/06/2025 às 04:03
+-- Tempo de geração: 22/06/2025 às 17:16
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -977,7 +977,17 @@ INSERT INTO `grades_horario` (`id_grade`, `id_estab`, `dia_semana`, `inicio_expe
 (57, 10, '3', '18:00:00', '22:00:00'),
 (58, 10, '4', '18:00:00', '22:00:00'),
 (59, 10, '5', '18:00:00', '22:00:00'),
-(60, 10, '6', '18:00:00', '22:00:00');
+(60, 10, '6', '18:00:00', '22:00:00'),
+(61, 1, '7', '09:00:00', '18:00:00'),
+(62, 2, '7', '10:00:00', '19:00:00'),
+(63, 3, '7', '08:30:00', '17:30:00'),
+(64, 4, '7', '09:00:00', '16:00:00'),
+(65, 5, '7', '11:00:00', '20:00:00'),
+(66, 6, '7', '07:00:00', '15:00:00'),
+(67, 7, '7', '12:00:00', '21:00:00'),
+(68, 8, '7', '09:30:00', '17:30:00'),
+(69, 9, '7', '10:00:00', '18:00:00'),
+(70, 10, '7', '08:00:00', '14:00:00');
 
 -- --------------------------------------------------------
 
@@ -1056,6 +1066,86 @@ CREATE TABLE `itens_pedidos` (
   `qtd_produto` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Despejando dados para a tabela `itens_pedidos`
+--
+
+INSERT INTO `itens_pedidos` (`id_pedido`, `id_produto`, `qtd_produto`) VALUES
+(1, 6, 1),
+(1, 7, 2),
+(1, 8, 1),
+(1, 9, 3),
+(1, 10, 1),
+(2, 1, 3),
+(2, 2, 1),
+(2, 3, 2),
+(2, 4, 1),
+(2, 5, 4),
+(3, 11, 1),
+(3, 12, 2),
+(3, 13, 1),
+(3, 14, 1),
+(3, 15, 2),
+(4, 16, 1),
+(4, 17, 3),
+(4, 18, 1),
+(4, 19, 2),
+(5, 21, 2),
+(5, 22, 1),
+(5, 23, 3),
+(5, 24, 1),
+(6, 26, 1),
+(6, 29, 1),
+(7, 39, 3),
+(7, 40, 1),
+(8, 41, 2),
+(8, 42, 1),
+(8, 43, 1),
+(8, 44, 2),
+(8, 45, 1),
+(9, 46, 1),
+(9, 47, 2),
+(9, 48, 1),
+(9, 49, 3),
+(9, 50, 1),
+(10, 1, 8),
+(10, 3, 1),
+(10, 4, 1),
+(11, 7, 1),
+(11, 10, 1),
+(12, 14, 2),
+(12, 15, 3),
+(13, 16, 2),
+(13, 17, 1),
+(13, 19, 1),
+(13, 20, 2),
+(14, 22, 2),
+(14, 23, 2),
+(15, 28, 1),
+(15, 29, 2),
+(16, 37, 1),
+(16, 39, 3),
+(17, 41, 1),
+(17, 44, 3),
+(17, 45, 2),
+(18, 46, 3),
+(18, 47, 1),
+(18, 48, 2),
+(18, 49, 1),
+(19, 1, 4),
+(20, 3, 2),
+(21, 2, 1),
+(21, 4, 3),
+(21, 1, 6),
+(22, 2, 2),
+(22, 3, 1),
+(22, 5, 1),
+(22, 4, 2),
+(23, 8, 1),
+(23, 10, 1),
+(24, 40, 3),
+(25, 11, 6);
+
 -- --------------------------------------------------------
 
 --
@@ -1123,6 +1213,37 @@ CREATE TABLE `pedidos` (
   `endereco` int(11) NOT NULL,
   `payment_intent_id` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `pedidos`
+--
+
+INSERT INTO `pedidos` (`id_pedido`, `id_cliente`, `valor_total`, `forma_pagamento`, `data_compra`, `status_entrega`, `endereco`, `payment_intent_id`) VALUES
+(1, 2, 160.80, 2, '2025-06-22 11:07:26', 2, 2, 'pi_3RcoYA4U9pgCLCrt04zB9FAh'),
+(2, 1, 50.30, 2, '2025-06-22 11:08:22', 2, 1, 'pi_3RcoZ04U9pgCLCrt0IfL6OxR'),
+(3, 3, 92.00, 2, '2025-06-22 11:09:23', 2, 3, 'pi_3Rcoa04U9pgCLCrt0qr0LeM0'),
+(4, 4, 209.00, 2, '2025-06-22 11:10:10', 2, 4, 'pi_3Rcoak4U9pgCLCrt0bxUN0OC'),
+(5, 5, 32.00, 2, '2025-06-22 11:11:02', 2, 5, 'pi_3Rcobd4U9pgCLCrt1mlzm1D2'),
+(6, 6, 28.00, 2, '2025-06-22 11:24:16', 2, 6, 'pi_3RcooQ4U9pgCLCrt0L1bn8jc'),
+(7, 8, 56.00, 2, '2025-06-22 11:25:50', 2, 8, 'pi_3Rcopw4U9pgCLCrt1LtkyCMU'),
+(8, 9, 153.00, 2, '2025-06-22 11:26:23', 2, 9, 'pi_3RcoqW4U9pgCLCrt1FfsBkti'),
+(9, 10, 75.00, 2, '2025-06-22 11:27:10', 2, 10, 'pi_3RcorB4U9pgCLCrt05Qucjaa'),
+(10, 1, 11.80, 3, '2025-06-22 11:46:43', 2, 1, 'pi_3RcpA64U9pgCLCrt1lJyPlBK'),
+(11, 2, 32.90, 3, '2025-06-22 11:47:31', 2, 2, 'pi_3RcpAw4U9pgCLCrt0nsx0fo6'),
+(12, 3, 65.00, 3, '2025-06-22 11:48:20', 2, 3, 'pi_3RcpBk4U9pgCLCrt0SI6Yc60'),
+(13, 4, 197.00, 3, '2025-06-22 11:49:12', 2, 4, 'pi_3RcpCY4U9pgCLCrt0O5t4Dxk'),
+(14, 5, 23.00, 3, '2025-06-22 11:50:06', 2, 5, 'pi_3RcpDR4U9pgCLCrt0edbK9ce'),
+(15, 6, 24.00, 3, '2025-06-22 11:52:16', 2, 6, 'pi_3RcpFS4U9pgCLCrt0Mp112cB'),
+(16, 8, 57.00, 3, '2025-06-22 11:53:50', 2, 8, 'pi_3RcpGz4U9pgCLCrt01VMFDmi'),
+(17, 9, 105.00, 3, '2025-06-22 11:55:54', 2, 9, 'pi_3RcpJ44U9pgCLCrt0dAqDpEi'),
+(18, 10, 61.00, 3, '2025-06-22 11:57:39', 2, 10, 'pi_3RcpKf4U9pgCLCrt1oBzIllI'),
+(19, 1, 2.40, 2, '2025-06-22 12:03:10', 2, 1, 'pi_3RcpQ54U9pgCLCrt0fvowPnW'),
+(20, 1, 8.00, 2, '2025-06-22 12:05:36', 2, 1, 'pi_3RcpSN4U9pgCLCrt0M4aFgfj'),
+(21, 1, 18.10, 2, '2025-06-22 12:06:45', 2, 1, 'pi_3RcpTa4U9pgCLCrt0q7UAbcp'),
+(22, 1, 29.00, 2, '2025-06-22 12:12:29', 2, 1, 'pi_3RcpZ04U9pgCLCrt0cFUej3j'),
+(23, 1, 35.00, 2, '2025-06-22 12:13:24', 2, 1, 'pi_3RcpZu4U9pgCLCrt19ZVJ9w8'),
+(24, 4, 15.00, 3, '2025-06-22 12:14:30', 2, 4, 'pi_3Rcpat4U9pgCLCrt0zZaxxpo'),
+(25, 10, 60.00, 2, '2025-06-22 12:15:52', 2, 10, 'pi_3Rcpbt4U9pgCLCrt1ln84IAG');
 
 --
 -- Acionadores `pedidos`
@@ -1231,35 +1352,35 @@ CREATE TABLE `produtos` (
 --
 
 INSERT INTO `produtos` (`id_produto`, `nome`, `descricao`, `valor`, `id_categoria`, `id_estab`, `qtd_estoque`, `imagem_produto`) VALUES
-(1, 'Pão Francês', 'Pão crocante assado na hora.', 0.60, 13, 1, 300, '1750554801.jpg'),
-(2, 'Croissant de Presunto e Queijo', 'Massa folhada recheada com presunto e queijo.', 5.50, 13, 1, 50, '1750554826.jpg'),
-(3, 'Bolo de Cenoura com Chocolate', 'Fatia de bolo caseiro com cobertura de chocolate.', 4.00, 8, 1, 40, '1750554846.jpg'),
-(4, 'Café com Leite', 'Café com leite quente.', 3.00, 12, 1, 80, '1750554875.jpg'),
-(5, 'Sonho de Creme', 'Doce frito recheado com creme de baunilha.', 8.00, 8, 1, 30, '1750554903.jpg'),
-(6, 'Feijoada Completa', 'Feijoada com acompanhamentos tradicionais.', 25.00, 3, 2, 20, '1750554953.jpg'),
-(7, 'Bife à Parmegiana', 'Bife empanado com queijo e molho de tomate.', 27.90, 3, 2, 15, '1750554976.jpg'),
-(8, 'Moqueca de Peixe', 'Moqueca com arroz e pirão.', 30.00, 17, 2, 10, '1750554987.jpg'),
-(9, 'Marmita Executiva', 'Arroz, feijão, carne e salada.', 15.00, 7, 2, 40, '1750555001.jpg'),
-(10, 'Coca-cola lata 220ml', 'Refrigerante típico brasileiro.', 5.00, 9, 2, 60, '1750555128.jpg'),
-(11, 'Açaí Tradicional 300ml', 'Açaí puro com granola.', 10.00, 10, 3, 50, '1750555179.jpg'),
-(12, 'Açaí com Banana e Leite Condensado 300ml', 'Açaí com banana, granola e leite condensado.', 13.00, 10, 3, 40, '1750555222.jpg'),
-(13, 'Açaí com Morango e Nutella 250ml', 'Açaí com morango fresco e Nutella.', 15.00, 10, 3, 30, '1750555244.jpg'),
-(14, 'Suco de Cupuaçu', 'Suco natural de cupuaçu.', 7.00, 9, 3, 25, '1750555255.jpg'),
-(15, 'Tigela Power', 'Açaí com mix de frutas e castanhas.', 17.00, 10, 3, 20, '1750555270.jpg'),
-(16, 'Pizza Margherita', 'Molho de tomate, mussarela e manjericão.', 35.00, 2, 4, 20, '1750555492.jpg'),
-(17, 'Pizza Calabresa', 'Calabresa fatiada com cebola e queijo.', 38.00, 2, 4, 25, '1750555350.jpg'),
-(18, 'Pizza Quatro Queijos', 'Mussarela, provolone, gorgonzola e parmesão.', 42.00, 2, 4, 15, '1750555508.jpg'),
-(19, 'Coca-cola 2L', 'Bebida gaseificada de 2 litros.', 9.00, 9, 4, 30, '1750555533.jpg'),
-(20, 'Pizza Chocolate com Morango', 'Pizza doce com chocolate e morango.', 40.00, 8, 4, 10, '1750555554.jpg'),
-(21, 'Café Expresso', 'Café forte e encorpado.', 4.00, 12, 5, 100, '1750555600.jpg'),
-(22, 'Capuccino', 'Café com leite vaporizado e chocolate.', 6.50, 12, 5, 60, '1750555609.jpg'),
-(23, 'Bolo de Fubá com Goiabada', 'Fatia de bolo típico do cerrado.', 5.00, 8, 5, 30, '1750555727.jpg'),
-(24, 'Pão de Queijo', 'Pão de queijo mineiro.', 2.50, 11, 5, 100, '1750555740.jpg'),
+(1, 'Pão Francês', 'Pão crocante assado na hora.', 0.60, 13, 1, 279, '1750554801.jpg'),
+(2, 'Croissant de Presunto e Queijo', 'Massa folhada recheada com presunto e queijo.', 5.50, 13, 1, 40, '1750554826.jpg'),
+(3, 'Bolo de Cenoura com Chocolate', 'Fatia de bolo caseiro com cobertura de chocolate.', 4.00, 8, 1, 34, '1750554846.jpg'),
+(4, 'Café com Leite', 'Café com leite quente.', 3.00, 12, 1, 73, '1750554875.jpg'),
+(5, 'Sonho de Creme', 'Doce frito recheado com creme de baunilha.', 8.00, 8, 1, 24, '1750554903.jpg'),
+(6, 'Feijoada Completa', 'Feijoada com acompanhamentos tradicionais.', 25.00, 3, 2, 19, '1750554953.jpg'),
+(7, 'Bife à Parmegiana', 'Bife empanado com queijo e molho de tomate.', 27.90, 3, 2, 12, '1750554976.jpg'),
+(8, 'Moqueca de Peixe', 'Moqueca com arroz e pirão.', 30.00, 17, 2, 6, '1750554987.jpg'),
+(9, 'Marmita Executiva', 'Arroz, feijão, carne e salada.', 15.00, 7, 2, 37, '1750555001.jpg'),
+(10, 'Coca-cola lata 220ml', 'Refrigerante típico brasileiro.', 5.00, 9, 2, 57, '1750555128.jpg'),
+(11, 'Açaí Tradicional 300ml', 'Açaí puro com granola.', 10.00, 10, 3, 43, '1750555179.jpg'),
+(12, 'Açaí com Banana e Leite Condensado 300ml', 'Açaí com banana, granola e leite condensado.', 13.00, 10, 3, 38, '1750555222.jpg'),
+(13, 'Açaí com Morango e Nutella 250ml', 'Açaí com morango fresco e Nutella.', 15.00, 10, 3, 28, '1750555244.jpg'),
+(14, 'Suco de Cupuaçu', 'Suco natural de cupuaçu.', 7.00, 9, 3, 21, '1750555255.jpg'),
+(15, 'Tigela Power', 'Açaí com mix de frutas e castanhas.', 17.00, 10, 3, 15, '1750555270.jpg'),
+(16, 'Pizza Margherita', 'Molho de tomate, mussarela e manjericão.', 35.00, 2, 4, 16, '1750555492.jpg'),
+(17, 'Pizza Calabresa', 'Calabresa fatiada com cebola e queijo.', 38.00, 2, 4, 21, '1750555350.jpg'),
+(18, 'Pizza Quatro Queijos', 'Mussarela, provolone, gorgonzola e parmesão.', 42.00, 2, 4, 14, '1750555508.jpg'),
+(19, 'Coca-cola 2L', 'Bebida gaseificada de 2 litros.', 9.00, 9, 4, 27, '1750555533.jpg'),
+(20, 'Pizza Chocolate com Morango', 'Pizza doce com chocolate e morango.', 40.00, 8, 4, 8, '1750555554.jpg'),
+(21, 'Café Expresso', 'Café forte e encorpado.', 4.00, 12, 5, 98, '1750555600.jpg'),
+(22, 'Capuccino', 'Café com leite vaporizado e chocolate.', 6.50, 12, 5, 57, '1750555609.jpg'),
+(23, 'Bolo de Fubá com Goiabada', 'Fatia de bolo típico do cerrado.', 5.00, 8, 5, 25, '1750555727.jpg'),
+(24, 'Pão de Queijo', 'Pão de queijo mineiro.', 2.50, 11, 5, 99, '1750555740.jpg'),
 (25, 'Chá de Hibisco', 'Chá natural gelado.', 5.00, 9, 5, 50, '1750555752.jpg'),
-(26, 'Baião de Dois', 'Arroz, feijão verde, queijo coalho e carne seca.', 22.00, 3, 6, 20, '1750555819.jpg'),
+(26, 'Baião de Dois', 'Arroz, feijão verde, queijo coalho e carne seca.', 22.00, 3, 6, 19, '1750555819.jpg'),
 (27, 'Carne de Sol com Macaxeira', 'Prato regional nordestino.', 26.00, 3, 6, 15, '1750555832.jpg'),
-(28, 'Cuscuz Nordestino', 'Cuscuz de milho com ovos e queijo.', 12.00, 3, 6, 30, '1750555850.jpg'),
-(29, 'Suco de Cajá', 'Bebida típica do nordeste.', 6.00, 9, 6, 25, '1750555864.jpg'),
+(28, 'Cuscuz Nordestino', 'Cuscuz de milho com ovos e queijo.', 12.00, 3, 6, 29, '1750555850.jpg'),
+(29, 'Suco de Cajá', 'Bebida típica do nordeste.', 6.00, 9, 6, 22, '1750555864.jpg'),
 (30, 'Marmita Nordestina', 'Marmita com carne seca, arroz e feijão.', 18.00, 7, 6, 40, '1750557793.jpg'),
 (31, 'Café Pingado', 'Café com um toque de leite.', 3.00, 12, 7, 100, '1750555951.jpg'),
 (32, 'Torrada com Manteiga', 'Pão torrado com manteiga.', 4.00, 13, 7, 50, '1750555961.jpg'),
@@ -1267,20 +1388,20 @@ INSERT INTO `produtos` (`id_produto`, `nome`, `descricao`, `valor`, `id_categori
 (34, 'Café Gelado com Leite', 'Bebida gelada à base de café.', 6.50, 9, 7, 30, '1750555984.jpg'),
 (35, 'Torta de Limão', 'Fatia de torta com cobertura de limão.', 6.00, 8, 7, 20, '1750555995.jpg'),
 (36, 'Escondidinho de Carne', 'Purê de mandioca com carne seca.', 20.00, 3, 8, 20, '1750556051.jpg'),
-(37, 'Doce de Leite Caseiro', 'Doce tradicional feito em casa.', 6.00, 8, 8, 50, '1750556095.jpg'),
+(37, 'Doce de Leite Caseiro', 'Doce tradicional feito em casa.', 6.00, 8, 8, 49, '1750556095.jpg'),
 (38, 'Torta de Frango', 'Torta salgada com recheio de frango.', 12.00, 11, 8, 30, '1750556105.jpg'),
-(39, 'Marmita Caseira', 'Arroz, feijão, bife acebolado e salada.', 17.00, 7, 8, 35, '1750556118.jpg'),
-(40, 'Bolo de Milho Verde', 'Bolo típico do nordeste.', 5.00, 8, 8, 25, '1750556132.jpg'),
-(41, 'Sushi de Salmão', '6 unidades de sushi fresco.', 22.00, 4, 9, 30, '1750556193.jpg'),
-(42, 'Temaki de Atum', 'Cone de alga com arroz e atum.', 18.00, 4, 9, 25, '1750556203.jpg'),
-(43, 'Combinado 20 peças', 'Sushis variados.', 45.00, 4, 9, 20, '1750556230.'),
-(44, 'Missoshiru', 'Sopa de missô.', 9.00, 4, 9, 40, '1750556248.jpg'),
-(45, 'Sashimi de Salmão', '10 fatias de sashimi fresco.', 28.00, 4, 9, 15, '1750556260.jpg'),
-(46, 'Tapioca de Frango com Catupiry', 'Tapioca recheada com frango e catupiry.', 10.00, 3, 10, 30, '1750556331.jpg'),
-(47, 'Tapioca de Coco com Leite Condensado', 'Tapioca doce tradicional.', 9.00, 8, 10, 40, '1750556341.jpg'),
-(48, 'Suco Natural de Abacaxi', 'Suco sem adição de açúcar.', 5.50, 9, 10, 35, '1750556352.jpg'),
-(49, 'Tapioca de Carne Seca', 'Tapioca nordestina recheada.', 11.00, 3, 10, 25, '1750556366.jpg'),
-(50, 'Cuscuz com Ovo e Queijo', 'Prato regional nordestino.', 8.50, 3, 10, 30, '1750556387.jpg');
+(39, 'Marmita Caseira', 'Arroz, feijão, bife acebolado e salada.', 17.00, 7, 8, 29, '1750556118.jpg'),
+(40, 'Bolo de Milho Verde', 'Bolo típico do nordeste.', 5.00, 8, 8, 21, '1750556132.jpg'),
+(41, 'Sushi de Salmão', '6 unidades de sushi fresco.', 22.00, 4, 9, 27, '1750556193.jpg'),
+(42, 'Temaki de Atum', 'Cone de alga com arroz e atum.', 18.00, 4, 9, 19, '1750556203.jpg'),
+(43, 'Combinado 20 peças', 'Sushis variados.', 45.00, 4, 9, 19, '1750556230.'),
+(44, 'Missoshiru', 'Sopa de missô.', 9.00, 4, 9, 35, '1750556248.jpg'),
+(45, 'Sashimi de Salmão', '10 fatias de sashimi fresco.', 28.00, 4, 9, 12, '1750556260.jpg'),
+(46, 'Tapioca de Frango com Catupiry', 'Tapioca recheada com frango e catupiry.', 10.00, 3, 10, 26, '1750556331.jpg'),
+(47, 'Tapioca de Coco com Leite Condensado', 'Tapioca doce tradicional.', 9.00, 8, 10, 37, '1750556341.jpg'),
+(48, 'Suco Natural de Abacaxi', 'Suco sem adição de açúcar.', 5.50, 9, 10, 27, '1750556352.jpg'),
+(49, 'Tapioca de Carne Seca', 'Tapioca nordestina recheada.', 11.00, 3, 10, 16, '1750556366.jpg'),
+(50, 'Cuscuz com Ovo e Queijo', 'Prato regional nordestino.', 8.50, 3, 10, 29, '1750556387.jpg');
 
 -- --------------------------------------------------------
 
@@ -1629,7 +1750,7 @@ ALTER TABLE `formas_pagamentos`
 -- AUTO_INCREMENT de tabela `grades_horario`
 --
 ALTER TABLE `grades_horario`
-  MODIFY `id_grade` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id_grade` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT de tabela `historico_clientes`
@@ -1647,7 +1768,7 @@ ALTER TABLE `historico_estabelecimentos`
 -- AUTO_INCREMENT de tabela `itens_pedidos`
 --
 ALTER TABLE `itens_pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de tabela `logs_tokens`
@@ -1671,7 +1792,7 @@ ALTER TABLE `mensagens_estab`
 -- AUTO_INCREMENT de tabela `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de tabela `planos`
