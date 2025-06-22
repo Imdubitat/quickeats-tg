@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Tempo de geração: 22/06/2025 às 18:05
+-- Host: localhost
+-- Tempo de geração: 22/06/2025 às 18:42
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -522,6 +522,43 @@ CREATE TABLE `avaliacoes` (
   `id_pedido` int(11) NOT NULL,
   `nota` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `avaliacoes`
+--
+
+INSERT INTO `avaliacoes` (`id_avaliacao`, `id_pedido`, `nota`) VALUES
+(1, 20, 5),
+(2, 19, 4),
+(3, 10, 2),
+(4, 28, 5),
+(5, 27, 5),
+(6, 26, 3),
+(7, 1, 5),
+(8, 11, 4),
+(9, 33, 2),
+(10, 32, 5),
+(11, 24, 5),
+(12, 4, 5),
+(13, 36, 5),
+(14, 34, 5),
+(15, 14, 5),
+(16, 38, 5),
+(17, 15, 5),
+(18, 6, 3),
+(19, 43, 4),
+(20, 42, 4),
+(21, 41, 3),
+(22, 46, 3),
+(23, 45, 5),
+(24, 16, 5),
+(25, 50, 5),
+(26, 49, 5),
+(27, 17, 5),
+(28, 8, 4),
+(29, 25, 4),
+(30, 18, 5),
+(31, 9, 5);
 
 -- --------------------------------------------------------
 
@@ -1291,56 +1328,56 @@ CREATE TABLE `pedidos` (
 --
 
 INSERT INTO `pedidos` (`id_pedido`, `id_cliente`, `valor_total`, `forma_pagamento`, `data_compra`, `status_entrega`, `endereco`, `payment_intent_id`) VALUES
-(1, 2, 160.80, 2, '2025-06-22 11:07:26', 2, 2, 'pi_3RcoYA4U9pgCLCrt04zB9FAh'),
-(2, 1, 50.30, 2, '2025-06-22 11:08:22', 2, 1, 'pi_3RcoZ04U9pgCLCrt0IfL6OxR'),
-(3, 3, 92.00, 2, '2025-06-22 11:09:23', 2, 3, 'pi_3Rcoa04U9pgCLCrt0qr0LeM0'),
-(4, 4, 209.00, 2, '2025-06-22 11:10:10', 2, 4, 'pi_3Rcoak4U9pgCLCrt0bxUN0OC'),
-(5, 5, 32.00, 2, '2025-06-22 11:11:02', 2, 5, 'pi_3Rcobd4U9pgCLCrt1mlzm1D2'),
-(6, 6, 28.00, 2, '2025-06-22 11:24:16', 2, 6, 'pi_3RcooQ4U9pgCLCrt0L1bn8jc'),
-(7, 8, 56.00, 2, '2025-06-22 11:25:50', 2, 8, 'pi_3Rcopw4U9pgCLCrt1LtkyCMU'),
-(8, 9, 153.00, 2, '2025-06-22 11:26:23', 2, 9, 'pi_3RcoqW4U9pgCLCrt1FfsBkti'),
-(9, 10, 75.00, 2, '2025-06-22 11:27:10', 2, 10, 'pi_3RcorB4U9pgCLCrt05Qucjaa'),
-(10, 1, 11.80, 3, '2025-06-22 11:46:43', 2, 1, 'pi_3RcpA64U9pgCLCrt1lJyPlBK'),
-(11, 2, 32.90, 3, '2025-06-22 11:47:31', 2, 2, 'pi_3RcpAw4U9pgCLCrt0nsx0fo6'),
-(12, 3, 65.00, 3, '2025-06-22 11:48:20', 2, 3, 'pi_3RcpBk4U9pgCLCrt0SI6Yc60'),
-(13, 4, 197.00, 3, '2025-06-22 11:49:12', 2, 4, 'pi_3RcpCY4U9pgCLCrt0O5t4Dxk'),
-(14, 5, 23.00, 3, '2025-06-22 11:50:06', 2, 5, 'pi_3RcpDR4U9pgCLCrt0edbK9ce'),
-(15, 6, 24.00, 3, '2025-06-22 11:52:16', 2, 6, 'pi_3RcpFS4U9pgCLCrt0Mp112cB'),
-(16, 8, 57.00, 3, '2025-06-22 11:53:50', 2, 8, 'pi_3RcpGz4U9pgCLCrt01VMFDmi'),
-(17, 9, 105.00, 3, '2025-06-22 11:55:54', 2, 9, 'pi_3RcpJ44U9pgCLCrt0dAqDpEi'),
-(18, 10, 61.00, 3, '2025-06-22 11:57:39', 2, 10, 'pi_3RcpKf4U9pgCLCrt1oBzIllI'),
-(19, 1, 2.40, 2, '2025-06-22 12:03:10', 2, 1, 'pi_3RcpQ54U9pgCLCrt0fvowPnW'),
-(20, 1, 8.00, 2, '2025-06-22 12:05:36', 2, 1, 'pi_3RcpSN4U9pgCLCrt0M4aFgfj'),
-(21, 1, 18.10, 2, '2025-06-22 12:06:45', 2, 1, 'pi_3RcpTa4U9pgCLCrt0q7UAbcp'),
-(22, 1, 29.00, 2, '2025-06-22 12:12:29', 2, 1, 'pi_3RcpZ04U9pgCLCrt0cFUej3j'),
-(23, 1, 35.00, 2, '2025-06-22 12:13:24', 2, 1, 'pi_3RcpZu4U9pgCLCrt19ZVJ9w8'),
-(24, 4, 15.00, 3, '2025-06-22 12:14:30', 2, 4, 'pi_3Rcpat4U9pgCLCrt0zZaxxpo'),
-(25, 10, 60.00, 2, '2025-06-22 12:15:52', 2, 10, 'pi_3Rcpbt4U9pgCLCrt1ln84IAG'),
-(26, 2, 20.00, 2, '2025-06-22 12:37:36', 2, 2, 'pi_3Rcpx24U9pgCLCrt0QNhAPZt'),
-(27, 2, 62.90, 2, '2025-06-22 12:38:41', 2, 2, 'pi_3Rcpy94U9pgCLCrt06FDHs6F'),
-(28, 2, 105.00, 2, '2025-06-22 12:39:25', 2, 2, 'pi_3Rcpyy4U9pgCLCrt1gWGM83D'),
-(29, 3, 53.00, 2, '2025-06-22 12:41:21', 2, 3, 'pi_3Rcq0q4U9pgCLCrt1Jqa1BGM'),
-(30, 3, 72.00, 2, '2025-06-22 12:42:15', 2, 3, 'pi_3Rcq1i4U9pgCLCrt1bgQskuJ'),
-(31, 3, 56.00, 2, '2025-06-22 12:43:16', 2, 3, 'pi_3Rcq2e4U9pgCLCrt0Lfj1you'),
-(32, 4, 34.00, 2, '2025-06-22 12:45:09', 2, 4, 'pi_3Rcq4U4U9pgCLCrt1eUXbwSM'),
-(33, 4, 32.50, 2, '2025-06-22 12:46:41', 2, 4, 'pi_3Rcq5q4U9pgCLCrt0rA1Q2Dm'),
-(34, 5, 84.00, 2, '2025-06-22 12:49:45', 2, 5, 'pi_3Rcq8x4U9pgCLCrt1n3PvpjP'),
-(35, 5, 122.00, 2, '2025-06-22 12:50:39', 2, 5, 'pi_3Rcq9r4U9pgCLCrt1t3aRerL'),
-(36, 5, 45.00, 2, '2025-06-22 12:51:17', 2, 5, 'pi_3RcqAN4U9pgCLCrt1KIQFfwB'),
-(37, 6, 19.00, 2, '2025-06-22 12:53:15', 2, 6, 'pi_3RcqCM4U9pgCLCrt1twoCjjf'),
-(38, 6, 33.00, 2, '2025-06-22 12:54:10', 2, 6, 'pi_3RcqDH4U9pgCLCrt10wUlhJ4'),
-(39, 6, 43.00, 2, '2025-06-22 12:54:59', 2, 6, 'pi_3RcqE44U9pgCLCrt0ivRpjt1'),
+(1, 2, 160.80, 2, '2025-06-22 11:07:26', 5, 2, 'pi_3RcoYA4U9pgCLCrt04zB9FAh'),
+(2, 1, 50.30, 2, '2025-06-22 11:08:22', 4, 1, 'pi_3RcoZ04U9pgCLCrt0IfL6OxR'),
+(3, 3, 92.00, 2, '2025-06-22 11:09:23', 4, 3, 'pi_3Rcoa04U9pgCLCrt0qr0LeM0'),
+(4, 4, 209.00, 2, '2025-06-22 11:10:10', 5, 4, 'pi_3Rcoak4U9pgCLCrt0bxUN0OC'),
+(5, 5, 32.00, 2, '2025-06-22 11:11:02', 8, 5, 'pi_3Rcobd4U9pgCLCrt1mlzm1D2'),
+(6, 6, 28.00, 2, '2025-06-22 11:24:16', 5, 6, 'pi_3RcooQ4U9pgCLCrt0L1bn8jc'),
+(7, 8, 56.00, 2, '2025-06-22 11:25:50', 5, 8, 'pi_3Rcopw4U9pgCLCrt1LtkyCMU'),
+(8, 9, 153.00, 2, '2025-06-22 11:26:23', 5, 9, 'pi_3RcoqW4U9pgCLCrt1FfsBkti'),
+(9, 10, 75.00, 2, '2025-06-22 11:27:10', 5, 10, 'pi_3RcorB4U9pgCLCrt05Qucjaa'),
+(10, 1, 11.80, 3, '2025-06-22 11:46:43', 5, 1, 'pi_3RcpA64U9pgCLCrt1lJyPlBK'),
+(11, 2, 32.90, 3, '2025-06-22 11:47:31', 5, 2, 'pi_3RcpAw4U9pgCLCrt0nsx0fo6'),
+(12, 3, 65.00, 3, '2025-06-22 11:48:20', 4, 3, 'pi_3RcpBk4U9pgCLCrt0SI6Yc60'),
+(13, 4, 197.00, 3, '2025-06-22 11:49:12', 7, 4, 'pi_3RcpCY4U9pgCLCrt0O5t4Dxk'),
+(14, 5, 23.00, 3, '2025-06-22 11:50:06', 5, 5, 'pi_3RcpDR4U9pgCLCrt0edbK9ce'),
+(15, 6, 24.00, 3, '2025-06-22 11:52:16', 5, 6, 'pi_3RcpFS4U9pgCLCrt0Mp112cB'),
+(16, 8, 57.00, 3, '2025-06-22 11:53:50', 5, 8, 'pi_3RcpGz4U9pgCLCrt01VMFDmi'),
+(17, 9, 105.00, 3, '2025-06-22 11:55:54', 5, 9, 'pi_3RcpJ44U9pgCLCrt0dAqDpEi'),
+(18, 10, 61.00, 3, '2025-06-22 11:57:39', 5, 10, 'pi_3RcpKf4U9pgCLCrt1oBzIllI'),
+(19, 1, 2.40, 2, '2025-06-22 12:03:10', 5, 1, 'pi_3RcpQ54U9pgCLCrt0fvowPnW'),
+(20, 1, 8.00, 2, '2025-06-22 12:05:36', 5, 1, 'pi_3RcpSN4U9pgCLCrt0M4aFgfj'),
+(21, 1, 18.10, 2, '2025-06-22 12:06:45', 3, 1, 'pi_3RcpTa4U9pgCLCrt0q7UAbcp'),
+(22, 1, 29.00, 2, '2025-06-22 12:12:29', 7, 1, 'pi_3RcpZ04U9pgCLCrt0cFUej3j'),
+(23, 1, 35.00, 2, '2025-06-22 12:13:24', 8, 1, 'pi_3RcpZu4U9pgCLCrt19ZVJ9w8'),
+(24, 4, 15.00, 3, '2025-06-22 12:14:30', 5, 4, 'pi_3Rcpat4U9pgCLCrt0zZaxxpo'),
+(25, 10, 60.00, 2, '2025-06-22 12:15:52', 5, 10, 'pi_3Rcpbt4U9pgCLCrt1ln84IAG'),
+(26, 2, 20.00, 2, '2025-06-22 12:37:36', 5, 2, 'pi_3Rcpx24U9pgCLCrt0QNhAPZt'),
+(27, 2, 62.90, 2, '2025-06-22 12:38:41', 5, 2, 'pi_3Rcpy94U9pgCLCrt06FDHs6F'),
+(28, 2, 105.00, 2, '2025-06-22 12:39:25', 5, 2, 'pi_3Rcpyy4U9pgCLCrt1gWGM83D'),
+(29, 3, 53.00, 2, '2025-06-22 12:41:21', 4, 3, 'pi_3Rcq0q4U9pgCLCrt1Jqa1BGM'),
+(30, 3, 72.00, 2, '2025-06-22 12:42:15', 3, 3, 'pi_3Rcq1i4U9pgCLCrt1bgQskuJ'),
+(31, 3, 56.00, 2, '2025-06-22 12:43:16', 3, 3, 'pi_3Rcq2e4U9pgCLCrt0Lfj1you'),
+(32, 4, 34.00, 2, '2025-06-22 12:45:09', 5, 4, 'pi_3Rcq4U4U9pgCLCrt1eUXbwSM'),
+(33, 4, 32.50, 2, '2025-06-22 12:46:41', 5, 4, 'pi_3Rcq5q4U9pgCLCrt0rA1Q2Dm'),
+(34, 5, 84.00, 2, '2025-06-22 12:49:45', 5, 5, 'pi_3Rcq8x4U9pgCLCrt1n3PvpjP'),
+(35, 5, 122.00, 2, '2025-06-22 12:50:39', 6, 5, 'pi_3Rcq9r4U9pgCLCrt1t3aRerL'),
+(36, 5, 45.00, 2, '2025-06-22 12:51:17', 5, 5, 'pi_3RcqAN4U9pgCLCrt1KIQFfwB'),
+(37, 6, 19.00, 2, '2025-06-22 12:53:15', 3, 6, 'pi_3RcqCM4U9pgCLCrt1twoCjjf'),
+(38, 6, 33.00, 2, '2025-06-22 12:54:10', 5, 6, 'pi_3RcqDH4U9pgCLCrt10wUlhJ4'),
+(39, 6, 43.00, 2, '2025-06-22 12:54:59', 5, 6, 'pi_3RcqE44U9pgCLCrt0ivRpjt1'),
 (40, 7, 67.00, 2, '2025-06-22 12:56:28', 2, 7, 'pi_3RcqFS4U9pgCLCrt0mTT0cLD'),
-(41, 7, 98.00, 2, '2025-06-22 12:57:14', 2, 7, 'pi_3RcqGB4U9pgCLCrt1R3yDSzi'),
-(42, 7, 98.00, 2, '2025-06-22 12:58:00', 2, 7, 'pi_3RcqGw4U9pgCLCrt0ZH6ITsK'),
-(43, 7, 40.00, 2, '2025-06-22 12:58:37', 2, 7, 'pi_3RcqHa4U9pgCLCrt1f4ehrp4'),
-(44, 7, 47.50, 2, '2025-06-22 12:59:17', 2, 7, 'pi_3RcqIB4U9pgCLCrt0xBC5VQb'),
-(45, 8, 97.90, 2, '2025-06-22 13:00:55', 2, 8, 'pi_3RcqJm4U9pgCLCrt0vePlVrw'),
-(46, 8, 75.00, 2, '2025-06-22 13:01:43', 2, 8, 'pi_3RcqKX4U9pgCLCrt0f9Qd61H'),
-(47, 8, 41.00, 2, '2025-06-22 13:02:35', 2, 8, 'pi_3RcqLN4U9pgCLCrt1RWcDANs'),
+(41, 7, 98.00, 2, '2025-06-22 12:57:14', 5, 7, 'pi_3RcqGB4U9pgCLCrt1R3yDSzi'),
+(42, 7, 98.00, 2, '2025-06-22 12:58:00', 5, 7, 'pi_3RcqGw4U9pgCLCrt0ZH6ITsK'),
+(43, 7, 40.00, 2, '2025-06-22 12:58:37', 5, 7, 'pi_3RcqHa4U9pgCLCrt1f4ehrp4'),
+(44, 7, 47.50, 2, '2025-06-22 12:59:17', 8, 7, 'pi_3RcqIB4U9pgCLCrt0xBC5VQb'),
+(45, 8, 97.90, 2, '2025-06-22 13:00:55', 5, 8, 'pi_3RcqJm4U9pgCLCrt0vePlVrw'),
+(46, 8, 75.00, 2, '2025-06-22 13:01:43', 5, 8, 'pi_3RcqKX4U9pgCLCrt0f9Qd61H'),
+(47, 8, 41.00, 2, '2025-06-22 13:02:35', 3, 8, 'pi_3RcqLN4U9pgCLCrt1RWcDANs'),
 (48, 9, 20.00, 2, '2025-06-22 13:03:56', 2, 9, 'pi_3RcqMh4U9pgCLCrt0kcK4Eht'),
-(49, 9, 193.00, 2, '2025-06-22 13:04:41', 2, 9, 'pi_3RcqNR4U9pgCLCrt1saZtCwv'),
-(50, 9, 62.90, 2, '2025-06-22 13:05:19', 2, 9, 'pi_3RcqO44U9pgCLCrt0V7kJKtn');
+(49, 9, 193.00, 2, '2025-06-22 13:04:41', 5, 9, 'pi_3RcqNR4U9pgCLCrt1saZtCwv'),
+(50, 9, 62.90, 2, '2025-06-22 13:05:19', 5, 9, 'pi_3RcqO44U9pgCLCrt0V7kJKtn');
 
 --
 -- Acionadores `pedidos`
@@ -1450,30 +1487,30 @@ CREATE TABLE `produtos` (
 
 INSERT INTO `produtos` (`id_produto`, `nome`, `descricao`, `valor`, `id_categoria`, `id_estab`, `qtd_estoque`, `imagem_produto`) VALUES
 (1, 'Pão Francês', 'Pão crocante assado na hora.', 0.60, 13, 1, 274, '1750554801.jpg'),
-(2, 'Croissant de Presunto e Queijo', 'Massa folhada recheada com presunto e queijo.', 5.50, 13, 1, 38, '1750554826.jpg'),
-(3, 'Bolo de Cenoura com Chocolate', 'Fatia de bolo caseiro com cobertura de chocolate.', 4.00, 8, 1, 32, '1750554846.jpg'),
-(4, 'Café com Leite', 'Café com leite quente.', 3.00, 12, 1, 71, '1750554875.jpg'),
-(5, 'Sonho de Creme', 'Doce frito recheado com creme de baunilha.', 8.00, 8, 1, 20, '1750554903.jpg'),
+(2, 'Croissant de Presunto e Queijo', 'Massa folhada recheada com presunto e queijo.', 5.50, 13, 1, 40, '1750554826.jpg'),
+(3, 'Bolo de Cenoura com Chocolate', 'Fatia de bolo caseiro com cobertura de chocolate.', 4.00, 8, 1, 33, '1750554846.jpg'),
+(4, 'Café com Leite', 'Café com leite quente.', 3.00, 12, 1, 73, '1750554875.jpg'),
+(5, 'Sonho de Creme', 'Doce frito recheado com creme de baunilha.', 8.00, 8, 1, 21, '1750554903.jpg'),
 (6, 'Feijoada Completa', 'Feijoada com acompanhamentos tradicionais.', 25.00, 3, 2, 17, '1750554953.jpg'),
 (7, 'Bife à Parmegiana', 'Bife empanado com queijo e molho de tomate.', 27.90, 3, 2, 9, '1750554976.jpg'),
-(8, 'Moqueca de Peixe', 'Moqueca com arroz e pirão.', 30.00, 17, 2, 2, '1750554987.jpg'),
+(8, 'Moqueca de Peixe', 'Moqueca com arroz e pirão.', 30.00, 17, 2, 3, '1750554987.jpg'),
 (9, 'Marmita Executiva', 'Arroz, feijão, carne e salada.', 15.00, 7, 2, 32, '1750555001.jpg'),
-(10, 'Coca-cola lata 220ml', 'Refrigerante típico brasileiro.', 5.00, 9, 2, 45, '1750555128.jpg'),
+(10, 'Coca-cola lata 220ml', 'Refrigerante típico brasileiro.', 5.00, 9, 2, 46, '1750555128.jpg'),
 (11, 'Açaí Tradicional 300ml', 'Açaí puro com granola.', 10.00, 10, 3, 39, '1750555179.jpg'),
 (12, 'Açaí com Banana e Leite Condensado 300ml', 'Açaí com banana, granola e leite condensado.', 13.00, 10, 3, 33, '1750555222.jpg'),
 (13, 'Açaí com Morango e Nutella 250ml', 'Açaí com morango fresco e Nutella.', 15.00, 10, 3, 24, '1750555244.jpg'),
 (14, 'Suco de Cupuaçu', 'Suco natural de cupuaçu.', 7.00, 9, 3, 16, '1750555255.jpg'),
 (15, 'Tigela Power', 'Açaí com mix de frutas e castanhas.', 17.00, 10, 3, 11, '1750555270.jpg'),
-(16, 'Pizza Margherita', 'Molho de tomate, mussarela e manjericão.', 35.00, 2, 4, 15, '1750555492.jpg'),
-(17, 'Pizza Calabresa', 'Calabresa fatiada com cebola e queijo.', 38.00, 2, 4, 20, '1750555350.jpg'),
+(16, 'Pizza Margherita', 'Molho de tomate, mussarela e manjericão.', 35.00, 2, 4, 17, '1750555492.jpg'),
+(17, 'Pizza Calabresa', 'Calabresa fatiada com cebola e queijo.', 38.00, 2, 4, 21, '1750555350.jpg'),
 (18, 'Pizza Quatro Queijos', 'Mussarela, provolone, gorgonzola e parmesão.', 42.00, 2, 4, 13, '1750555508.jpg'),
-(19, 'Coca-cola 2L', 'Bebida gaseificada de 2 litros.', 9.00, 9, 4, 24, '1750555533.jpg'),
-(20, 'Pizza Chocolate com Morango', 'Pizza doce com chocolate e morango.', 40.00, 8, 4, 7, '1750555554.jpg'),
-(21, 'Café Expresso', 'Café forte e encorpado.', 4.00, 12, 5, 97, '1750555600.jpg'),
-(22, 'Capuccino', 'Café com leite vaporizado e chocolate.', 6.50, 12, 5, 57, '1750555609.jpg'),
-(23, 'Bolo de Fubá com Goiabada', 'Fatia de bolo típico do cerrado.', 5.00, 8, 5, 22, '1750555727.jpg'),
-(24, 'Pão de Queijo', 'Pão de queijo mineiro.', 2.50, 11, 5, 69, '1750555740.jpg'),
-(25, 'Chá de Hibisco', 'Chá natural gelado.', 5.00, 9, 5, 46, '1750555752.jpg'),
+(19, 'Coca-cola 2L', 'Bebida gaseificada de 2 litros.', 9.00, 9, 4, 25, '1750555533.jpg'),
+(20, 'Pizza Chocolate com Morango', 'Pizza doce com chocolate e morango.', 40.00, 8, 4, 9, '1750555554.jpg'),
+(21, 'Café Expresso', 'Café forte e encorpado.', 4.00, 12, 5, 99, '1750555600.jpg'),
+(22, 'Capuccino', 'Café com leite vaporizado e chocolate.', 6.50, 12, 5, 58, '1750555609.jpg'),
+(23, 'Bolo de Fubá com Goiabada', 'Fatia de bolo típico do cerrado.', 5.00, 8, 5, 25, '1750555727.jpg'),
+(24, 'Pão de Queijo', 'Pão de queijo mineiro.', 2.50, 11, 5, 85, '1750555740.jpg'),
+(25, 'Chá de Hibisco', 'Chá natural gelado.', 5.00, 9, 5, 48, '1750555752.jpg'),
 (26, 'Baião de Dois', 'Arroz, feijão verde, queijo coalho e carne seca.', 22.00, 3, 6, 19, '1750555819.jpg'),
 (27, 'Carne de Sol com Macaxeira', 'Prato regional nordestino.', 26.00, 3, 6, 15, '1750555832.jpg'),
 (28, 'Cuscuz Nordestino', 'Cuscuz de milho com ovos e queijo.', 12.00, 3, 6, 29, '1750555850.jpg'),
@@ -1805,7 +1842,7 @@ ALTER TABLE `administradores`
 -- AUTO_INCREMENT de tabela `avaliacoes`
 --
 ALTER TABLE `avaliacoes`
-  MODIFY `id_avaliacao` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_avaliacao` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT de tabela `categorias_chamado`
