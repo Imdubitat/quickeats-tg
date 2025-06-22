@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 22/06/2025 às 17:16
+-- Tempo de geração: 22/06/2025 às 17:28
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -1394,7 +1394,7 @@ INSERT INTO `produtos` (`id_produto`, `nome`, `descricao`, `valor`, `id_categori
 (40, 'Bolo de Milho Verde', 'Bolo típico do nordeste.', 5.00, 8, 8, 21, '1750556132.jpg'),
 (41, 'Sushi de Salmão', '6 unidades de sushi fresco.', 22.00, 4, 9, 27, '1750556193.jpg'),
 (42, 'Temaki de Atum', 'Cone de alga com arroz e atum.', 18.00, 4, 9, 19, '1750556203.jpg'),
-(43, 'Combinado 20 peças', 'Sushis variados.', 45.00, 4, 9, 19, '1750556230.'),
+(43, 'Combinado 20 peças', 'Sushis variados.', 45.00, 4, 9, 19, '1750556230.jpg'),
 (44, 'Missoshiru', 'Sopa de missô.', 9.00, 4, 9, 35, '1750556248.jpg'),
 (45, 'Sashimi de Salmão', '10 fatias de sashimi fresco.', 28.00, 4, 9, 12, '1750556260.jpg'),
 (46, 'Tapioca de Frango com Catupiry', 'Tapioca recheada com frango e catupiry.', 10.00, 3, 10, 26, '1750556331.jpg'),
