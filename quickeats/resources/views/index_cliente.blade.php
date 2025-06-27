@@ -90,7 +90,10 @@
                         <a class="" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal" style="cursor: pointer;">Esqueci a senha</a>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <button type="submit" class="btn btn-custom4 w-50">Entrar</button>
+                        <button id="submit" type="submit" class="btn btn-custom4 w-50">
+                            <span id="submit-text">Entrar</span>
+                            <span id="submit-spinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -165,7 +168,10 @@
                         <p>Já tem uma conta? <a href="#" data-bs-toggle="modal" data-bs-target="#signinModal">Faça Login</a></p>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <button type="submit" class="btn btn-custom4 w-50">Cadastrar</button>
+                        <button id="submit" type="submit" class="btn btn-custom4 w-50">
+                            <span id="submit-text">Cadastrar</span>
+                            <span id="submit-spinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -259,6 +265,22 @@
                     });
                 }
             }
+        });
+
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', () => {
+                const submitButton = form.querySelector('button[type="submit"]');
+                if (!submitButton) return;
+
+                const spinner = submitButton.querySelector('.spinner-border');
+                const textSpans = Array.from(submitButton.querySelectorAll('span')).filter(
+                    span => !span.classList.contains('spinner-border')
+                );
+
+                submitButton.disabled = true;
+                if (spinner) spinner.classList.remove('d-none');
+                textSpans.forEach(span => span.classList.add('d-none'));
+            });
         });
     });
 </script>

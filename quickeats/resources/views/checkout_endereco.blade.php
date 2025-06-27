@@ -30,7 +30,7 @@
             @endforeach
 
             <div class="text-center mt-4">
-                <button id="submit" class="btn btn-success w-50 mt-4 fw-semibold" type="submit">
+                <button id="submit" type="submit" class="btn btn-custom4 w-50">
                     <span id="submit-text">Realizar pagamento</span>
                     <span id="submit-spinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
                 </button>
