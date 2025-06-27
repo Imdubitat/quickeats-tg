@@ -30,9 +30,27 @@
             @endforeach
 
             <div class="text-center mt-4">
-                <button type="submit" class="btn btn-custom4 w-50">Realizar pagamento</button>
+                <button id="submit" class="btn btn-success w-50 mt-4 fw-semibold" type="submit">
+                    <span id="submit-text">Realizar pagamento</span>
+                    <span id="submit-spinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+                </button>
             </div>
         </form>
     </div>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.querySelector('form');
+        const submitButton = document.getElementById('submit');
+        const submitText = document.getElementById('submit-text');
+        const submitSpinner = document.getElementById('submit-spinner');
+
+        form.addEventListener('submit', () => {
+            submitButton.disabled = true;
+            submitSpinner.classList.remove('d-none');
+            submitText.classList.add('d-none');
+        });
+    });
+</script>
 @endsection

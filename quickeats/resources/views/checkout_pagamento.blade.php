@@ -41,8 +41,9 @@
                     </div>
                     <div id="card-errors" class="text-danger mt-2"></div>
                     
-                    <button id="submit" class="btn btn-success w-100 mt-4 fw-semibold">
-                        Finalizar Pedido
+                    <button id="submit" class="btn btn-success w-100 mt-4 fw-semibold d-flex justify-content-center align-items-center" type="submit">
+                        <span id="submit-text">Finalizar Pedido</span>
+                        <span id="submit-spinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
                     </button>
                 </form>
             </div>
@@ -97,51 +98,64 @@
     card.mount("#card-element");
 
     const form = document.getElementById('payment-form');
+    const submitButton = document.getElementById('submit');
+    const submitText = document.getElementById('submit-text');
+    const submitSpinner = document.getElementById('submit-spinner');
+    const cardErrors = document.getElementById('card-errors');
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const { error, paymentIntent } = await stripe.confirmCardPayment(
-            "{{ $clientSecret }}",
-            {
-                payment_method: {
-                    card: card
+        // Mostra spinner e desativa botão
+        submitButton.disabled = true;
+        submitSpinner.classList.remove('d-none');
+        submitText.classList.add('d-none');
+        cardErrors.textContent = '';
+
+        try {
+            const { error, paymentIntent } = await stripe.confirmCardPayment(
+                "{{ $clientSecret }}",
+                {
+                    payment_method: {
+                        card: card
+                    }
                 }
+            );
+
+            if (error) {
+                throw error;
             }
-        );
 
-        if (error) {
-            document.getElementById('card-errors').textContent = error.message;
-            return;
-        }
+            if (paymentIntent.status === 'succeeded') {
+                await fetch("{{ route('realizar_pedido') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({
+                        payment_intent_id: paymentIntent.id,
+                        payment_method_id: paymentIntent.payment_method,
+                        valor_total: {{ $valorTotal }}
+                    })
+                });
 
-        if (paymentIntent.status === 'succeeded') {
-            // Envia o ID do paymentIntent e payment_method para o back-end
-            fetch("{{ route('realizar_pedido') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                },
-                body: JSON.stringify({
-                    payment_intent_id: paymentIntent.id,
-                    payment_method_id: paymentIntent.payment_method,
-                    valor_total: 99.90 // ajuste se necessário
-                })
-            })
-            .then(response => {
-                if (!response.ok) throw new Error("Erro ao salvar pedido");
-                return response.json();
-            })
-            .then(data => {
                 sessionStorage.setItem('mensagem', 'Pedido realizado com sucesso!');
                 window.location.href = "carrinho";
-            })
-            .catch(error => {
-                console.error(error);
-                document.getElementById('card-errors').textContent = "Erro ao finalizar o pedido.";
-            });
+            } else {
+                throw new Error("Pagamento não foi concluído com sucesso.");
+            }
+        } catch (error) {
+            console.error(error);
+            cardErrors.textContent = error.message || "Erro ao finalizar o pedido.";
+            
+            // Reativa botão e esconde spinner
+            submitButton.disabled = false;
+            submitSpinner.classList.add('d-none');
+            submitText.classList.remove('d-none');
         }
     });
 </script>
+
 
 @endsection
