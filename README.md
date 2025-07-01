@@ -10,42 +10,39 @@ https://delicate-weight-9bf.notion.site/QuickEats-Sistema-de-Delivery-de-Aliment
 
 ## 📒 Como executar o projeto na sua máquina
 
-### Pré-requisitos
+### ✅ Pré-requisitos
 Antes de começar, certifique-se de que você tem os seguintes softwares instalados em sua máquina:
 
 - PHP >= 8.2
 - Composer (https://getcomposer.org/)
 - MySQL ou PostgreSQL (ou outro banco de dados compatível)
 
-
+### 1️⃣ Clone o repositório
 ```bash
   git clone https://github.com/Imdubitat/quickeats-tg.git
 ```
 
-Vá até o diretório do projeto
-
+### 2️⃣ Vá até o diretório do projeto
 ```bash
   cd quickeats
 ```
 
-Instale o composer:
-
+### 3️⃣ Instale o composer:
 ```bash
   composer install
 ```
 
-Copie o arquivo .env.example
-
+### 4️⃣ Copie o arquivo .env.example
 ```bash
   cp .env.example .env
 ```
 
-Gere a chave da aplicação
+### 5️⃣ Gere a chave da aplicação
 ```bash
   php artisan key:generate
 ```
 
-Configure o banco de dados no arquivo de configuração .env
+### 6️⃣ Configure o banco de dados no arquivo de configuração .env
 ```bash
   DB_CONNECTION=mysql
   DB_HOST=127.0.0.1
@@ -55,12 +52,12 @@ Configure o banco de dados no arquivo de configuração .env
   DB_PASSWORD=
 ```
 
-Configure o gerenciamento de sessão no arquivo de cofiguração .env
+### 7️⃣ Configure o gerenciamento de sessão no arquivo de configuração .env
 ```bash
 SESSION_DRIVER=file
 ```
 
-Inicie o servidor de desenvolvimento
+### 8️⃣ Inicie o servidor de desenvolvimento
 ```bash
   php artisan serve
 ```
