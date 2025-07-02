@@ -85,7 +85,36 @@
                     </div>
                     <div class="mb-3">
                         <label for="estado{{ $endereco->id_endereco }}" class="form-label">Estado</label>
-                        <input type="text" class="form-control" maxlength="2" id="estado{{ $endereco->id_endereco }}" name="estado" value="{{ old('estado', $endereco->estado) }}" required>
+                        <select id="estado{{ $endereco->id_endereco }}" class="form-select rounded-4" name="estado" required>
+                            <option value="" disabled {{ old('estado', $endereco->estado) ? '' : 'selected' }}>Selecione</option>
+                            <option value="AC" {{ old('estado', $endereco->estado) == 'AC' ? 'selected' : '' }}>Acre</option>
+                            <option value="AL" {{ old('estado', $endereco->estado) == 'AL' ? 'selected' : '' }}>Alagoas</option>
+                            <option value="AP" {{ old('estado', $endereco->estado) == 'AP' ? 'selected' : '' }}>Amapá</option>
+                            <option value="AM" {{ old('estado', $endereco->estado) == 'AM' ? 'selected' : '' }}>Amazonas</option>
+                            <option value="BA" {{ old('estado', $endereco->estado) == 'BA' ? 'selected' : '' }}>Bahia</option>
+                            <option value="CE" {{ old('estado', $endereco->estado) == 'CE' ? 'selected' : '' }}>Ceará</option>
+                            <option value="DF" {{ old('estado', $endereco->estado) == 'DF' ? 'selected' : '' }}>Distrito Federal</option>
+                            <option value="ES" {{ old('estado', $endereco->estado) == 'ES' ? 'selected' : '' }}>Espírito Santo</option>
+                            <option value="GO" {{ old('estado', $endereco->estado) == 'GO' ? 'selected' : '' }}>Goiás</option>
+                            <option value="MA" {{ old('estado', $endereco->estado) == 'MA' ? 'selected' : '' }}>Maranhão</option>
+                            <option value="MT" {{ old('estado', $endereco->estado) == 'MT' ? 'selected' : '' }}>Mato Grosso</option>
+                            <option value="MS" {{ old('estado', $endereco->estado) == 'MS' ? 'selected' : '' }}>Mato Grosso do Sul</option>
+                            <option value="MG" {{ old('estado', $endereco->estado) == 'MG' ? 'selected' : '' }}>Minas Gerais</option>
+                            <option value="PA" {{ old('estado', $endereco->estado) == 'PA' ? 'selected' : '' }}>Pará</option>
+                            <option value="PB" {{ old('estado', $endereco->estado) == 'PB' ? 'selected' : '' }}>Paraíba</option>
+                            <option value="PR" {{ old('estado', $endereco->estado) == 'PR' ? 'selected' : '' }}>Paraná</option>
+                            <option value="PE" {{ old('estado', $endereco->estado) == 'PE' ? 'selected' : '' }}>Pernambuco</option>
+                            <option value="PI" {{ old('estado', $endereco->estado) == 'PI' ? 'selected' : '' }}>Piauí</option>
+                            <option value="RJ" {{ old('estado', $endereco->estado) == 'RJ' ? 'selected' : '' }}>Rio de Janeiro</option>
+                            <option value="RN" {{ old('estado', $endereco->estado) == 'RN' ? 'selected' : '' }}>Rio Grande do Norte</option>
+                            <option value="RS" {{ old('estado', $endereco->estado) == 'RS' ? 'selected' : '' }}>Rio Grande do Sul</option>
+                            <option value="RO" {{ old('estado', $endereco->estado) == 'RO' ? 'selected' : '' }}>Rondônia</option>
+                            <option value="RR" {{ old('estado', $endereco->estado) == 'RR' ? 'selected' : '' }}>Roraima</option>
+                            <option value="SC" {{ old('estado', $endereco->estado) == 'SC' ? 'selected' : '' }}>Santa Catarina</option>
+                            <option value="SP" {{ old('estado', $endereco->estado) == 'SP' ? 'selected' : '' }}>São Paulo</option>
+                            <option value="SE" {{ old('estado', $endereco->estado) == 'SE' ? 'selected' : '' }}>Sergipe</option>
+                            <option value="TO" {{ old('estado', $endereco->estado) == 'TO' ? 'selected' : '' }}>Tocantins</option>
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="cep{{ $endereco->id_endereco }}" class="form-label">CEP</label>
