@@ -182,3 +182,16 @@ footer a:hover,
 #submit-spinner {
     vertical-align: middle;
 }
+
+.card-endereco {
+    border: 1px solid #e0e0e0;
+    transition: box-shadow 0.3s, transform 0.3s, border-color 0.3s;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.03);
+}
+
+.card-endereco:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border-color: #0d6efd;
+    transform: translateY(-2px);
+    cursor: pointer;
+}

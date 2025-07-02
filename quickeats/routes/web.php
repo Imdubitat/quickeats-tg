@@ -72,7 +72,7 @@ Route::middleware('auth:cliente')->group(function () {
     Route::post('/aumenta-carrinho', [ClienteController::class, 'aumentarQuantidadeCarrinho'])->name('aumentar_carrinho');
 
     // Exibir endereços cadastrados
-    Route::post('/enderecos', [ClienteController::class, 'exibirEnderecos'])->name('exibir_enderecos');
+    Route::match(['get', 'post'], '/checkout-enderecos', [ClienteController::class, 'exibirEnderecos'])->name('exibir_enderecos');
 
     // Exibir formas de pagamento
     Route::post('/pagamento', [ClienteController::class, 'exibirFormasPagamento'])->name('exibir_pagamentos');

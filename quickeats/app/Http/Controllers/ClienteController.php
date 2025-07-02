@@ -805,6 +805,9 @@ class ClienteController extends Controller
         // Captura o id do cliente da sessão
         $idCliente = Auth::guard('cliente')->id();
 
+        // Captura o destino do redirecionamento
+        $redirectTo = $request->input('redirectTo', route('home_cliente'));
+
         try {
             // Chamada do método no Model
             Endereco::cadastrar(
@@ -817,11 +820,11 @@ class ClienteController extends Controller
                 $request->cepCad
             );
 
-            return redirect()->back()->with('success', 'Endereço cadastrado com sucesso!');
+            return redirect($redirectTo)->with('success', 'Endereço cadastrado com sucesso!');
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->back()->withErrors($e->errors())->withInput();
+            return redirect($redirectTo)->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Erro ao cadastrar endereço: ' . $e->getMessage());
+            return redirect($redirectTo)->with('error', 'Erro ao cadastrar endereço: ' . $e->getMessage());
         }
     }
 

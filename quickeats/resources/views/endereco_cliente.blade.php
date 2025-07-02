@@ -1,6 +1,6 @@
 @extends('template_cliente')
 
-@section('title', 'Home | Cliente')
+@section('title', 'Controle de endereços')
 
 @section('nav-buttons')
 
@@ -119,6 +119,7 @@
             <div class="modal-body">
                 <form action="{{ route('cadastrar_endereco') }}" method="POST">
                     @csrf
+                    <input type="hidden" name="redirectTo" value="{{ route('enderecos') }}">
                     <div class="form-floating mb-3">
                         <input id="cepCad" type="text" class="form-control rounded-4 @error('cepCad') is-invalid @enderror" placeholder="CEP" name="cepCad" value="{{ old('cepCad') }}" required>
                         <label for="cepCad">CEP</label>
