@@ -204,8 +204,8 @@ class EstabelecimentoController extends Controller
         $pedido = $pedido[0]; // Pega o primeiro resultado do array
 
         try {
-            // Se o novo status for "6", realizar o reembolso
-            if ($request->novo_status == "7") {
+            // Se o novo status for "7" ou 8, realizar o reembolso
+            if ($request->novo_status == "7" || $request->novo_status == "8") {
                 // Configurar a chave da Stripe
                 Stripe::setApiKey(env('STRIPE_SECRET'));
 
