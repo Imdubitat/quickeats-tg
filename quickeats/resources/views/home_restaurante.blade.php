@@ -80,7 +80,7 @@
                 <a href="{{ route('estoque_restaurante') }}" class="text-decoration-none">
                     <div class="card text-white" style="background-color: #FF0000;">
                         <div class="card-body">
-                            <h5 class="card-title">📉 Estoque Baixo</h5>
+                            <h5 class="card-title">📉 Produtos com estoque baixo</h5>
                             <h2>{{ $estoqueBaixo }}</h2>
                         </div>
                     </div>
