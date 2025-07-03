@@ -63,7 +63,7 @@
                         <div class="card mb-3">
                             <div class="card-body">
                                 <h5 class="card-title">Pedido #{{ $p->id_pedido }}</h5>
-                                <p class="card-text"><strong>Cliente:</strong> {{ $p->nome_cliente }}</p>
+                                <p class="card-text"><strong>Estabelecimento:</strong> {{ $p->nome_estabelecimento }}</p>
                                 <p class="card-text">
                                     <strong>Valor:</strong> R$ {{ number_format($p->valor_total, 2, ',', '.') }}
                                 </p>
