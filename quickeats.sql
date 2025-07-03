@@ -378,7 +378,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `faturamento_estabelecimento` (IN `p
     FROM 
         pedidos p
     WHERE 
-        p.id_pedido IN (
+    	p.status_entrega NOT IN (7,8)
+        AND p.id_pedido IN (
             SELECT i.id_pedido
             FROM itens_pedidos i
             INNER JOIN produtos pr ON i.id_produto = pr.id_produto
